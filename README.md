@@ -1,4 +1,4 @@
-transformist
+Transformist
 ============
 
-PHP file transformation library
+A PHP file conversion library.
