@@ -1,6 +1,8 @@
 <?php
 
 /**
+ *	The base class for a Converter.
+ *
  *	@package Transformist
  *	@author Félix Girault <felix@vtech.fr>
  */

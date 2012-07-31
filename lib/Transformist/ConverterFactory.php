@@ -11,9 +11,31 @@ class Transformist_ConverterFactory {
 
 	/**
 	 *	A singleton instance of the ConverterFactory.
+	 *
+	 *	@var Transformist_ConverterFactory
 	 */
 
 	protected static $_instance = null;
+
+
+
+	/**
+	 *	The path in which Converters can be found.
+	 *
+	 *	@var string
+	 */
+
+	protected $_path = '';	// initialized in constructor
+
+
+
+	/**
+	 *	The package of Converters.
+	 *
+	 *	@var string
+	 */
+
+	protected $_package = 'Transformist_Converter_';
 
 
 
@@ -64,7 +86,7 @@ class Transformist_ConverterFactory {
 	protected static function _instance( ) {
 
 		if ( self::$_instance === null ) {
-			self::$_instance = new Transformist_ConverterFactory( );
+			self::$_instance = new self( );
 		}
 
 		return self::$_instance;
@@ -80,24 +102,27 @@ class Transformist_ConverterFactory {
 
 	protected function __construct( ) {
 
-		$this->_listStrategies( );
+		$this->_path = TRANSFORMIST_ROOT . 'Transformist' . DS . 'Converter' . DS;
+		$this->_listConverters( );
 	}
 
 
 
 	/**
-	 *	Lists and stores every available Converter. This is useful because it
-	 *	avoids to scan file system each time a Converter is requested.
+	 *	Lists and stores every available Converter. This is useful to avoid
+	 *	scanning file system each time a Converter is requested.
 	 */
 
-	protected function _listStrategies( ) {
+	protected function _listConverters( ) {
 
-		$pattern = TRANSFORMIST_ROOT . 'Transformist' . DS . 'Converter' . DS . '*.php';
-		$namespace = 'Transformist_Converter_';
+		$files = glob( $this->_path . '*.php' );
 
-		foreach ( glob( $pattern ) as $fileName ) {
-			$className = $namespace . basename( $fileName, '.php' );
-			$this->_converters[] = $className;
+		foreach ( $files as $fileName ) {
+			$className = $this->_package . basename( $fileName, '.php' );
+
+			if ( class_exists( $className )) {
+				$this->_converters[] = $className;
+			}
 		}
 	}
 }

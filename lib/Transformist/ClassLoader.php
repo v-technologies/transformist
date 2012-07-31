@@ -3,7 +3,7 @@
 /**
  *	A simple PSR-0 compliant class loader.
  *
- *	@package Sae
+ *	@package Transformist
  *	@author Félix Girault <felix@vtech.fr>
  */
 
@@ -33,7 +33,7 @@ class Transformist_ClassLoader {
 
 
 	/**
-	 *	Installs this class loader on the SPL autoload stack.
+	 *	Registers this class loader on the SPL autoload stack.
 	 */
 
 	public function register( ) {
@@ -44,9 +44,9 @@ class Transformist_ClassLoader {
 
 
 	/**
-	 *	Uninstalls this class loader from the SPL autoloader stack.
+	 *	Unregisters this class loader from the SPL autoloader stack.
 	 */
-	
+
 	public function unregister( ) {
 
 		spl_autoload_unregister( array( $this, 'load' ));
@@ -57,7 +57,7 @@ class Transformist_ClassLoader {
 	/**
 	 *  Loads the given class or interface.
 	 *
-	 *  @param string $className name of the class to load
+	 *  @param string $className Name of the class to load.
 	 */
 
 	public function load( $className ) {

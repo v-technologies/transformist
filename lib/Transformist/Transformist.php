@@ -62,8 +62,7 @@ class Transformist_Transformist {
 
 		if ( !class_exists( 'finfo' )) {
 			throw new Transformist_Exception(
-				'Unable to detect mime type. ' .
-				'The FileInfo extension is required (http://php.net/manual/book.fileinfo.php).'
+				'Unable to detect mime type. Auto detection requires the FileInfo extension.'
 			);
 		}
 
