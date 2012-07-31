@@ -3,17 +3,17 @@
 /**
  *	Converts Office documents to Pdf.
  *
- *	@package Transformist.Strategy
+ *	@package Transformist.Converter
  *	@author Félix Girault <felix@vtech.fr>
  */
 
-class Transformist_Strategy_OfficeToPdf extends Transformist_Strategy {
+class Transformist_Converter_OfficeToPdf extends Transformist_Converter {
 
 	/**
-	 *	Checks if the strategy can convert files from the given format.
+	 *	Checks if the Converter can convert files from the given format.
 	 *
 	 *	@param string $mimeType Mime type to test.
-	 *	@return boolean Whether or not the Strategy can handle the mime type.
+	 *	@return boolean Whether or not the Converter can handle the mime type.
 	 */
 
 	public static function convertsFrom( $mimeType ) {
@@ -24,10 +24,10 @@ class Transformist_Strategy_OfficeToPdf extends Transformist_Strategy {
 
 
 	/**
-	 *	Checks if the strategy can convert files to the given format.
+	 *	Checks if the Converter can convert files to the given format.
 	 *
 	 *	@param string $mimeType Mime type to test.
-	 *	@return boolean Whether or not the Strategy can handle the mime type.
+	 *	@return boolean Whether or not the Converter can handle the mime type.
 	 */
 
 	public static function convertsTo( $mimeType ) {
