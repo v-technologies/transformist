@@ -20,26 +20,6 @@ class Transformist_ConverterFactory {
 
 
 	/**
-	 *	The path in which Converters can be found.
-	 *
-	 *	@var string
-	 */
-
-	protected $_path = '';	// initialized in constructor
-
-
-
-	/**
-	 *	The package of Converters.
-	 *
-	 *	@var string
-	 */
-
-	protected $_package = 'Transformist_Converter_';
-
-
-
-	/**
 	 *	A list of Converter class names.
 	 *
 	 *	@var array
@@ -55,6 +35,7 @@ class Transformist_ConverterFactory {
 	 *
 	 *	@param string $sourceMimeType Mime type of the source document.
 	 *	@param string $targetMimeType	Mime type of the target document.
+	 *	@return mixed A converter if one matches the request, otherwise null.
 	 */
 
 	public static function load( $sourceMimeType, $targetMimeType ) {
@@ -102,7 +83,6 @@ class Transformist_ConverterFactory {
 
 	protected function __construct( ) {
 
-		$this->_path = TRANSFORMIST_ROOT . 'Transformist' . DS . 'Converter' . DS;
 		$this->_listConverters( );
 	}
 
@@ -115,10 +95,10 @@ class Transformist_ConverterFactory {
 
 	protected function _listConverters( ) {
 
-		$files = glob( $this->_path . '*.php' );
+		$files = glob( TRANSFORMIST_ROOT . 'Transformist' . DS . 'Converter' . DS . '*.php' );
 
 		foreach ( $files as $fileName ) {
-			$className = $this->_package . basename( $fileName, '.php' );
+			$className = 'Transformist_Converter_' . basename( $fileName, '.php' );
 
 			if ( class_exists( $className )) {
 				$this->_converters[] = $className;

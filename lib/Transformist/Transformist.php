@@ -33,7 +33,7 @@ class Transformist_Transformist {
 	 *	Constructs a Transformist given a source document and its mime type.
 	 *	If no mime type is provided, the Transformist will try to determine it
 	 *	by itself. If an error occurs during mime type detection, an exception
-	 *	will be thrown, so it would better be wrapped in a try/catch block.
+	 *	will be raised.
 	 *
 	 *	@param string $document Contents of the source document.
 	 *	@param string $mimeType Mime type of the source document.
@@ -71,9 +71,9 @@ class Transformist_Transformist {
 
 		if ( $mimeType === false ) {
 			throw new Transformist_Exception( 'Unable to detect mime type.' );
-		} else {
-			$this->_sourceMimeType = $mimeType;
 		}
+
+		$this->_sourceMimeType = $mimeType;
 	}
 
 

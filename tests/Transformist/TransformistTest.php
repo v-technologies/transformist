@@ -18,7 +18,5 @@ class Transformist_TransformistTest extends PHPUnit_Framework_TestCase {
 
 		$Transformist = new Transformist_Transformist( '' );
 		$this->assertTrue( $Transformist instanceof Transformist_Transformist );
-
-		$Transformist = new Transformist_Transformist( '' );
 	}
 }

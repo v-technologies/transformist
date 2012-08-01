@@ -38,6 +38,7 @@ class Transformist_ConverterTest extends PHPUnit_Framework_TestCase {
 		// default implementation should always return false.
 
 		$this->assertFalse( $this->Converter->convertsFrom( '' ));
+		$this->assertFalse( $this->Converter->convertsFrom( 'text/plain' ));
 	}
 
 
@@ -51,6 +52,7 @@ class Transformist_ConverterTest extends PHPUnit_Framework_TestCase {
 		// default implementation should always return false.
 
 		$this->assertFalse( $this->Converter->convertsTo( '' ));
+		$this->assertFalse( $this->Converter->convertsTo( 'text/plain' ));
 	}
 
 
@@ -64,5 +66,6 @@ class Transformist_ConverterTest extends PHPUnit_Framework_TestCase {
 		// default implementation should always return false.
 
 		$this->assertFalse( $this->Converter->convert( '' ));
+		$this->assertFalse( $this->Converter->convert( 'text/plain' ));
 	}
 }
