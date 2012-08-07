@@ -7,16 +7,16 @@
  *	@author Félix Girault <felix@vtech.fr>
  */
 
-class Transformist_Converter {
+abstract class Transformist_Converter {
 
 	/**
-	 *	Checks if the Converter can convert files from the given format.
+	 *	Checks if the Converter can convert the given document.
 	 *
-	 *	@param string $mimeType Mime type to test.
-	 *	@return boolean Whether or not the Converter can handle the mime type.
+	 *	@param Transformist_Document $Document Document to convert.
+	 *	@return boolean Whether or not the Converter can convert the document.
 	 */
 
-	public static function convertsFrom( $mimeType ) {
+	public static function canConvert( $Document ) {
 
 		return false;
 	}
@@ -24,15 +24,35 @@ class Transformist_Converter {
 
 
 	/**
-	 *	Checks if the Converter can convert files to the given format.
+	 *	Tests different things before and after actually converting the file.
 	 *
-	 *	@param string $mimeType Mime type to test.
-	 *	@return boolean Whether or not the Converter can handle the mime type.
+	 *	@param Transformist_Document $Document Document to convert.
+	 *	@throws Transformist_Exception
 	 */
 
-	public static function convertsTo( $mimeType ) {
+	public final function convert( $Document ) {
 
-		return false;
+		if ( !static::canConvert( $Document )) {
+			return;
+		}
+
+		if ( !$Document->input( )->isReadable( )) {
+			throw new Transformist_Exception(
+				'The file `%s` is not readable.',
+				$Document->input( )->getRealPath( )
+			);
+		}
+
+		$OutputDir = $Document->output( )->getPathInfo( );
+
+		if ( !$OutputDir->isWritable( )) {
+			throw new Transformist_Exception(
+				'The directory `%s` is not writable.',
+				$OutputDir->getRealPath( )
+			);
+		}
+
+		$this->_convert( $Document );
 	}
 
 
@@ -40,12 +60,9 @@ class Transformist_Converter {
 	/**
 	 *	Converts the given document.
 	 *
-	 *	@param string $document The document to convert.
-	 *	@return mixed The converted document, or false if an error occurs.
+	 *	@param Transformist_Document $Document Document to convert.
 	 */
 
-	public function convert( $document ) {
+	abstract public function _convert( $Document );
 
-		return false;
-	}
 }

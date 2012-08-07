@@ -30,24 +30,19 @@ class Transformist_ConverterFactory {
 
 
 	/**
-	 *	Finds a Converter that can convert a document from $sourceMimeType to
-	 *	$targetMimeType.
+	 *	Finds a Converter that can convert the given document.
 	 *
-	 *	@param string $sourceMimeType Mime type of the source document.
-	 *	@param string $targetMimeType	Mime type of the target document.
+	 *	@param Transformist_Document $Document Document to convert.
 	 *	@return mixed A converter if one matches the request, otherwise null.
 	 */
 
-	public static function load( $sourceMimeType, $targetMimeType ) {
+	public static function load( $Document ) {
 
 		$_this = self::_instance( );
 		$Converter = null;
 
 		foreach ( $_this->_converters as $className ) {
-			if (
-				$className::convertsFrom( $sourceMimeType ) &&
-				$className::convertsTo( $targetMimeType )
-			) {
+			if ( $className::canConvert( $Document )) {
 				$Converter = new $className;
 				break;
 			}
@@ -100,7 +95,10 @@ class Transformist_ConverterFactory {
 		foreach ( $files as $fileName ) {
 			$className = 'Transformist_Converter_' . basename( $fileName, '.php' );
 
-			if ( class_exists( $className )) {
+			if (
+				class_exists( $className )
+				&& is_subclass_of( $className, 'Transformist_Converter' )
+			) {
 				$this->_converters[] = $className;
 			}
 		}
