@@ -48,41 +48,59 @@ class Transformist_Converter_Office extends Transformist_Converter {
 	/**
 	 *	Converts the given document.
 	 *
-	 *	@todo Find a better way to set an output filename, because the current
-	 *		workaround is freaking ugly.
 	 *	@param Transformist_Document $Document Document to convert.
 	 */
 
 	public function _convert( $Document ) {
 
 		$workaround = ( $Document->input( )->getName( ) !== $Document->output( )->getName( ));
-		$originalInputFile = $Document->input( )->getRealPath( );
-		$inputFile = $originalInputFile;
+		$originalInputFilePath = $Document->input( )->getRealPath( );
+		$inputFilePath = $originalInputFilePath;
+
+		// The office command doesn't allow us to specify an output file name.
+		// So here's the trick: we're renaming the input file to match the
+		// desired output file name, with a unique extension to ensure that
+		// the file doesn't exists.
+		// This seems dirty at first, but the file renaming is actually pretty
+		// fast (between 0,02 and 0,03 ms on my old desktop computer), and it
+		// becomes reeaally fast compared to the office command execution time.
+
+		// PROBLEM: No one else can access the file while it is beeing converted,
+		// as its name changes.
+		// POSSIBLE FIX: Use a symlink instead of renaming the file, but what
+		// about windows ?
 
 		if ( $workaround ) {
-			$tmpInputFile = $Document->input( )->getPath( ) . DIRECTORY_SEPARATOR
-				. $Document->output( )->getName( ) . '.workaround';
+			$tmpInputFilePath = $Document->input( )->getPath( )
+				. DIRECTORY_SEPARATOR
+				. $Document->output( )->getName( )
+				. uniqid( '.workaround-' );
 
-			if ( rename( $inputFile, $tmpInputFile )) {
-				$inputFile = $tmpInputFile;
+			if ( rename( $inputFilePath, $tmpInputFilePath )) {
+				$inputFilePath = $tmpInputFilePath;
 			}
 		}
 
 		$outputType = $Document->output( )->getMimeType( );
 		$filter = self::$_formats[ $outputType ];
 
+		// We're calling the office suite, without GUI (--headless) and without
+		// opening a default document (--nodefault).
+
 		$command = sprintf(
-			'soffice --headless --nodefault --outdir %s/test --convert-to %s:%s %s',
-			$Document->output( )->getPath( ),
-			$Document->output( )->getExtension( ),
-			$filter,
-			$inputFile
+			'soffice --headless --nodefault --outdir %s --convert-to %s:%s %s',
+			$Document->output( )->getPath( ),		// output directory
+			$Document->output( )->getExtension( ),	// output file extension
+			$filter,							// filter
+			$inputFilePath						// input file
 		);
 
 		exec( $command );
 
+		// Resetting the input file name if needed.
+
 		if ( $workaround ) {
-			rename( $inputFile, $originalInputFile );
+			rename( $inputFilePath, $originalInputFilePath );
 		}
 	}
 }
