@@ -10,15 +10,45 @@
 abstract class Transformist_Converter {
 
 	/**
+	 *	@var array
+	 */
+
+	protected $_conversions = array( );
+
+
+
+	/**
 	 *	Checks if the Converter can convert the given document.
 	 *
 	 *	@param Transformist_Document $Document Document to convert.
 	 *	@return boolean Whether or not the Converter can convert the document.
 	 */
 
-	public static function canConvert( $Document ) {
+	public function canConvert( $Document ) {
 
-		return false;
+		$inputType = $Document->input( )->type( );
+
+		if ( !isset( $this->_conversions[ $inputType ])) {
+			return false;
+		}
+
+		return in_array(
+			$Document->output( )->type( ),
+			$this->_conversions[ $inputType ]
+		);
+	}
+
+
+
+	/**
+	 *	Returns every conversion that can be done by the converter.
+	 *
+	 *	@return array MIME types.
+	 */
+
+	public function availableConversions( ) {
+
+		return $this->_conversions;
 	}
 
 
@@ -31,24 +61,22 @@ abstract class Transformist_Converter {
 	 */
 
 	public final function convert( $Document ) {
-
+		/*
 		if ( !static::canConvert( $Document )) {
 			return;
 		}
-
+		*/
 		if ( !$Document->input( )->isReadable( )) {
 			throw new Transformist_Exception(
 				'The file `%s` is not readable.',
-				$Document->input( )->getRealPath( )
+				$Document->input( )->path( )
 			);
 		}
 
-		$OutputDir = $Document->output( )->getPathInfo( );
-
-		if ( !$OutputDir->isWritable( )) {
+		if ( !$Document->output( )->isDirWritable( )) {
 			throw new Transformist_Exception(
 				'The directory `%s` is not writable.',
-				$OutputDir->getRealPath( )
+				$Document->output( )->dirPath( )
 			);
 		}
 
@@ -63,6 +91,6 @@ abstract class Transformist_Converter {
 	 *	@param Transformist_Document $Document Document to convert.
 	 */
 
-	abstract public function _convert( $Document );
+	abstract protected function _convert( $Document );
 
 }

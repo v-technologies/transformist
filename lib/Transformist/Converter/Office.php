@@ -12,36 +12,22 @@
 class Transformist_Converter_Office extends Transformist_Converter {
 
 	/**
-	 *	Maps mime types with their corresponding formats.
+	 *
 	 */
 
-	protected static $_formats = array(
-		'application/pdf' => 'writer_pdf_Export'
+	protected $_conversions = array(
+		'application/msword' => 'application/pdf'
 	);
 
 
 
 	/**
-	 *	Checks if the Converter can convert the given document.
-	 *
-	 *	@param Transformist_Document $Document Document to convert.
-	 *	@return boolean Whether or not the Converter can convert the document.
+	 *	Maps mime types with their corresponding formats.
 	 */
 
-	public static function canConvert( $Document ) {
-
-		$handlesInput = in_array(
-			$Document->input( )->getMimeType( ),
-			array( 'application/msword' )
-		);
-
-		$handlesOutput = in_array(
-			$Document->output( )->getMimeType( ),
-			array_keys( self::$_formats )
-		);
-
-		return ( $handlesInput && $handlesOutput );
-	}
+	protected $_formats = array(
+		'application/pdf' => 'writer_pdf_Export'
+	);
 
 
 
@@ -51,56 +37,55 @@ class Transformist_Converter_Office extends Transformist_Converter {
 	 *	@param Transformist_Document $Document Document to convert.
 	 */
 
-	public function _convert( $Document ) {
+	protected function _convert( $Document ) {
 
-		$workaround = ( $Document->input( )->getName( ) !== $Document->output( )->getName( ));
-		$originalInputFilePath = $Document->input( )->getRealPath( );
-		$inputFilePath = $originalInputFilePath;
+		$Input =& $Document->input( );
+		$Output =& $Document->output( );
+
+		$inputPath = $Input->path( );
 
 		// The office command doesn't allow us to specify an output file name.
-		// So here's the trick: we're renaming the input file to match the
-		// desired output file name, with a unique extension to ensure that
-		// the file doesn't exists.
-		// This seems dirty at first, but the file renaming is actually pretty
-		// fast (between 0,02 and 0,03 ms on my old desktop computer), and it
-		// becomes reeaally fast compared to the office command execution time.
+		// So here's the trick: we're creating a link to the input file, named
+		// as the desired output file name, with a unique extension to ensure
+		// that the link file name doesn't exists.
+		// The we will pass the symlink to the office command, which will use
+		// the link name as output file name.
 
-		// PROBLEM: No one else can access the file while it is beeing converted,
-		// as its name changes.
-		// POSSIBLE FIX: Use a symlink instead of renaming the file, but what
-		// about windows ?
+		$workaround = ( $Input->baseName( ) !== $Output->baseName( ));
 
 		if ( $workaround ) {
-			$tmpInputFilePath = $Document->input( )->getPath( )
+			$linkPath = $Output->dirPath( )
 				. DIRECTORY_SEPARATOR
-				. $Document->output( )->getName( )
-				. uniqid( '.workaround-' );
+				. $Output->baseName( )
+				. uniqid( '.workaround' );
 
-			if ( rename( $inputFilePath, $tmpInputFilePath )) {
-				$inputFilePath = $tmpInputFilePath;
+			if ( symlink( $inputPath, $linkPath )) {
+				$inputPath = $linkPath;
+			} else {
+				// avoids deleting the real file after the conversion if the
+				// symlink couldn't be created.
+				$workaround = false;
 			}
 		}
-
-		$outputType = $Document->output( )->getMimeType( );
-		$filter = self::$_formats[ $outputType ];
 
 		// We're calling the office suite, without GUI (--headless) and without
 		// opening a default document (--nodefault).
 
-		$command = sprintf(
-			'soffice --headless --nodefault --outdir %s --convert-to %s:%s %s',
-			$Document->output( )->getPath( ),		// output directory
-			$Document->output( )->getExtension( ),	// output file extension
-			$filter,							// filter
-			$inputFilePath						// input file
+		Transformist_Command::execute(
+			'soffice',
+			array(
+				'--headless',
+				'--nodefault',
+				'--outdir' => $Output->dirPath( ),
+				'--convert-to' => $Output->extension( ) . ':' . $filter,
+				$this->_formats[ $Output->type( )]
+			)
 		);
 
-		exec( $command );
-
-		// Resetting the input file name if needed.
+		// We don't need the symlink anymore.
 
 		if ( $workaround ) {
-			rename( $inputFilePath, $originalInputFilePath );
+			unlink( $inputPath );
 		}
 	}
 }

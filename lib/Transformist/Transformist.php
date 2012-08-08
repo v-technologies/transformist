@@ -10,6 +10,16 @@
 class Transformist_Transformist {
 
 	/**
+	 *	A collection of converters.
+	 *
+	 *	@var Transformist_ConverterCollection
+	 */
+
+	protected $_ConverterCollection = null;
+
+
+
+	/**
 	 *	Converts the document to a format matching the given mime type.
 	 *
 	 *	@param Transformist_Document $Document The document to convert.
@@ -19,10 +29,39 @@ class Transformist_Transformist {
 
 	public static function convert( $Document ) {
 
-		$Converter = Transformist_ConverterFactory::load( $Document );
+		$_this = self::_instance( );
+		$_this->_ConverterCollection->convert( $Document );
+	}
 
-		if ( $Converter !== null ) {
-			$Converter->convert( $Document );
+
+
+	/**
+	 *	Returns a singleton instance of the object.
+	 *
+	 *	@return Transformist_Transformist Instance.
+	 */
+
+	protected static function _instance( ) {
+
+		static $Instance = null;
+
+		if ( $Instance === null ) {
+			$Instance = new Transformist_Transformist( );
 		}
+
+		return $Instance;
+	}
+
+
+
+	/**
+	 *	As Transformist is a singleton, this constructor can't be called
+	 *	from outside. It is only called once when the singleton instance is
+	 *	created, and is in charge of initializing the object.
+	 */
+
+	protected function __construct( ) {
+
+		$this->_ConverterCollection = new Transformist_ConverterCollection( );
 	}
 }

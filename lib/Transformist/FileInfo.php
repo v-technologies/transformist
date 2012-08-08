@@ -1,21 +1,31 @@
 <?php
 
 /**
- *	An extended version of the SplFileInfo class.
+ *	Wraps some functionnalities of SplFileInfo, and adds some pretty useful stuff.
  *
  *	@package Transformist
  *	@author Félix Girault <felix@vtech.fr>
  */
 
-class Transformist_FileInfo extends SplFileInfo {
+class Transformist_FileInfo {
 
 	/**
-	 *	Mime type of the file.
+	 *	Internal file representation.
+	 *
+	 *	@var SplFileInfo
+	 */
+
+	protected $_Info = null;
+
+
+
+	/**
+	 *	MIME type of the file.
 	 *
 	 *	@var string
 	 */
 
-	protected $_mime = '';
+	protected $_type = '';
 
 
 
@@ -23,14 +33,26 @@ class Transformist_FileInfo extends SplFileInfo {
 	 *	Constructs a new FileInfo object.
 	 *
 	 *	@param string $fileName Path to the file.
-	 *	@param string $mimeType Mime type of the file to avoid auto detection.
+	 *	@param string $type MIME type of the file to avoid auto detection.
 	 */
 
-	public function __construct( $fileName, $mimeType = '' ) {
+	public function __construct( $fileName, $type = '' ) {
 
-		parent::__construct( $fileName );
+		$this->_Info = new SplFileInfo( $fileName );
+		$this->_type = $type;
+	}
 
-		$this->_mime = $mimeType;
+
+
+	/**
+	 *	Returns if the file exists.
+	 *
+	 *	@return boolean True if the file exists, otherwise false.
+	 */
+
+	public function exists( ) {
+
+		return $this->_Info->isFile( );
 	}
 
 
@@ -42,61 +64,139 @@ class Transformist_FileInfo extends SplFileInfo {
 	 *	@return string File name.
 	 */
 
-	public function getName( ) {
+	public function baseName( ) {
 
-		return $this->getBasename( '.' . $this->getExtension( ));
+		return $this->_Info->getBasename( '.' . $this->_Info->getExtension( ));
 	}
 
 
 
 	/**
-	 *	Returns the mime type of the file.
+	 *	Returns if the file is readable.
 	 *
-	 *	@return $mimeType
+	 *	@return boolean True if the file is readable, otherwise false.
+	 */
+
+	public function isReadable( ) {
+
+		return $this->_Info->isReadable( );
+	}
+
+
+
+	/**
+	 *	Returns if the file is writable.
+	 *
+	 *	@return boolean True if the file is writable, otherwise false.
+	 */
+
+	public function isWritable( ) {
+
+		return $this->_Info->isWritable( );
+	}
+
+
+
+	/**
+	 *	Returns if the directory containing the file is readable.
+	 *
+	 *	@return boolean True if the directory is readable, otherwise false.
+	 */
+
+	public function isDirReadable( ) {
+
+		return $this->_Info->getPathInfo( )->isReadable( );
+	}
+
+
+
+	/**
+	 *	Returns if the directory containing the file is writable.
+	 *
+	 *	@return boolean True if the directory is writable, otherwise false.
+	 */
+
+	public function isDirWritable( ) {
+
+		return $this->_Info->getPathInfo( )->isWritable( );
+	}
+
+
+
+	/**
+	 *	Returns the absolute path to the file.
+	 *
+	 *	@return string Path.
+	 */
+
+	public function path( ) {
+
+		return $this->_Info->getRealPath( );
+	}
+
+
+
+	/**
+	 *	Returns the absolute path to the directory containing the file.
+	 *
+	 *	@return string Path.
+	 */
+
+	public function dirPath( ) {
+
+		return $this->_Info->getPathInfo( )->getRealPath( );
+	}
+
+
+
+	/**
+	 *	Returns the MIME type of the file.
+	 *
+	 *	@return string MIME type.
 	 *	@throws Transformist_Exception
 	 */
 
-	public function getMimeType( ) {
+	public function type( ) {
 
-		if ( $this->_mime === '' ) {
-			$this->_detectMimeType( );
+		if ( $this->_type === '' ) {
+			$this->_detectType( );
 		}
 
-		return $this->_mime;
+		return $this->_type;
 	}
 
 
 
 	/**
-	 *	Attempts to detect the mime type of the file.
+	 *	Attempts to detect the MIME type of the file.
 	 *
 	 *	@throws Transformist_Exception
 	 */
 
-	protected function _detectMimeType( ) {
+	protected function _detectType( ) {
 
 		if ( !class_exists( 'finfo' )) {
 			throw new Transformist_Exception(
-				'Unable to detect mime type. Auto detection requires the FileInfo extension.'
+				'Unable to detect MIME type. Auto detection requires the FileInfo extension.'
 			);
 		}
 
 		$info = new finfo( FILEINFO_MIME );
-		$mime = $info->file( $this->getRealPath( ));
+		$type = $info->file( $this->path( ));
 
-		if ( $mime === false ) {
-			throw new Transformist_Exception( 'Unable to detect mime type.' );
+		if ( $type === false ) {
+			throw new Transformist_Exception( 'Unable to detect MIME type.' );
 		}
 
-		// finfo can return mime types in the form 'application/msword; charset=binary'.
+		// finfo can return MIME types in the form 'application/msword; charset=binary'.
 		// In this case, we keep the only part that matters to us: 'application/msword'.
 
-		$semicolon = strpos( $mime, ';' );
+		$semicolon = strpos( $type, ';' );
 
 		if ( $semicolon !== false ) {
-			$mime = array_shift( explode( ';', $mime ));
+			$type = array_shift( explode( ';', $type ));
 		}
 
-		$this->_mime = $mime;
+		$this->_type = $type;
 	}
 }

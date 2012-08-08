@@ -79,6 +79,6 @@ class Transformist_Document {
 
 	public function isConverted( ) {
 
-		return $this->_Output->isFile( );
+		return $this->_Output->exists( );
 	}
 }
