@@ -10,10 +10,22 @@
 abstract class Transformist_Converter {
 
 	/**
-	 *	@var array
+	 *	Accepted input type.
+	 *
+	 *	@var string
 	 */
 
-	protected $_conversions = array( );
+	protected $_inputType = '';
+
+
+
+	/**
+	 *	Supported output type.
+	 *
+	 *	@var string
+	 */
+
+	protected $_outputType = '';
 
 
 
@@ -41,31 +53,41 @@ abstract class Transformist_Converter {
 
 
 	/**
-	 *	Returns every conversion that can be done by the converter.
+	 *	Returns the type of files that the converter accepts.
 	 *
-	 *	@return array MIME types.
+	 *	@return string Type.
 	 */
 
-	public function availableConversions( ) {
+	public function inputType( ) {
 
-		return $this->_conversions;
+		return $this->_inputType;
 	}
 
 
 
 	/**
-	 *	Tests different things before and after actually converting the file.
+	 *	Returns the type of files that the converter produces.
+	 *
+	 *	@return string Type.
+	 */
+
+	public function outputType( ) {
+
+		return $this->_outputType;
+	}
+
+
+
+	/**
+	 *	Ensures that the converter can process the given document, and converts
+	 *	it if everything seems fine.
 	 *
 	 *	@param Transformist_Document $Document Document to convert.
 	 *	@throws Transformist_Exception
 	 */
 
 	public final function convert( $Document ) {
-		/*
-		if ( !static::canConvert( $Document )) {
-			return;
-		}
-		*/
+
 		if ( !$Document->input( )->isReadable( )) {
 			throw new Transformist_Exception(
 				'The file `%s` is not readable.',

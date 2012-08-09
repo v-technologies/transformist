@@ -9,25 +9,15 @@
  *	@author Félix Girault <felix@vtech.fr>
  */
 
-class Transformist_Converter_Office extends Transformist_Converter {
+abstract class Transformist_Converter_Office extends Transformist_Converter {
 
 	/**
+	 *	Name of the printer to be used for conversion.
 	 *
+	 *	@var string
 	 */
 
-	protected $_conversions = array(
-		'application/msword' => 'application/pdf'
-	);
-
-
-
-	/**
-	 *	Maps mime types with their corresponding formats.
-	 */
-
-	protected $_formats = array(
-		'application/pdf' => 'writer_pdf_Export'
-	);
+	protected $_printer = '';
 
 
 
@@ -38,6 +28,14 @@ class Transformist_Converter_Office extends Transformist_Converter {
 	 */
 
 	protected function _convert( $Document ) {
+
+		if (
+			empty( $this->_printer )
+			|| empty( $this->_inputType )
+			|| empty( $this->_outputType )
+		) {
+			return;
+		}
 
 		$Input =& $Document->input( );
 		$Output =& $Document->output( );
@@ -77,8 +75,8 @@ class Transformist_Converter_Office extends Transformist_Converter {
 				'--headless',
 				'--nodefault',
 				'--outdir' => $Output->dirPath( ),
-				'--convert-to' => $Output->extension( ) . ':' . $filter,
-				$this->_formats[ $Output->type( )]
+				'--convert-to' => $Output->extension( ) . ':' . $this->_printer,
+				$Input->path( )
 			)
 		);
 

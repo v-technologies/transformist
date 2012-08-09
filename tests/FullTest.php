@@ -54,7 +54,7 @@ class FullTest {
 
 
 	/**
-	 *	Searches recursively for every test class available in subdirectories.
+	 *	Searches recursively for every test case available in subdirectories.
 	 *	ie. each filename ending with Test.php.
 	 *
 	 *	@param array $package An array of package names.
