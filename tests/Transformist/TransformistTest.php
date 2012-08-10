@@ -1,13 +1,15 @@
 <?php
 
 if ( !defined( 'INCLUDED' )) {
-	require_once( dirname( dirname( __FILE__ )) . DIRECTORY_SEPARATOR . 'bootstrap.php' );
+	require_once dirname( dirname( __FILE__ )) . DIRECTORY_SEPARATOR . 'bootstrap.php';
 }
 
 
 
 /**
  *	Test case for Transformist.
+ *
+ *	@author Félix Girault <felix@vtech.fr>
  */
 
 class Transformist_TransformistTest extends PHPUnit_Framework_TestCase {

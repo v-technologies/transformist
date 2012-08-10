@@ -10,12 +10,15 @@ define( 'TEST_FILE_PATH', TRANSFORMIST_TEST_ROOT . 'files' . DS . 'input' . DS  
 
 /**
  *	Test case for FileInfo.
+ *
+ *	@author Félix Girault <felix@vtech.fr>
  */
 
 class Transformist_FileInfoTest extends PHPUnit_Framework_TestCase {
 
 	/**
-	 *
+	 *	This must be the path to an existing file for the test case to be
+	 *	executed properly.
 	 */
 
 	public $filePath = TEST_FILE_PATH;
@@ -35,9 +38,6 @@ class Transformist_FileInfoTest extends PHPUnit_Framework_TestCase {
 	 */
 
 	public function setUp( ) {
-
-		// we need the file to run the test
-		$this->assertTrue( file_exists( $this->filePath ));
 
 		$this->FileInfo = new Transformist_FileInfo( $this->filePath );
 	}
@@ -61,7 +61,7 @@ class Transformist_FileInfoTest extends PHPUnit_Framework_TestCase {
 
 	public function testBaseName( ) {
 
-		$this->assertEquals( $this->FileInfo->baseName( ), 'doc-sample' );
+		$this->assertEquals( 'doc-sample', $this->FileInfo->baseName( ));
 	}
 
 
@@ -116,7 +116,7 @@ class Transformist_FileInfoTest extends PHPUnit_Framework_TestCase {
 
 	public function testPath( ) {
 
-		$this->assertEquals( $this->FileInfo->path( ), $this->filePath );
+		$this->assertEquals( $this->filePath, $this->FileInfo->path( ));
 	}
 
 
@@ -127,7 +127,7 @@ class Transformist_FileInfoTest extends PHPUnit_Framework_TestCase {
 
 	public function testDirPath( ) {
 
-		$this->assertEquals( $this->FileInfo->dirPath( ), dirname( $this->filePath ));
+		$this->assertEquals( dirname( $this->filePath ), $this->FileInfo->dirPath( ));
 	}
 
 
@@ -153,7 +153,7 @@ class Transformist_FileInfoTest extends PHPUnit_Framework_TestCase {
 
 		$FileInfo = new Transformist_FileInfo( $this->filePath, 'application/pdf' );
 
-		$this->assertEquals( $FileInfo->type( ), 'application/pdf' );
-		$this->assertEquals( $this->FileInfo->type( ), 'application/msword' );
+		$this->assertEquals( 'application/pdf', $FileInfo->type( ));
+		$this->assertEquals( 'application/msword', $this->FileInfo->type( ));
 	}
 }

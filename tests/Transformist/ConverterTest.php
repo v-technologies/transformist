@@ -1,7 +1,7 @@
 <?php
 
 if ( !defined( 'INCLUDED' )) {
-	require_once( dirname( dirname( __FILE__ )) . DIRECTORY_SEPARATOR . 'bootstrap.php' );
+	require_once dirname( dirname( __FILE__ )) . DIRECTORY_SEPARATOR . 'bootstrap.php';
 }
 
 define( 'TEST_INPUT_TYPE', 'text/plain' );
@@ -44,6 +44,8 @@ class Transformist_ConcreteConverter extends Transformist_Converter {
 
 /**
  *	Test case for Converter.
+ *
+ *	@author Félix Girault <felix@vtech.fr>
  */
 
 class Transformist_ConverterTest extends PHPUnit_Framework_TestCase {
@@ -96,7 +98,7 @@ class Transformist_ConverterTest extends PHPUnit_Framework_TestCase {
 
 	public function testInputType( ) {
 
-		$this->assertEquals( $this->Converter->inputType( ), TEST_INPUT_TYPE );
+		$this->assertEquals( TEST_INPUT_TYPE, $this->Converter->inputType( ));
 	}
 
 
@@ -107,7 +109,7 @@ class Transformist_ConverterTest extends PHPUnit_Framework_TestCase {
 
 	public function testOutputType( ) {
 
-		$this->assertEquals( $this->Converter->outputType( ), TEST_OUTPUT_TYPE );
+		$this->assertEquals( TEST_OUTPUT_TYPE, $this->Converter->outputType( ));
 	}
 
 

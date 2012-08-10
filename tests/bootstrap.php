@@ -22,7 +22,7 @@ if ( !defined( 'INCLUDED' )) {
  *	Loads Transformist boostrap.
  */
 
-require_once( dirname( dirname( __FILE__ )) . DS . 'lib' . DS . 'bootstrap.php' );
+require_once dirname( dirname( __FILE__ )) . DS . 'lib' . DS . 'bootstrap.php';
 
 
 
@@ -32,3 +32,7 @@ require_once( dirname( dirname( __FILE__ )) . DS . 'lib' . DS . 'bootstrap.php' 
 
 $ClassLoader = new Transformist_ClassLoader( TRANSFORMIST_TEST_ROOT );
 $ClassLoader->register( );
+
+// Composer
+
+require_once '..' . DS . 'vendor' . DS . 'autoload.php';
