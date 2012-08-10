@@ -10,9 +10,9 @@
 class Transformist_Package {
 
 	/**
-	 *	Internal directory representation.
+	 *	Root path to the package.
 	 *
-	 *	@var SplFileInfo
+	 *	@var string
 	 */
 
 	protected $_path = null;
@@ -20,7 +20,9 @@ class Transformist_Package {
 
 
 	/**
+	 *	Packages separator.
 	 *
+	 *	@var string
 	 */
 
 	protected $_separator = '_';
@@ -28,10 +30,9 @@ class Transformist_Package {
 
 
 	/**
-	 *	Constructs a document given its input and output file infos.
+	 *	Constructs a package located at the given path.
 	 *
-	 *	@param Transformist_FileInfo $Input Input file info.
-	 *	@param Transformist_FileInfo $Output Output file info.
+	 *	@param string $path Root path to the package.
 	 */
 
 	public function __construct( $path ) {
@@ -44,14 +45,14 @@ class Transformist_Package {
 
 
 	/**
-	 *	Returns the absolute path to the directory.
+	 *	Returns the root path to the package.
 	 *
 	 *	@return string Path.
 	 */
 
 	public function path( ) {
 
-		return $this->_Info->getRealPath( );
+		return $this->_path( );
 	}
 
 
