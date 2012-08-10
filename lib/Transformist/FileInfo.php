@@ -150,6 +150,19 @@ class Transformist_FileInfo {
 
 
 	/**
+	 *	Returns the internal SplFileInfo object.
+	 *
+	 *	@return SplFileInfo Internal file info.
+	 */
+
+	public function splFileInfo( ) {
+
+		return $this->_Info;
+	}
+
+
+
+	/**
 	 *	Returns the MIME type of the file.
 	 *
 	 *	@return string MIME type.

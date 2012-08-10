@@ -20,6 +20,20 @@ class Transformist_Transformist {
 
 
 	/**
+	 *	Returns an array of all available conversions.
+	 *
+	 *	@param array Available conversions.
+	 */
+
+	public static function availableConversions( ) {
+
+		$_this = self::_instance( );
+		return $_this->_ConverterCollection->availableConversions( );
+	}
+
+
+
+	/**
 	 *	Converts the document to a format matching the given mime type.
 	 *
 	 *	@param Transformist_Document $Document The document to convert.
@@ -46,7 +60,7 @@ class Transformist_Transformist {
 		static $Instance = null;
 
 		if ( $Instance === null ) {
-			$Instance = new Transformist_Transformist( );
+			$Instance = new self( );
 		}
 
 		return $Instance;

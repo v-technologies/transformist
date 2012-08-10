@@ -70,6 +70,25 @@ class Transformist_ConverterCollection {
 
 
 	/**
+	 *	Returns an array of all available conversions.
+	 *
+	 *	@param array Available conversions.
+	 */
+
+	public function availableConversions( ) {
+
+		$conversions = array( );
+
+		foreach ( $this->_map as $input => $outputs ) {
+			$conversions[ $input ] = array_keys( $outputs );
+		}
+
+		return $conversions;
+	}
+
+
+
+	/**
 	 *	Checks if the collection knows a way convert the given document.
 	 *
 	 *	@param Transformist_Document $Document Document to convert.
@@ -155,12 +174,10 @@ class Transformist_ConverterCollection {
 
 	protected function _loadConverters( ) {
 
-		$Package = new Transformist_Package( TRANSFORMIST_ROOT . 'Transformist' . DS . 'Converter' );
-		$files = $Package->classes( true );
+		$Package = new Transformist_Package( TRANSFORMIST_ROOT );
+		$classes = $Package->classes( array( 'Transformist', 'Converter' ), true );
 
 		foreach ( $classes as $className ) {
-			$className = 'Transformist_Converter_' . $className;
-
 			if (	class_exists( $className )) {
 				$Reflection = new ReflectionClass( $className );
 

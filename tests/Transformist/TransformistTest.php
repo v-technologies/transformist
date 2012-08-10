@@ -1,6 +1,8 @@
 <?php
 
-require_once( dirname( dirname( __FILE__ )) . DIRECTORY_SEPARATOR . 'bootstrap.php' );
+if ( !defined( 'INCLUDED' )) {
+	require_once( dirname( dirname( __FILE__ )) . DIRECTORY_SEPARATOR . 'bootstrap.php' );
+}
 
 
 
@@ -14,9 +16,40 @@ class Transformist_TransformistTest extends PHPUnit_Framework_TestCase {
 	 *
 	 */
 
-	public function testConstruct( ) {
+	public $ConverterCollection = null;
 
-		$Transformist = new Transformist_Transformist( '' );
-		$this->assertTrue( $Transformist instanceof Transformist_Transformist );
+
+
+	/**
+	 *
+	 */
+
+	public function setUp( ) {
+
+		$this->ConverterCollection = new Transformist_ConverterCollection( );
+	}
+
+
+
+	/**
+	 *
+	 */
+
+	public function testAvailableConversions( ) {
+
+		$this->assertEquals(
+			Transformist_Transformist::availableConversions( ),
+			$this->ConverterCollection->availableConversions( )
+		);
+	}
+
+
+
+	/**
+	 *
+	 */
+
+	public function testConvert( ) {
+
 	}
 }

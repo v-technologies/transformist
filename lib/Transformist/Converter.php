@@ -38,15 +38,9 @@ abstract class Transformist_Converter {
 
 	public function canConvert( $Document ) {
 
-		$inputType = $Document->input( )->type( );
-
-		if ( !isset( $this->_conversions[ $inputType ])) {
-			return false;
-		}
-
-		return in_array(
-			$Document->output( )->type( ),
-			$this->_conversions[ $inputType ]
+		return (
+			$Document->input( )->type( ) == $this->_inputType
+			&& $Document->output( )->type( ) == $this->_outputType
 		);
 	}
 

@@ -37,7 +37,7 @@ class Transformist_Package {
 	public function __construct( $path ) {
 
 		$this->_path = is_dir( $path )
-			? $path
+			? rtrim( $path, DS )
 			: dirname( $path );
 	}
 
@@ -60,7 +60,8 @@ class Transformist_Package {
 	 *	Scans the directory and returns the entries it contains.
 	 *	Note: This method doesn't deal with symlinks.
 	 *
-	 *	@param
+	 *	@param string $packages Sub packages in which to search for, relatively
+	 *		to the base package path.
 	 *	@param boolean $recursive Whether or not to search recursively.
 	 *	@return array An array of directory and/or file paths.
 	 */
@@ -70,15 +71,15 @@ class Transformist_Package {
 		$classes = array( );
 		$searchPath = empty( $packages )
 			? $this->_path
-			: $this->_path . DIRECTORY_SEPARATOR . $this->_makePath( $packages );
+			: $this->_path . DS . $this->_makePath( $packages, DS );
 
 		$entries = scandir( $searchPath );
 
 		if ( is_array( $entries )) {
 			foreach ( $entries as $entry ) {
-				$path = $this->_path . DIRECTORY_SEPARATOR . $entry;
+				$path = $searchPath . DS . $entry;
 				$parts = $packages;
-				$parts[] = $entry;
+				$parts[] = basename( $entry, '.php' );
 
 				if (
 					$recursive
@@ -107,7 +108,7 @@ class Transformist_Package {
 	 *	@return string Path.
 	 */
 
-	protected function _makePath( $parts, $separator = DIRECTORY_SEPARATOR ) {
+	protected function _makePath( $parts, $separator ) {
 
 		if ( empty( $parts )) {
 			return '';

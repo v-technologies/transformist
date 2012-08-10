@@ -15,6 +15,26 @@ if ( !defined( 'TRANSFORMIST_ROOT')) {
 
 
 /**
+ *
+ */
+
+function dump( $var ) {
+
+	echo '<pre>';
+	var_dump( $var );
+	echo '</pre>';
+}
+
+function export( $var ) {
+
+	echo '<pre>';
+	var_export( $var );
+	echo '</pre>';
+}
+
+
+
+/**
  *	Autoload
  */
 

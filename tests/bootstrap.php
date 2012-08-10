@@ -12,6 +12,10 @@ if ( !defined( 'TRANSFORMIST_TEST_ROOT')) {
 	define( 'TRANSFORMIST_TEST_ROOT', dirname( __FILE__ ) . DS );
 }
 
+if ( !defined( 'INCLUDED' )) {
+	define( 'INCLUDED', true );
+}
+
 
 
 /**
