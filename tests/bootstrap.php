@@ -12,8 +12,8 @@ if ( !defined( 'TRANSFORMIST_TEST_ROOT')) {
 	define( 'TRANSFORMIST_TEST_ROOT', dirname( __FILE__ ) . DS );
 }
 
-if ( !defined( 'INCLUDED' )) {
-	define( 'INCLUDED', true );
+if ( !defined( 'TRANSFORMIST_BOOTSTRAPPED' )) {
+	define( 'TRANSFORMIST_BOOTSTRAPPED', true );
 }
 
 
@@ -35,4 +35,4 @@ $ClassLoader->register( );
 
 // Composer
 
-require_once '..' . DS . 'vendor' . DS . 'autoload.php';
+require_once dirname( dirname( __FILE__ )) . DS . 'vendor' . DS . 'autoload.php';

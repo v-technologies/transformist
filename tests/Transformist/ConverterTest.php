@@ -1,6 +1,6 @@
 <?php
 
-if ( !defined( 'INCLUDED' )) {
+if ( !defined( 'TRANSFORMIST_BOOTSTRAPPED' )) {
 	require_once dirname( dirname( __FILE__ )) . DIRECTORY_SEPARATOR . 'bootstrap.php';
 }
 

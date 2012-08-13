@@ -1,6 +1,6 @@
 <?php
 
-if ( !defined( 'INCLUDED' )) {
+if ( !defined( 'TRANSFORMIST_BOOTSTRAPPED' )) {
 	require_once dirname( dirname( __FILE__ )) . DIRECTORY_SEPARATOR . 'bootstrap.php';
 }
 
@@ -40,8 +40,8 @@ class Transformist_TransformistTest extends PHPUnit_Framework_TestCase {
 	public function testAvailableConversions( ) {
 
 		$this->assertEquals(
-			Transformist_Transformist::availableConversions( ),
-			$this->ConverterCollection->availableConversions( )
+			$this->ConverterCollection->availableConversions( ),
+			Transformist_Transformist::availableConversions( )
 		);
 	}
 
@@ -53,5 +53,14 @@ class Transformist_TransformistTest extends PHPUnit_Framework_TestCase {
 
 	public function testConvert( ) {
 
+		$Document = new Transformist_Document(
+			new Transformist_FileInfo( 'input.txt', 'text/plain' ),
+			new Transformist_FileInfo( 'output.doc', 'application/msword' )
+		);
+
+		$this->assertEquals(
+			$this->ConverterCollection->convert( $Document ),
+			Transformist_Transformist::convert( $Document )
+		);
 	}
 }

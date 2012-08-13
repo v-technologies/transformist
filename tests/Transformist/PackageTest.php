@@ -1,6 +1,6 @@
 <?php
 
-if ( !defined( 'INCLUDED' )) {
+if ( !defined( 'TRANSFORMIST_BOOTSTRAPPED' )) {
 	require_once dirname( dirname( __FILE__ )) . DIRECTORY_SEPARATOR . 'bootstrap.php';
 }
 
@@ -91,12 +91,16 @@ class Transformist_PackageTest extends PHPUnit_Framework_TestCase {
 
 		$Package = new Transformist_Package( vfsStream::url( 'root' ), '_' );
 
+		// Simple search in the root package.
+
 		$this->assertEquals(
 			array(
 				'Class'
 			),
 			$Package->classes( )
 		);
+
+		// Recursive search in the root package.
 
 		$this->assertEquals(
 			array(
@@ -107,12 +111,16 @@ class Transformist_PackageTest extends PHPUnit_Framework_TestCase {
 			$Package->classes( array( ), true )
 		);
 
+		// Simple search in a subpackage.
+
 		$this->assertEquals(
 			array(
 				'PackageFoo_ClassFoo'
 			),
 			$Package->classes( array( 'PackageFoo' ))
 		);
+
+		// Recursive search in a subpackage.
 
 		$this->assertEquals(
 			array(
