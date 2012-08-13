@@ -159,5 +159,39 @@ class Transformist_FileInfoTest extends PHPUnit_Framework_TestCase {
 
 		$this->assertEquals( 'application/pdf', $FileInfo->type( ));
 		$this->assertEquals( 'application/msword', $this->FileInfo->type( ));
+
+		// we can cover more code with runkit
+
+		if ( extension_loaded( 'runkit' )) {
+
+			// from now on class_exists( ) will always return false
+			runkit_function_rename( 'class_exists', '__original_class_exists' );
+			runkit_function_add( 'class_exists', '$className', 'return false;' );
+
+			$FileInfo = new Transformist_FileInfo( $this->filePath );
+			$raisedException = false;
+
+			try {
+				$FileInfo->type( );
+			} catch ( Transformist_Exception $e ) {
+				$raisedException = true;
+			}
+
+			$this->assertTrue( $raisedException );
+
+			// resetting original class_exists function
+			runkit_function_remove( 'class_exists' );
+			runkit_function_rename( '__original_class_exists', 'class_exists' );
+
+			/*
+			// from now on finfo::file( ) will always return false
+			runkit_method_rename( 'finfo', 'file', '__original_file' );
+			runkit_method_add( 'finfo', 'file', '$fileName', 'return false;' );
+
+			// resetting original finfo::file method
+			runkit_method_remove( 'finfo', 'file' );
+			runkit_method_rename( 'finfo', '__original_file', 'file' );
+			*/
+		}
 	}
 }

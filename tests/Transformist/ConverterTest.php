@@ -36,9 +36,8 @@ class Transformist_ConcreteConverter extends Transformist_Converter {
 	 *
 	 */
 
-	protected function _convert( $Document ) {
+	protected function _convert( $Document ) { }
 
-	}
 }
 
 
@@ -84,8 +83,8 @@ class Transformist_ConverterTest extends PHPUnit_Framework_TestCase {
 		$this->assertTrue( $this->Converter->canConvert( $Document ));
 
 		$OtherDocument = new Transformist_Document(
-			new Transformist_FileInfo( 'input.test', 'unknown' ),
-			new Transformist_FileInfo( 'output.test', 'unknown' )
+			new Transformist_FileInfo( 'input.test', 'invalid' ),
+			new Transformist_FileInfo( 'output.test', 'invalid' )
 		);
 
 		$this->assertFalse( $this->Converter->canConvert( $OtherDocument ));
@@ -120,6 +119,11 @@ class Transformist_ConverterTest extends PHPUnit_Framework_TestCase {
 	 */
 
 	public function testConvert( ) {
+
+		$Document = new Transformist_Document(
+			new Transformist_FileInfo( 'unknown', 'invalid' ),
+			new Transformist_FileInfo( 'unknown', 'invalid' )
+		);
 
 
 	}
