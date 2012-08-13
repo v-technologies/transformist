@@ -1,10 +1,14 @@
 <?php
 
 if ( !defined( 'TRANSFORMIST_BOOTSTRAPPED' )) {
-	require_once( dirname( dirname( __FILE__ )) . DIRECTORY_SEPARATOR . 'bootstrap.php' );
+	require_once dirname( dirname( __FILE__ ))
+		. DIRECTORY_SEPARATOR . 'bootstrap.php';
 }
 
-define( 'TEST_FILE_PATH', TRANSFORMIST_TEST_ROOT . 'files' . DS . 'input' . DS  . 'doc-sample.doc' );
+define(
+	'TEST_FILE_PATH',
+	TRANSFORMIST_TEST_ROOT . 'files' . DS . 'input' . DS  . 'doc-sample.doc'
+);
 
 
 
