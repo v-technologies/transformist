@@ -12,6 +12,10 @@ if ( !defined( 'TRANSFORMIST_ROOT')) {
 	define( 'TRANSFORMIST_ROOT', dirname( __FILE__ ) . DS );
 }
 
+if ( !defined( 'TRANSFORMIST_BOOTSTRAPPED' )) {
+	define( 'TRANSFORMIST_BOOTSTRAPPED', true );
+}
+
 
 
 /**
