@@ -131,7 +131,8 @@ class Transformist_FileInfo {
 
 	public function path( ) {
 
-		return $this->_Info->getRealPath( );
+		return $this->_Info->getPath( )
+			. DIRECTORY_SEPARATOR . $this->_Info->getFilename( );
 	}
 
 
@@ -144,7 +145,10 @@ class Transformist_FileInfo {
 
 	public function dirPath( ) {
 
-		return $this->_Info->getPathInfo( )->getRealPath( );
+		$PathInfo = $this->_Info->getPathInfo( );
+
+		return $PathInfo->getPath( )
+			. DIRECTORY_SEPARATOR . $PathInfo->getBasename( );
 	}
 
 
@@ -195,7 +199,7 @@ class Transformist_FileInfo {
 		}
 
 		$info = new finfo( FILEINFO_MIME );
-		$type = $info->file( $this->path( ));
+		$type = @$info->file( $this->path( ));
 
 		if ( $type === false ) {
 			throw new Transformist_Exception( 'Unable to detect MIME type.' );

@@ -1,23 +1,13 @@
 <?php
 
 /**
- *	An interface to execute commands.
+ *	A simplistic interface to execute commands.
  *
  *	@package Transformist
  *	@author Félix Girault <felix@vtech.fr>
  */
 
 class Transformist_Command {
-
-	/**
-	 *	An array of all command that are executed.
-	 *
-	 *	@var array
-	 */
-
-	protected static $_commands = array( );
-
-
 
 	/**
 	 *	Constructor.
@@ -27,9 +17,17 @@ class Transformist_Command {
 	 *	@param string $assignment An assignment character that will be used to
 	 *		associate long options and their values. It is generally a space
 	 *		or an equals sign.
+	 *	@param array $output If $output is provided, it will be filled with
+	 *		 the generated command, and every line of output from the command.
+	 *	@return integer Return status of the executed command
 	 */
 
-	public static function execute( $name, $options = array( ), $assignment = ' ' ) {
+	public static function execute(
+		$name,
+		$options = array( ),
+		$assignment = ' ',
+		&$output = array( )
+	) {
 
 		$command = $name;
 
@@ -44,39 +42,9 @@ class Transformist_Command {
 			$command .= $value;
 		}
 
-		self::$_commands[] = $command;
-		return @exec( $command );
-	}
+		$output[] = $command;
 
-
-
-	/**
-	 *	Returns all the executed commands.
-	 *
-	 *	@return array
-	 */
-
-	public static function executed( ) {
-
-		return self::$_commands;
-	}
-
-
-
-	/**
-	 *	Returns the last executed command.
-	 *
-	 *	@return string|false The last command, or false if none were already
-	 *		executed.
-	 */
-
-	public static function last( ) {
-
-		if ( empty( self::$_commands )) {
-			return false;
-		}
-
-		$last = count( self::$_commands ) - 1;
-		return self::$_commands[ $last ];
+		exec( $command, $output, $status );
+		return $status;
 	}
 }
