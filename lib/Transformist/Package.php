@@ -15,7 +15,7 @@ class Transformist_Package {
 	 *	@var string
 	 */
 
-	protected $_path = null;
+	protected $_path = '';
 
 
 
@@ -38,8 +38,11 @@ class Transformist_Package {
 
 	public function __construct( $path, $separator = '_' ) {
 
-		$this->setPath( $path );
-		$this->setSeparator( $separator );
+		$this->_path = is_dir( $path )
+			? rtrim( $path, DS )
+			: dirname( $path );
+
+		$this->_separator = $separator;
 	}
 
 
@@ -58,21 +61,6 @@ class Transformist_Package {
 
 
 	/**
-	 *	Sets the root path to the package.
-	 *
-	 *	@param string $path Path.
-	 */
-
-	public function setPath( $path ) {
-
-		$this->_path = is_dir( $path )
-			? rtrim( $path, DS )
-			: dirname( $path );
-	}
-
-
-
-	/**
 	 *	Returns the package separator.
 	 *
 	 *	@return string Package separator.
@@ -81,19 +69,6 @@ class Transformist_Package {
 	public function separator( ) {
 
 		return $this->_separator;
-	}
-
-
-
-	/**
-	 *	Sets the package separator.
-	 *
-	 *	@param string $separator Package separator.
-	 */
-
-	public function setSeparator( $separator ) {
-
-		$this->_separator = $separator;
 	}
 
 

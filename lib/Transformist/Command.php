@@ -10,24 +10,39 @@
 class Transformist_Command {
 
 	/**
-	 *	Constructor.
+	 *	Holds informations about executed commands.
+	 *
+	 *	```
+	 *		array(
+	 *			array( ... ),
+	 *			array( ... ),
+	 *			array(
+	 *				'command' => 'ls -l',
+	 *				'output' => array( ... ),
+	 *				'status' => 0
+	 *			)
+	 *		)
+	 *	```
+	 *
+	 *	@var array
+	 */
+
+	protected static $_executed = array( );
+
+
+
+	/**
+	 *	Executes a command with the given options.
 	 *
 	 *	@param string $name Command name.
 	 *	@param array $options Command options.
 	 *	@param string $assignment An assignment character that will be used to
 	 *		associate long options and their values. It is generally a space
 	 *		or an equals sign.
-	 *	@param array $output If $output is provided, it will be filled with
-	 *		 the generated command, and every line of output from the command.
-	 *	@return integer Return status of the executed command
+	 *	@return array Informations about the executed command.
 	 */
 
-	public static function execute(
-		$name,
-		$options = array( ),
-		$assignment = ' ',
-		&$output = array( )
-	) {
+	public static function execute( $name, $options = array( ), $assignment = ' ' ) {
 
 		$command = $name;
 
@@ -36,15 +51,46 @@ class Transformist_Command {
 
 			if ( is_string( $key )) {
 				$command .= $key . $assignment;
-				$value = escapeshellarg( $value );
 			}
 
 			$command .= $value;
 		}
 
-		$output[] = $command;
+		@exec( $command, $output, $status );
 
-		exec( $command, $output, $status );
-		return $status;
+		$informations = compact( 'command', 'output', 'status' );
+		self::$_executed[] = $informations;
+
+		return $informations;
+	}
+
+
+
+	/**
+	 *	Returns informations about all executed commands.
+	 *
+	 *	@return array Informations.
+	 */
+
+	public static function executed( ) {
+
+		return self::$_executed;
+	}
+
+
+
+	/**
+	 *	Returns informations about the last executed command.
+	 *
+	 *	@return array Informations.
+	 */
+
+	public function last( ) {
+
+		$last = count( self::$_executed ) - 1;
+
+		return ( $last < 0 )
+			? array( )
+			: self::$_executed[ $last ];
 	}
 }

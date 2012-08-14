@@ -29,12 +29,10 @@ abstract class Transformist_Converter_Office extends Transformist_Converter {
 
 	protected function _convert( $Document ) {
 
-		if (
-			empty( $this->_printer )
-			|| empty( $this->_inputType )
-			|| empty( $this->_outputType )
-		) {
-			return;
+		if ( empty( $this->_printer )) {
+			throw new Transformist_Exception(
+				'$_printer, $_inputType and $_outputType must be defined'
+			);
 		}
 
 		$Input =& $Document->input( );
@@ -60,9 +58,7 @@ abstract class Transformist_Converter_Office extends Transformist_Converter {
 			if ( symlink( $inputPath, $linkPath )) {
 				$inputPath = $linkPath;
 			} else {
-				// avoids deleting the real file after the conversion if the
-				// symlink couldn't be created.
-				$workaround = false;
+				return;
 			}
 		}
 
@@ -74,9 +70,9 @@ abstract class Transformist_Converter_Office extends Transformist_Converter {
 			array(
 				'--headless',
 				'--nodefault',
-				'--outdir' => $Output->dirPath( ),
 				'--convert-to' => $Output->extension( ) . ':' . $this->_printer,
-				$Input->path( )
+				'--outdir' => $Output->dirPath( ),
+				$inputPath
 			)
 		);
 

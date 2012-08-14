@@ -70,6 +70,107 @@ class Transformist_ConverterCollection {
 
 
 	/**
+	 *	Lists and loads available converters.
+	 */
+
+	protected function _loadConverters( ) {
+
+		$Package = new Transformist_Package( TRANSFORMIST_ROOT );
+		$classes = $Package->classes( array( 'Transformist', 'Converter' ), true );
+
+		foreach ( $classes as $className ) {
+			if ( class_exists( $className )) {
+				$Reflection = new ReflectionClass( $className );
+
+				if ( !$Reflection->isAbstract( )) {
+					$this->_converters[ $className ] = new $className( );
+				}
+			}
+		}
+	}
+
+
+
+	/**
+	 *	Indexes all converters for their later usage to be easier.
+	 */
+
+	protected function _mapConverters( ) {
+
+		foreach ( $this->_converters as $name => $Converter ) {
+			$input = $Converter->inputType( );
+			$output = $Converter->outputType( );
+
+			if ( !isset( $this->_map[ $input ])) {
+				$this->_map[ $input ] = array( );
+			}
+
+			if ( isset( $this->_map[ $input ][ $output ])) {
+				trigger_error(
+					sprintf(
+						'Two converters found for conversions from `%s` to `%s`. ' .
+						'Using `%s` instead of `%s`.',
+						$Converter->inputType( ),
+						$Converter->outputType( ),
+						$name,
+						array_shift( $this->_map[ $input ][ $output ])
+					),
+					E_USER_NOTICE
+				);
+			}
+
+			$this->_map[ $input ][ $output ] = array( $name );
+		}
+
+		if ( $this->_deep !== false ) {
+			$this->_mapConvertersDeeply( );
+		}
+	}
+
+
+
+	/**
+	 *	Finds all possible converters combinations to provide a larger panel
+	 *	of possible conversions.
+	 */
+
+	protected function _mapConvertersDeeply( ) {
+
+		$limit = intval( $this->_deep ) + 1;
+
+		do {
+			$modified = false;
+
+			foreach ( $this->_map as $input => $outputs ) {
+				foreach ( $outputs as $output => $converters ) {
+					if ( !isset( $this->_map[ $output ])) {
+						continue;
+					}
+
+					foreach ( $this->_map[ $output ] as $chainableOutput => $chainableConverters ) {
+						if ( isset( $outputs[ $chainableOutput ])) {
+							continue;
+						}
+
+						$total = count( $converters ) + count( $chainableConverters );
+
+						if (( $this->_deep === true ) || ( $total <= $limit )) {
+							$this->_map[ $input ][ $chainableOutput ] = array_merge(
+								$converters,
+								$chainableConverters
+							);
+
+							$modified = true;
+						}
+					}
+				}
+			}
+		} while ( $modified );
+	}
+
+
+
+	/**
 	 *	Returns an array of all available conversions.
 	 *
 	 *	@param array Available conversions.
@@ -164,106 +265,5 @@ class Transformist_ConverterCollection {
 		}
 
 		return $chain;
-	}
-
-
-
-	/**
-	 *	Lists and loads available converters.
-	 */
-
-	protected function _loadConverters( ) {
-
-		$Package = new Transformist_Package( TRANSFORMIST_ROOT );
-		$classes = $Package->classes( array( 'Transformist', 'Converter' ), true );
-
-		foreach ( $classes as $className ) {
-			if (	class_exists( $className )) {
-				$Reflection = new ReflectionClass( $className );
-
-				if ( !$Reflection->isAbstract( )) {
-					$this->_converters[ $className ] = new $className( );
-				}
-			}
-		}
-	}
-
-
-
-	/**
-	 *	Indexes all converters for their later usage to be easier.
-	 */
-
-	protected function _mapConverters( ) {
-
-		foreach ( $this->_converters as $name => $Converter ) {
-			$input = $Converter->inputType( );
-			$output = $Converter->outputType( );
-
-			if ( !isset( $this->_map[ $input ])) {
-				$this->_map[ $input ] = array( );
-			}
-
-			if ( isset( $this->_map[ $input ][ $output ])) {
-				trigger_error(
-					sprintf(
-						'Two converters found for conversions from `%s` to `%s`. ' .
-						'Using `%s` instead of `%s`.',
-						$Converter->inputType( ),
-						$Converter->outputType( ),
-						$name,
-						array_shift( $this->_map[ $input ][ $output ])
-					),
-					E_USER_NOTICE
-				);
-			}
-
-			$this->_map[ $input ][ $output ] = array( $name );
-		}
-
-		if ( $this->_deep !== false ) {
-			$this->_mapConvertersDeeply( );
-		}
-	}
-
-
-
-	/**
-	 *	Finds all possible converters combinations to provide a larger panel
-	 *	of possible conversions.
-	 */
-
-	protected function _mapConvertersDeeply( ) {
-
-		$limit = intval( $this->_deep ) + 1;
-
-		do {
-			$modified = false;
-
-			foreach ( $this->_map as $input => $outputs ) {
-				foreach ( $outputs as $output => $converters ) {
-					if ( !isset( $this->_map[ $output ])) {
-						continue;
-					}
-
-					foreach ( $this->_map[ $output ] as $chainableOutput => $chainableConverters ) {
-						if ( isset( $outputs[ $chainableOutput ])) {
-							continue;
-						}
-
-						$total = count( $converters ) + count( $chainableConverters );
-
-						if (( $this->_deep === true ) || ( $total <= $limit )) {
-							$this->_map[ $input ][ $chainableOutput ] = array_merge(
-								$converters,
-								$chainableConverters
-							);
-
-							$modified = true;
-						}
-					}
-				}
-			}
-		} while ( $modified );
 	}
 }

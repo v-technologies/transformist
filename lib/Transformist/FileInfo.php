@@ -66,7 +66,20 @@ class Transformist_FileInfo {
 
 	public function baseName( ) {
 
-		return $this->_Info->getBasename( '.' . $this->_Info->getExtension( ));
+		return $this->_Info->getBasename( '.' . $this->extension( ));
+	}
+
+
+
+	/**
+	 *	Returns the file extension.
+	 *
+	 *	@return string Extension.
+	 */
+
+	public function extension( ) {
+
+		return $this->_Info->getExtension( );
 	}
 
 
