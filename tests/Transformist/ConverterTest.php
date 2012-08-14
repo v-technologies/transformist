@@ -13,38 +13,6 @@ use org\bovigo\vfs\vfsStream;
 
 
 /**
- *
- */
-
-class Transformist_ConcreteConverter extends Transformist_Converter {
-
-	/**
-	 *
-	 */
-
-	protected $_inputType = CONVERTER_INPUT_TYPE;
-
-
-
-	/**
-	 *
-	 */
-
-	protected $_outputType = CONVERTER_OUTPUT_TYPE;
-
-
-
-	/**
-	 *
-	 */
-
-	protected function _convert( $Document ) { }
-
-}
-
-
-
-/**
  *	Test case for Converter.
  *
  *	@author Félix Girault <felix@vtech.fr>
@@ -97,6 +65,15 @@ class Transformist_ConverterTest extends PHPUnit_Framework_TestCase {
 		);
 
 		$this->assertTrue( $this->Converter->canConvert( $Document ));
+	}
+
+
+
+	/**
+	 *
+	 */
+
+	public function testCanConvertWithUnknownTypes( ) {
 
 		$OtherDocument = new Transformist_Document(
 			new Transformist_FileInfo( 'foo', 'unknown' ),
@@ -161,4 +138,36 @@ class Transformist_ConverterTest extends PHPUnit_Framework_TestCase {
 		$this->setExpectedException( 'Transformist_Exception' );
 		$this->Converter->convert( $Document );
 	}
+}
+
+
+
+/**
+ *
+ */
+
+class Transformist_ConcreteConverter extends Transformist_Converter {
+
+	/**
+	 *
+	 */
+
+	protected $_inputType = CONVERTER_INPUT_TYPE;
+
+
+
+	/**
+	 *
+	 */
+
+	protected $_outputType = CONVERTER_OUTPUT_TYPE;
+
+
+
+	/**
+	 *
+	 */
+
+	protected function _convert( $Document ) { }
+
 }

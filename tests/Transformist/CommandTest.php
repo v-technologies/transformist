@@ -25,16 +25,14 @@ class Transformist_CommandTest extends PHPUnit_Framework_TestCase {
 		array(
 			'name' => 'ls',
 			'options' => array( ),
-			'assignment' => ' ',
-			'expected' => 'ls'
+			'assignment' => ' '
 		),
 
 		// command with short options
 		array(
 			'name' => 'ls',
 			'options' => array( '-a', '-b' ),
-			'assignment' => ' ',
-			'expected' => 'ls -a -b'
+			'assignment' => ' '
 		),
 
 		// command with long options
@@ -44,8 +42,7 @@ class Transformist_CommandTest extends PHPUnit_Framework_TestCase {
 				'--color' => 'never',
 				'--width' => '80'
 			),
-			'assignment' => ' ',
-			'expected' => 'ls --color \'never\' --width \'80\''
+			'assignment' => ' '
 		),
 
 		// command with mixed options and a custom assignment character
@@ -55,8 +52,36 @@ class Transformist_CommandTest extends PHPUnit_Framework_TestCase {
 				'-a',
 				'--width' => '80'
 			),
-			'assignment' => '=',
-			'expected' => 'ls -a --width=\'80\''
+			'assignment' => '='
+		)
+	);
+
+
+
+	/**
+	 *
+	 */
+
+	public $results = array(
+		array(
+			'command' => 'ls',
+			'output' => array( ),
+			'status' => 0
+		),
+		array(
+			'command' => 'ls -a -b',
+			'output' => array( ),
+			'status' => 0
+		),
+		array(
+			'command' => 'ls --color never --width 80',
+			'output' => array( ),
+			'status' => 0
+		),
+		array(
+			'command' => 'ls -a --width=80',
+			'output' => array( ),
+			'status' => 0
 		)
 	);
 
@@ -71,19 +96,42 @@ class Transformist_CommandTest extends PHPUnit_Framework_TestCase {
 		if ( Runkit::isEnabled( )) {
 			Runkit::reimplement(
 				'exec',
-				'$command, &$output, &$return',
-				'$output = array( $command, \'line 1\', \'line 2\' ); $return = 12;'
+				'$command, &$output, &$status',
+				'$output = array( ); $status = 0;'
 			);
 
-			foreach ( $this->commands as $command ) {
+			foreach ( $this->commands as $index => $command ) {
 				extract( $command );
 
-				$status = Transformist_Command::execute( $name, $options, $assignment, $output );
-				$this->assertEquals( 12, $status );
-				$this->assertEquals( array( $expected, 'line 1', 'line 2' ), $output );
+				$this->assertEquals(
+					$this->results[ $index ],
+					Transformist_Command::execute( $name, $options, $assignment )
+				);
 			}
 
 			Runkit::reset( 'exec' );
 		}
+	}
+
+
+
+	/**
+	 *
+	 */
+
+	public function testExecuted( ) {
+
+		$this->assertEquals( $this->results, Transformist_Command::executed( ));
+	}
+
+
+
+	/**
+	 *
+	 */
+
+	public function testLast( ) {
+
+		$this->assertEquals( array_pop( $this->results ), Transformist_Command::last( ));
 	}
 }

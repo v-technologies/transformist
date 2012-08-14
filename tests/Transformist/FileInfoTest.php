@@ -184,37 +184,60 @@ class Transformist_FileInfoTest extends PHPUnit_Framework_TestCase {
 	public function testType( ) {
 
 		$this->assertEquals( 'application/xml', $this->XmlFileInfo->type( ));
+	}
+
+
+
+	/**
+	 *
+	 */
+
+	public function testForcedType( ) {
 
 		$FileInfo = new Transformist_FileInfo( '', 'application/pdf' );
 		$this->assertEquals( 'application/pdf', $FileInfo->type( ));
+	}
 
-		// undetermined MIME type
 
-		$raisedException = false;
+
+	/**
+	 *
+	 */
+
+	public function testUndeterminableType( ) {
+
+		$caught = false;
 
 		try {
 			$this->GifFileInfo->type( );
 		} catch ( Transformist_Exception $e ) {
-			$raisedException = true;
+			$caught = true;
 		}
 
-		$this->assertTrue( $raisedException );
+		$this->assertTrue( $caught );
+	}
 
-		// FileInfo not enabled
+
+
+	/**
+	 *
+	 */
+
+	public function testTypeWithoutFileInfo( ) {
 
 		if ( Runkit::isEnabled( )) {
 			Runkit::reimplement( 'class_exists', '$className', 'return false;' );
 
 			$FileInfo = new Transformist_FileInfo( vfsStream::url( 'root/accessible/empty' ));
-			$raisedException = false;
+			$caught = false;
 
 			try {
 				$FileInfo->type( );
 			} catch ( Transformist_Exception $e ) {
-				$raisedException = true;
+				$caught = true;
 			}
 
-			$this->assertTrue( $raisedException );
+			$this->assertTrue( $caught );
 
 			Runkit::reset( 'class_exists' );
 		}

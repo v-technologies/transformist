@@ -20,28 +20,55 @@ class Runkit {
 
 
 	/**
+	 *
+	 */
+
+	public static function redefine( $constant, $value ) {
+
+		$originalConstant = "__original_$constant";
+
+		if ( !defined( $originalConstant )) {
+			define( $originalConstant, constant( $constant ));
+		}
+
+		runkit_constant_redefine( $constant, $value );
+	}
+
+
+
+	/**
 	 *	Reimplements the given function.
 	 */
 
 	public static function reimplement( $function, $arguments, $code ) {
 
-		runkit_function_rename( $function, "__original_$function" );
+		$originalFunction = "__original_$function";
+
+		if ( !function_exists( $originalFunction )) {
+			runkit_function_rename( $function, "__original_$function" );
+		}
+
 		runkit_function_add( $function, $arguments, $code );
 	}
 
 
 
 	/**
-	 *	Reset original implementation of the given function.
+	 *	Reset original definition.
 	 */
 
-	public static function reset( $function ) {
+	public static function reset( $definition ) {
 
-		$originalFunction = "__original_$function";
+		$originalDefinition = "__original_$definition";
 
-		if ( function_exists( $originalFunction )) {
-			runkit_function_remove( $function );
-			runkit_function_rename( $originalFunction, $function );
+		if ( function_exists( $originalDefinition )) {
+			runkit_function_remove( $definition );
+			runkit_function_rename( $originalDefinition, $definition );
+		}
+
+		if ( defined( $originalDefinition )) {
+			runkit_constant_redefine( $definition, constant( $originalDefinition ));
+			runkit_constant_remove( $originalDefinition );
 		}
 	}
 }

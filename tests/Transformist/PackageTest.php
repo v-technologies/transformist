@@ -29,6 +29,14 @@ class Transformist_PackageTest extends PHPUnit_Framework_TestCase {
 	 *
 	 */
 
+	public $Package = null;
+
+
+
+	/**
+	 *
+	 */
+
 	public function setUp( ) {
 
 		$this->vfs = vfsStream::setup(
@@ -44,6 +52,8 @@ class Transformist_PackageTest extends PHPUnit_Framework_TestCase {
 				)
 			)
 		);
+
+		$this->Package = new Transformist_Package( vfsStream::url( 'root' ), '_' );
 	}
 
 
@@ -59,7 +69,7 @@ class Transformist_PackageTest extends PHPUnit_Framework_TestCase {
 		$Package = new Transformist_Package( $here );
 		$this->assertEquals( $here, $Package->path( ));
 
-		$Package->setPath( __FILE__ );
+		$Package = new Transformist_Package( __FILE__ );
 		$this->assertEquals( $here, $Package->path( ));
 	}
 
@@ -74,7 +84,7 @@ class Transformist_PackageTest extends PHPUnit_Framework_TestCase {
 		$Package = new Transformist_Package( 'foo', '\\' );
 		$this->assertEquals( '\\', $Package->separator( ));
 
-		$Package->setSeparator( DS );
+		$Package = new Transformist_Package( 'bar', DS );
 		$this->assertEquals( DS, $Package->separator( ));
 	}
 
@@ -86,18 +96,21 @@ class Transformist_PackageTest extends PHPUnit_Framework_TestCase {
 
 	public function testClasses( ) {
 
-		$Package = new Transformist_Package( vfsStream::url( 'root' ), '_' );
-
-		// Simple search in the root package.
-
 		$this->assertEquals(
 			array(
 				'Class'
 			),
-			$Package->classes( )
+			$this->Package->classes( )
 		);
+	}
 
-		// Recursive search in the root package.
+
+
+	/**
+	 *
+	 */
+
+	public function testClassesRecursive( ) {
 
 		$this->assertEquals(
 			array(
@@ -105,26 +118,40 @@ class Transformist_PackageTest extends PHPUnit_Framework_TestCase {
 				'PackageFoo_ClassFoo',
 				'PackageFoo_PackageBar_ClassBar'
 			),
-			$Package->classes( array( ), true )
+			$this->Package->classes( array( ), true )
 		);
+	}
 
-		// Simple search in a subpackage.
+
+
+	/**
+	 *
+	 */
+
+	public function testClassesSubPackage( ) {
 
 		$this->assertEquals(
 			array(
 				'PackageFoo_ClassFoo'
 			),
-			$Package->classes( array( 'PackageFoo' ))
+			$this->Package->classes( array( 'PackageFoo' ))
 		);
+	}
 
-		// Recursive search in a subpackage.
+
+
+	/**
+	 *
+	 */
+
+	public function testClassesSubPackageRecursive( ) {
 
 		$this->assertEquals(
 			array(
 				'PackageFoo_ClassFoo',
 				'PackageFoo_PackageBar_ClassBar'
 			),
-			$Package->classes( array( 'PackageFoo' ), true )
+			$this->Package->classes( array( 'PackageFoo' ), true )
 		);
 	}
 }
