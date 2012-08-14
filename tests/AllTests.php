@@ -10,7 +10,7 @@ require_once( 'bootstrap.php' );
  *	@author Félix Girault <felix@vtech.fr>
  */
 
-class FullTest {
+class AllTests {
 
 	/**
 	 *

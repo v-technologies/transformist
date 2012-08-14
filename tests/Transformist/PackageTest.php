@@ -21,22 +21,6 @@ class Transformist_PackageTest extends PHPUnit_Framework_TestCase {
 	 *
 	 */
 
-	public $vfsStructure = array(
-		'Class.php' => '',
-		'PackageFoo' => array(
-			'ClassFoo.php' => '',
-			'PackageBar' => array(
-				'ClassBar.php' => ''
-			)
-		)
-	);
-
-
-
-	/**
-	 *
-	 */
-
 	public $vfs = null;
 
 
@@ -47,7 +31,19 @@ class Transformist_PackageTest extends PHPUnit_Framework_TestCase {
 
 	public function setUp( ) {
 
-		$this->vfs = vfsStream::setup( 'root', null, $this->vfsStructure );
+		$this->vfs = vfsStream::setup(
+			'root',
+			null,
+			array(
+				'Class.php' => '',
+				'PackageFoo' => array(
+					'ClassFoo.php' => '',
+					'PackageBar' => array(
+						'ClassBar.php' => ''
+					)
+				)
+			)
+		);
 	}
 
 

@@ -5,10 +5,7 @@ if ( !defined( 'TRANSFORMIST_BOOTSTRAPPED' )) {
 		. DIRECTORY_SEPARATOR . 'bootstrap.php';
 }
 
-define(
-	'TEST_FILE_PATH',
-	TRANSFORMIST_TEST_ROOT . 'files' . DS . 'input' . DS  . 'doc-sample.doc'
-);
+use org\bovigo\vfs\vfsStream;
 
 
 
@@ -21,11 +18,10 @@ define(
 class Transformist_FileInfoTest extends PHPUnit_Framework_TestCase {
 
 	/**
-	 *	This must be the path to an existing file for the test case to be
-	 *	executed properly.
+	 *
 	 */
 
-	public $filePath = TEST_FILE_PATH;
+	public $vfs = null;
 
 
 
@@ -33,7 +29,8 @@ class Transformist_FileInfoTest extends PHPUnit_Framework_TestCase {
 	 *
 	 */
 
-	public $FileInfo = null;
+	public $XmlFileInfo = null;
+	public $GifFileInfo = null;
 
 
 
@@ -43,7 +40,28 @@ class Transformist_FileInfoTest extends PHPUnit_Framework_TestCase {
 
 	public function setUp( ) {
 
-		$this->FileInfo = new Transformist_FileInfo( $this->filePath );
+		$this->vfs = vfsStream::setup( 'root' );
+
+		$accessible = vfsStream::newDirectory( 'accessible' );
+		$accessible->addChild(
+			vfsStream::newFile( 'foo.xml' )
+				->withContent( '<?xml version="1.0" encoding="UTF-8"?>' )
+		);
+		$accessible->addChild(
+			vfsStream::newFile( 'empty' )
+				->withContent( '' )
+		);
+		$this->vfs->addChild( $accessible );
+
+		$restricted = vfsStream::newDirectory( 'restricted', 0000 );
+		$accessible->addChild(
+			vfsStream::newFile( 'bar.gif', 0000 )
+				->withContent( 'GIF' )
+		);
+		$this->vfs->addChild( $restricted );
+
+		$this->XmlFileInfo = new Transformist_FileInfo( vfsStream::url( 'root/accessible/foo.xml' ));
+		$this->GifFileInfo = new Transformist_FileInfo( vfsStream::url( 'root/restricted/bar.gif' ));
 	}
 
 
@@ -54,7 +72,7 @@ class Transformist_FileInfoTest extends PHPUnit_Framework_TestCase {
 
 	public function testExists( ) {
 
-		$this->assertTrue( $this->FileInfo->exists( ));
+		$this->assertTrue( $this->XmlFileInfo->exists( ));
 	}
 
 
@@ -65,7 +83,7 @@ class Transformist_FileInfoTest extends PHPUnit_Framework_TestCase {
 
 	public function testBaseName( ) {
 
-		$this->assertEquals( 'doc-sample', $this->FileInfo->baseName( ));
+		$this->assertEquals( 'foo', $this->XmlFileInfo->baseName( ));
 	}
 
 
@@ -76,7 +94,8 @@ class Transformist_FileInfoTest extends PHPUnit_Framework_TestCase {
 
 	public function testIsReadable( ) {
 
-
+		$this->assertTrue( $this->XmlFileInfo->isReadable( ));
+		$this->assertFalse( $this->GifFileInfo->isReadable( ));
 	}
 
 
@@ -87,7 +106,8 @@ class Transformist_FileInfoTest extends PHPUnit_Framework_TestCase {
 
 	public function testIsWritable( ) {
 
-
+		$this->assertTrue( $this->XmlFileInfo->isWritable( ));
+		$this->assertFalse( $this->GifFileInfo->isWritable( ));
 	}
 
 
@@ -98,7 +118,8 @@ class Transformist_FileInfoTest extends PHPUnit_Framework_TestCase {
 
 	public function testIsDirReadable( ) {
 
-
+		$this->assertTrue( $this->XmlFileInfo->isDirReadable( ));
+		$this->assertFalse( $this->GifFileInfo->isDirReadable( ));
 	}
 
 
@@ -109,7 +130,8 @@ class Transformist_FileInfoTest extends PHPUnit_Framework_TestCase {
 
 	public function testIsDirWritable( ) {
 
-
+		$this->assertTrue( $this->XmlFileInfo->isDirWritable( ));
+		$this->assertFalse( $this->GifFileInfo->isDirWritable( ));
 	}
 
 
@@ -120,7 +142,10 @@ class Transformist_FileInfoTest extends PHPUnit_Framework_TestCase {
 
 	public function testPath( ) {
 
-		$this->assertEquals( $this->filePath, $this->FileInfo->path( ));
+		$this->assertEquals(
+			vfsStream::url( 'root/accessible/foo.xml' ),
+			$this->XmlFileInfo->path( )
+		);
 	}
 
 
@@ -131,7 +156,10 @@ class Transformist_FileInfoTest extends PHPUnit_Framework_TestCase {
 
 	public function testDirPath( ) {
 
-		$this->assertEquals( dirname( $this->filePath ), $this->FileInfo->dirPath( ));
+		$this->assertEquals(
+			dirname( vfsStream::url( 'root/accessible/foo.xml' )),
+			$this->XmlFileInfo->dirPath( )
+		);
 	}
 
 
@@ -142,7 +170,7 @@ class Transformist_FileInfoTest extends PHPUnit_Framework_TestCase {
 
 	public function testSplFileInfo( ) {
 
-		$SplFileInfo = $this->FileInfo->splFileInfo( );
+		$SplFileInfo = $this->XmlFileInfo->splFileInfo( );
 
 		$this->assertTrue( $SplFileInfo instanceof SplFileInfo );
 	}
@@ -155,20 +183,29 @@ class Transformist_FileInfoTest extends PHPUnit_Framework_TestCase {
 
 	public function testType( ) {
 
-		$FileInfo = new Transformist_FileInfo( $this->filePath, 'application/pdf' );
+		$this->assertEquals( 'application/xml', $this->XmlFileInfo->type( ));
 
+		$FileInfo = new Transformist_FileInfo( '', 'application/pdf' );
 		$this->assertEquals( 'application/pdf', $FileInfo->type( ));
-		$this->assertEquals( 'application/msword', $this->FileInfo->type( ));
 
-		// we can cover more code with runkit
+		// undetermined MIME type
 
-		if ( extension_loaded( 'runkit' )) {
+		$raisedException = false;
 
-			// from now on class_exists( ) will always return false
-			runkit_function_rename( 'class_exists', '__original_class_exists' );
-			runkit_function_add( 'class_exists', '$className', 'return false;' );
+		try {
+			$this->GifFileInfo->type( );
+		} catch ( Transformist_Exception $e ) {
+			$raisedException = true;
+		}
 
-			$FileInfo = new Transformist_FileInfo( $this->filePath );
+		$this->assertTrue( $raisedException );
+
+		// FileInfo not enabled
+
+		if ( Runkit::isEnabled( )) {
+			Runkit::reimplement( 'class_exists', '$className', 'return false;' );
+
+			$FileInfo = new Transformist_FileInfo( vfsStream::url( 'root/accessible/empty' ));
 			$raisedException = false;
 
 			try {
@@ -179,19 +216,7 @@ class Transformist_FileInfoTest extends PHPUnit_Framework_TestCase {
 
 			$this->assertTrue( $raisedException );
 
-			// resetting original class_exists function
-			runkit_function_remove( 'class_exists' );
-			runkit_function_rename( '__original_class_exists', 'class_exists' );
-
-			/*
-			// from now on finfo::file( ) will always return false
-			runkit_method_rename( 'finfo', 'file', '__original_file' );
-			runkit_method_add( 'finfo', 'file', '$fileName', 'return false;' );
-
-			// resetting original finfo::file method
-			runkit_method_remove( 'finfo', 'file' );
-			runkit_method_rename( 'finfo', '__original_file', 'file' );
-			*/
+			Runkit::reset( 'class_exists' );
 		}
 	}
 }

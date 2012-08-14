@@ -68,42 +68,22 @@ class Transformist_CommandTest extends PHPUnit_Framework_TestCase {
 
 	public function testExecute( ) {
 
-		foreach ( $this->commands as $command ) {
-			extract( $command );
+		if ( Runkit::isEnabled( )) {
+			Runkit::reimplement(
+				'exec',
+				'$command, &$output, &$return',
+				'$output = array( $command, \'line 1\', \'line 2\' ); $return = 12;'
+			);
 
-			Transformist_Command::execute( $name, $options, $assignment );
-			$this->assertEquals( $expected, Transformist_Command::last( ));
+			foreach ( $this->commands as $command ) {
+				extract( $command );
+
+				$status = Transformist_Command::execute( $name, $options, $assignment, $output );
+				$this->assertEquals( 12, $status );
+				$this->assertEquals( array( $expected, 'line 1', 'line 2' ), $output );
+			}
+
+			Runkit::reset( 'exec' );
 		}
-	}
-
-
-
-	/**
-	 *
-	 */
-
-	public function testExecuted( ) {
-
-		$expected = array( );
-
-		foreach ( $this->commands as $command ) {
-			$expected[] = $command['expected'];
-		}
-
-		$this->assertEquals( $expected, Transformist_Command::executed( ));
-	}
-
-
-
-	/**
-	 *
-	 */
-
-	public function testLast( ) {
-
-		$last = count( $this->commands ) - 1;
-		$expected = $this->commands[ $last ]['expected'];
-
-		$this->assertEquals( $expected, Transformist_Command::last( ));
 	}
 }
