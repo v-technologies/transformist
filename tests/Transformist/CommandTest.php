@@ -91,25 +91,34 @@ class Transformist_CommandTest extends PHPUnit_Framework_TestCase {
 	 *
 	 */
 
+	public function setUp( ) {
+
+		if ( !Runkit::isEnabled( )) {
+			$this->markTestAsSkipped( 'Runkit must be enabled.' );
+		}
+
+		Runkit::reimplement(
+			'exec',
+			'$command, &$output, &$status',
+			'$output = array( ); $status = 0;'
+		);
+	}
+
+
+
+	/**
+	 *
+	 */
+
 	public function testExecute( ) {
 
-		if ( Runkit::isEnabled( )) {
-			Runkit::reimplement(
-				'exec',
-				'$command, &$output, &$status',
-				'$output = array( ); $status = 0;'
+		foreach ( $this->commands as $index => $command ) {
+			extract( $command );
+
+			$this->assertEquals(
+				$this->results[ $index ],
+				Transformist_Command::execute( $name, $options, $assignment )
 			);
-
-			foreach ( $this->commands as $index => $command ) {
-				extract( $command );
-
-				$this->assertEquals(
-					$this->results[ $index ],
-					Transformist_Command::execute( $name, $options, $assignment )
-				);
-			}
-
-			Runkit::reset( 'exec' );
 		}
 	}
 
@@ -133,5 +142,16 @@ class Transformist_CommandTest extends PHPUnit_Framework_TestCase {
 	public function testLast( ) {
 
 		$this->assertEquals( array_pop( $this->results ), Transformist_Command::last( ));
+	}
+
+
+
+	/**
+	 *
+	 */
+
+	public function tearDown( ) {
+
+		Runkit::reset( 'exec' );
 	}
 }

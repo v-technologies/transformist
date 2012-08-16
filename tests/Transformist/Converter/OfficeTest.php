@@ -7,17 +7,17 @@ if ( !defined( 'TRANSFORMIST_BOOTSTRAPPED' )) {
 
 define(
 	'OFFICE_INPUT_FILE',
-	TRANSFORMIST_TEST_ROOT . 'files' . DS . 'input' . DS . 'sample.doc'
+	TRANSFORMIST_TEST_RESOURCE . 'File' . DS . 'Input' . DS . 'sample.doc'
 );
 
 define(
 	'OFFICE_OUTPUT_FILE_1',
-	TRANSFORMIST_TEST_ROOT . 'files' . DS . 'output' . DS . 'sample.pdf'
+	TRANSFORMIST_TEST_RESOURCE . 'File' . DS . 'Output' . DS . 'sample.pdf'
 );
 
 define(
 	'OFFICE_OUTPUT_FILE_2',
-	TRANSFORMIST_TEST_ROOT . 'files' . DS . 'output' . DS . 'converted.pdf'
+	TRANSFORMIST_TEST_RESOURCE . 'File' . DS . 'Output' . DS . 'converted.pdf'
 );
 
 
@@ -115,7 +115,6 @@ class Transformist_Converter_ConcreteOffice extends Transformist_Converter_Offic
 	protected $_outputType = 'application/pdf';
 
 	protected $_printer = 'writer_pdf_Export';
-
 }
 
 
@@ -130,5 +129,4 @@ class Transformist_Converter_BrokenOffice extends Transformist_Converter_Office 
 	protected $_outputType = '';
 
 	protected $_printer = '';
-
 }

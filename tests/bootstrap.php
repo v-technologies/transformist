@@ -8,8 +8,12 @@ if ( !defined( 'DS')) {
 	define( 'DS', DIRECTORY_SEPARATOR );
 }
 
-if ( !defined( 'TRANSFORMIST_TEST_ROOT')) {
+if ( !defined( 'TRANSFORMIST_TEST_ROOT' )) {
 	define( 'TRANSFORMIST_TEST_ROOT', dirname( __FILE__ ) . DS );
+}
+
+if ( !defined( 'TRANSFORMIST_TEST_RESOURCE' )) {
+	define( 'TRANSFORMIST_TEST_RESOURCE', TRANSFORMIST_TEST_ROOT . 'Resource' . DS );
 }
 
 

@@ -39,6 +39,10 @@ class Transformist_PackageTest extends PHPUnit_Framework_TestCase {
 
 	public function setUp( ) {
 
+		if ( !class_exists( '\\org\\bovigo\\vfs\\vfsStream' )) {
+			$this->markTestAsSkipped( 'vfsStream must be enabled.' );
+		}
+
 		$this->vfs = vfsStream::setup(
 			'root',
 			null,

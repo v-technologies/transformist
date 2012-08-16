@@ -92,9 +92,18 @@ class Transformist_DocumentTest extends PHPUnit_Framework_TestCase {
 
 	public function testIsConverted( ) {
 
-		$this->assertFalse( $this->Document->isConverted( ));
-
 		$this->vfs->addChild( vfsStream::newFile( 'output.doc' ));
 		$this->assertTrue( $this->Document->isConverted( ));
+	}
+
+
+
+	/**
+	 *
+	 */
+
+	public function testIsntConverted( ) {
+
+		$this->assertFalse( $this->Document->isConverted( ));
 	}
 }

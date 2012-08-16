@@ -40,6 +40,10 @@ class Transformist_FileInfoTest extends PHPUnit_Framework_TestCase {
 
 	public function setUp( ) {
 
+		if ( !class_exists( '\\org\\bovigo\\vfs\\vfsStream' )) {
+			$this->markTestAsSkipped( 'vfsStream must be enabled.' );
+		}
+
 		$this->vfs = vfsStream::setup( 'root' );
 
 		$accessible = vfsStream::newDirectory( 'accessible' );
@@ -225,21 +229,23 @@ class Transformist_FileInfoTest extends PHPUnit_Framework_TestCase {
 
 	public function testTypeWithoutFileInfo( ) {
 
-		if ( Runkit::isEnabled( )) {
-			Runkit::reimplement( 'class_exists', '$className', 'return false;' );
-
-			$FileInfo = new Transformist_FileInfo( vfsStream::url( 'root/accessible/empty' ));
-			$caught = false;
-
-			try {
-				$FileInfo->type( );
-			} catch ( Transformist_Exception $e ) {
-				$caught = true;
-			}
-
-			$this->assertTrue( $caught );
-
-			Runkit::reset( 'class_exists' );
+		if ( !Runkit::isEnabled( )) {
+			$this->markTestAsSkipped( 'Runkit must be enabled.' );
 		}
+
+		Runkit::reimplement( 'class_exists', '$className', 'return false;' );
+
+		$FileInfo = new Transformist_FileInfo( vfsStream::url( 'root/accessible/empty' ));
+		$caught = false;
+
+		try {
+			$FileInfo->type( );
+		} catch ( Transformist_Exception $e ) {
+			$caught = true;
+		}
+
+		$this->assertTrue( $caught );
+
+		Runkit::reset( 'class_exists' );
 	}
 }
