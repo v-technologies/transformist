@@ -44,7 +44,7 @@ class Transformist_Transformist {
 	public static function convert( $Document ) {
 
 		$_this = self::_instance( );
-		$_this->_ConverterCollection->convert( $Document );
+		return $_this->_ConverterCollection->convert( $Document );
 	}
 
 

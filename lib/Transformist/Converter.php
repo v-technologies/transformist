@@ -73,40 +73,11 @@ abstract class Transformist_Converter {
 
 
 	/**
-	 *	Ensures that the converter can process the given document, and converts
-	 *	it if everything seems fine.
-	 *
-	 *	@param Transformist_Document $Document Document to convert.
-	 *	@throws Transformist_Exception
-	 */
-
-	public final function convert( $Document ) {
-
-		if ( !$Document->input( )->isReadable( )) {
-			throw new Transformist_Exception(
-				'The file `%s` is not readable.',
-				$Document->input( )->path( )
-			);
-		}
-
-		if ( !$Document->output( )->isDirWritable( )) {
-			throw new Transformist_Exception(
-				'The directory `%s` is not writable.',
-				$Document->output( )->dirPath( )
-			);
-		}
-
-		$this->_convert( $Document );
-	}
-
-
-
-	/**
 	 *	Converts the given document.
 	 *
 	 *	@param Transformist_Document $Document Document to convert.
 	 */
 
-	abstract protected function _convert( $Document );
+	abstract public function convert( $Document );
 
 }

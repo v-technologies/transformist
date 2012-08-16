@@ -10,12 +10,12 @@
 class Transformist_FileInfo {
 
 	/**
-	 *	Internal file representation.
+	 *	File path.
 	 *
-	 *	@var SplFileInfo
+	 *	@var string
 	 */
 
-	protected $_Info = null;
+	protected $_path = '';
 
 
 
@@ -36,21 +36,10 @@ class Transformist_FileInfo {
 	 *	@param string $type MIME type of the file to avoid auto detection.
 	 */
 
-	public function __construct( $fileName, $type = '' ) {
+	public function __construct( $filePath, $type = '' ) {
 
-		$this->_Info = new SplFileInfo( $fileName );
+		$this->_path = $filePath;//realpath( $filePath );
 		$this->_type = $type;
-	}
-
-
-
-	/**
-	 *	Clones the file info.
-	 */
-
-	public function __clone( ) {
-
-		$this->_Info = clone $this->_Info;
 	}
 
 
@@ -63,7 +52,7 @@ class Transformist_FileInfo {
 
 	public function exists( ) {
 
-		return $this->_Info->isFile( );
+		return file_exists( $this->_path );
 	}
 
 
@@ -77,7 +66,7 @@ class Transformist_FileInfo {
 
 	public function baseName( ) {
 
-		return $this->_Info->getBasename( '.' . $this->extension( ));
+		return basename( $this->_path, '.' . $this->extension( ));
 	}
 
 
@@ -90,7 +79,7 @@ class Transformist_FileInfo {
 
 	public function extension( ) {
 
-		return $this->_Info->getExtension( );
+		return pathinfo( $this->_path, PATHINFO_EXTENSION );
 	}
 
 
@@ -104,11 +93,8 @@ class Transformist_FileInfo {
 
 	public function setExtension( $extension ) {
 
-		$filePath = $this->dirPath( )
-			. DIRECTORY_SEPARATOR . $this->baseName( )
-			. '.' . $extension;
-
-		$this->_Info = new SplFileInfo( $filePath );
+		$this->_path = dirname( $this->_path )
+			. DIRECTORY_SEPARATOR . $this->baseName( ) . '.' . $extension;
 	}
 
 
@@ -121,7 +107,7 @@ class Transformist_FileInfo {
 
 	public function isReadable( ) {
 
-		return $this->_Info->isReadable( );
+		return is_readable( $this->_path );
 	}
 
 
@@ -134,7 +120,7 @@ class Transformist_FileInfo {
 
 	public function isWritable( ) {
 
-		return $this->_Info->isWritable( );
+		return is_writable( $this->_path );
 	}
 
 
@@ -147,7 +133,7 @@ class Transformist_FileInfo {
 
 	public function isDirReadable( ) {
 
-		return $this->_Info->getPathInfo( )->isReadable( );
+		return is_readable( dirname( $this->_path ));
 	}
 
 
@@ -160,7 +146,7 @@ class Transformist_FileInfo {
 
 	public function isDirWritable( ) {
 
-		return $this->_Info->getPathInfo( )->isWritable( );
+		return is_writable( dirname( $this->_path ));
 	}
 
 
@@ -173,8 +159,7 @@ class Transformist_FileInfo {
 
 	public function path( ) {
 
-		return $this->_Info->getPath( )
-			. DIRECTORY_SEPARATOR . $this->_Info->getFilename( );
+		return $this->_path;
 	}
 
 
@@ -187,23 +172,7 @@ class Transformist_FileInfo {
 
 	public function dirPath( ) {
 
-		$PathInfo = $this->_Info->getPathInfo( );
-
-		return $PathInfo->getPath( )
-			. DIRECTORY_SEPARATOR . $PathInfo->getBasename( );
-	}
-
-
-
-	/**
-	 *	Returns the internal SplFileInfo object.
-	 *
-	 *	@return SplFileInfo Internal file info.
-	 */
-
-	public function splFileInfo( ) {
-
-		return $this->_Info;
+		return dirname( $this->_path );
 	}
 
 
@@ -227,6 +196,19 @@ class Transformist_FileInfo {
 
 
 	/**
+	 *	Forces a MIME type for the file.
+	 *
+	 *	@param string $type MIME type.
+	 */
+
+	public function setType( $type ) {
+
+		$this->_type = $type;
+	}
+
+
+
+	/**
 	 *	Attempts to detect the MIME type of the file.
 	 *
 	 *	@throws Transformist_Exception
@@ -236,12 +218,12 @@ class Transformist_FileInfo {
 
 		if ( !class_exists( 'finfo' )) {
 			throw new Transformist_Exception(
-				'Unable to detect MIME type. Auto detection requires the FileInfo extension.'
+				'MIME type detection requires the FileInfo extension.'
 			);
 		}
 
 		$info = new finfo( FILEINFO_MIME );
-		$type = @$info->file( $this->path( ));
+		$type = @$info->file( $this->_path );
 
 		if ( $type === false ) {
 			throw new Transformist_Exception( 'Unable to detect MIME type.' );
@@ -255,19 +237,6 @@ class Transformist_FileInfo {
 		if ( $semicolon !== false ) {
 			$type = array_shift( explode( ';', $type ));
 		}
-
-		$this->_type = $type;
-	}
-
-
-
-	/**
-	 *	Forces a MIME type for the file.
-	 *
-	 *	@param string $type MIME type.
-	 */
-
-	public function setType( $type ) {
 
 		$this->_type = $type;
 	}

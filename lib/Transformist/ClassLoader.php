@@ -44,20 +44,9 @@ class Transformist_ClassLoader {
 
 
 	/**
-	 *	Unregisters this class loader from the SPL autoloader stack.
-	 */
-
-	public function unregister( ) {
-
-		spl_autoload_unregister( array( $this, 'load' ));
-	}
-
-
-
-	/**
-	 *  Loads the given class or interface.
+	 *	Loads the given class or interface.
 	 *
-	 *  @param string $className Name of the class to load.
+	 *	@param string $className Name of the class to load.
 	 */
 
 	public function load( $className ) {

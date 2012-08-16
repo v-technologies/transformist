@@ -27,7 +27,7 @@ abstract class Transformist_Converter_Office extends Transformist_Converter {
 	 *	@param Transformist_Document $Document Document to convert.
 	 */
 
-	protected function _convert( $Document ) {
+	public function convert( $Document ) {
 
 		if ( empty( $this->_printer )) {
 			throw new Transformist_Exception(
@@ -55,7 +55,7 @@ abstract class Transformist_Converter_Office extends Transformist_Converter {
 				. $Output->baseName( )
 				. uniqid( '.workaround-' );
 
-			if ( symlink( $inputPath, $linkPath )) {
+			if ( @symlink( $inputPath, $linkPath )) {
 				$inputPath = $linkPath;
 			} else {
 				return;
