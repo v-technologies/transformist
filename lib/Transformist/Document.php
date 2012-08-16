@@ -45,6 +45,18 @@ class Transformist_Document {
 
 
 	/**
+	 *	Clones the document.
+	 */
+
+	public function __clone( ) {
+
+		$this->_Input = clone $this->_Input;
+		$this->_Output = clone $this->_Output;
+	}
+
+
+
+	/**
 	 *	Returns the input file info object.
 	 *
 	 *	@return Transformist_FileInfo File info.
@@ -58,6 +70,19 @@ class Transformist_Document {
 
 
 	/**
+	 *	Sets the input file info object.
+	 *
+	 *	@param Transformist_FileInfo $Input File info.
+	 */
+
+	public function setInput( $Input ) {
+
+		$this->_Input = clone $Input;
+	}
+
+
+
+	/**
 	 *	Returns the output file info object.
 	 *
 	 *	@return Transformist_FileInfo File info.
@@ -66,6 +91,19 @@ class Transformist_Document {
 	public function output( ) {
 
 		return $this->_Output;
+	}
+
+
+
+	/**
+	 *	Sets the output file info object.
+	 *
+	 *	@return Transformist_FileInfo $Output File info.
+	 */
+
+	public function setOutput( $Output ) {
+
+		$this->_Output = clone $Output;
 	}
 
 

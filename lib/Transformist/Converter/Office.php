@@ -53,7 +53,7 @@ abstract class Transformist_Converter_Office extends Transformist_Converter {
 			$linkPath = $Output->dirPath( )
 				. DIRECTORY_SEPARATOR
 				. $Output->baseName( )
-				. uniqid( '.workaround' );
+				. uniqid( '.workaround-' );
 
 			if ( symlink( $inputPath, $linkPath )) {
 				$inputPath = $linkPath;

@@ -234,13 +234,83 @@ class Transformist_ConverterCollection {
 			$Converter =& $this->_converters[ array_shift( $chain )];
 			$Converter->convert( $Document );
 
+			return $Document->isConverted( );
+
 		// Multistep conversion
 
 		} else {
+			$converters = array( );
+
 			foreach ( $chain as $converterName ) {
-				$Converter = $this->_converters[ $converterName ];
+				$converters[] =& $this->_converters[ $converterName ];
 			}
+
+			$documents = $this->_splitDocument( $Document, $converters );
+
+			for ( $i = 0; $i < count( $documents ); $i++ ) {
+				$Converter =& $converters[ $i ];
+				$Step =& $documents[ $i ];
+
+				$Converter->convert( $Step );
+
+				if ( !$Step->isConverted( )) {
+					return false;
+				}
+			}
+
+			return true;
 		}
+	}
+
+
+
+	/**
+	 *	Splits a documents in multiple documents to facilitate a multistep
+	 *	conversion.
+	 *
+	 *	@param Transformist_Document $Document Document to split.
+	 *	@param array $converters An array of converters that will be used to
+	 *		convert the given document.
+	 *	@return array An array of intermediate documents.
+	 */
+
+	protected function _splitDocument( $Document, $converters ) {
+
+		$documents = array( );
+		$converterCount = count( $converters );
+
+		for ( $i = 0; $i < $converterCount; $i++ ) {
+			$Converter =& $converters[ $i ];
+
+			// first step
+
+			if ( $i === 0 ) {
+				$Step = clone $Document;
+				$Step->output( )->setType( $Converter->outputType( ));
+				$Step->output( )->setExtension( "step-$i" );
+			} else {
+				$PreviousDocument =& $documents[ count( $documents ) - 1 ];
+				$Step = clone $PreviousDocument;
+
+				// last step
+
+				if ( $i == ( $converterCount - 1 )) {
+					$Step->setInput( $PreviousDocument->output( ));
+					$Step->setOutput( $Document->output( ));
+
+				// intermediate step
+
+				} else {
+					$Step->setInput( $PreviousDocument->output( ));
+					$Step->output( )->setType( $Converter->outputType( ));
+					$Step->output( )->setExtension( "step-$i" );
+				}
+			}
+
+			$documents[] = $Step;
+		}
+
+		return $documents;
 	}
 
 
@@ -261,7 +331,7 @@ class Transformist_ConverterCollection {
 		$chain = array( );
 
 		if ( isset( $this->_map[ $inputType ][ $outputType ])) {
-			$this->_map[ $inputType ][ $outputType ];
+			$chain = $this->_map[ $inputType ][ $outputType ];
 		}
 
 		return $chain;

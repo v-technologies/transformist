@@ -45,6 +45,17 @@ class Transformist_FileInfo {
 
 
 	/**
+	 *	Clones the file info.
+	 */
+
+	public function __clone( ) {
+
+		$this->_Info = clone $this->_Info;
+	}
+
+
+
+	/**
 	 *	Returns if the file exists.
 	 *
 	 *	@return boolean True if the file exists, otherwise false.
@@ -80,6 +91,24 @@ class Transformist_FileInfo {
 	public function extension( ) {
 
 		return $this->_Info->getExtension( );
+	}
+
+
+
+	/**
+	 *	Sets the file extension.
+	 *
+	 *	@todo FIND A BETTER IMPLEMENTATION. THIS IS CRAP.
+	 *	@param string $extension Extension.
+	 */
+
+	public function setExtension( $extension ) {
+
+		$filePath = $this->dirPath( )
+			. DIRECTORY_SEPARATOR . $this->baseName( )
+			. '.' . $extension;
+
+		$this->_Info = new SplFileInfo( $filePath );
 	}
 
 
@@ -226,6 +255,19 @@ class Transformist_FileInfo {
 		if ( $semicolon !== false ) {
 			$type = array_shift( explode( ';', $type ));
 		}
+
+		$this->_type = $type;
+	}
+
+
+
+	/**
+	 *	Forces a MIME type for the file.
+	 *
+	 *	@param string $type MIME type.
+	 */
+
+	public function setType( $type ) {
 
 		$this->_type = $type;
 	}
