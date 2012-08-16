@@ -11,7 +11,7 @@ abstract class Transformist_Converter_HtmlToXml_HtmlToXmlBar
 	 *
 	 */
 
-	protected function _convert( $Document ) {
+	public function convert( $Document ) {
 
 	}
 }

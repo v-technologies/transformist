@@ -26,7 +26,7 @@ class Transformist_Converter_TextToHtml extends Transformist_Converter {
 	 *
 	 */
 
-	protected function _convert( $Document ) {
+	public function convert( $Document ) {
 
 		file_put_contents(
 			$Document->output( )->path( ),

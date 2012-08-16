@@ -5,15 +5,7 @@ if ( !defined( 'TRANSFORMIST_BOOTSTRAPPED' )) {
 		. DIRECTORY_SEPARATOR . 'bootstrap.php';
 }
 
-define(
-	'CONVERTER_COLLECTION_INPUT_FILE',
-	TRANSFORMIST_TEST_RESOURCE . 'File' . DS . 'Input' . DS . 'sample.txt'
-);
-
-define(
-	'CONVERTER_COLLECTION_OUTPUT_FILE',
-	TRANSFORMIST_TEST_RESOURCE . 'File' . DS . 'Output' . DS . 'sample.html'
-);
+use org\bovigo\vfs\vfsStream;
 
 
 
@@ -29,6 +21,14 @@ class Transformist_ConverterCollectionTest extends PHPUnit_Framework_TestCase {
 	 *
 	 */
 
+	public $vfs = null;
+
+
+
+	/**
+	 *
+	 */
+
 	public $Collection = null;
 
 
@@ -39,17 +39,24 @@ class Transformist_ConverterCollectionTest extends PHPUnit_Framework_TestCase {
 
 	public function setup( ) {
 
+		if ( !class_exists( '\\org\\bovigo\\vfs\\vfsStream' )) {
+			$this->markTestAsSkipped( 'vfsStream must be enabled.' );
+		}
+
 		if ( !Runkit::isEnabled( )) {
 			$this->markTestAsSkipped( 'Runkit must be enabled.' );
 		}
 
-		Runkit::redefine( 'TRANSFORMIST_ROOT', TRANSFORMIST_TEST_RESOURCE );
+		Runkit::redefineConstant( 'TRANSFORMIST_ROOT', TRANSFORMIST_TEST_RESOURCE );
 
-		if ( file_exists( CONVERTER_COLLECTION_OUTPUT_FILE )) {
-			unlink( CONVERTER_COLLECTION_OUTPUT_FILE );
-		}
+		$this->vfs = vfsStream::setup( 'root' );
+		$this->vfs->addChild( vfsStream::newFile( 'readable.txt' ));
+		$this->vfs->addChild( vfsStream::newFile( 'unreadable.txt', 0000 ));
+		$this->vfs->addChild( vfsStream::newDirectory( 'writable' ));
+		$this->vfs->addChild( vfsStream::newDirectory( 'unwritable', 0000 ));
 
 		$this->Collection = new Transformist_ConverterCollection( );
+		$this->MultistepCollection = new Transformist_ConverterCollection( true );
 	}
 
 
@@ -67,6 +74,9 @@ class Transformist_ConverterCollectionTest extends PHPUnit_Framework_TestCase {
 				),
 				'text/plain' => array(
 					'text/html'
+				),
+				'application/xml' => array(
+					'application/json'
 				)
 			),
 			$this->Collection->availableConversions( )
@@ -79,14 +89,57 @@ class Transformist_ConverterCollectionTest extends PHPUnit_Framework_TestCase {
 	 *
 	 */
 
+	public function testAvailableMultistepConversions( ) {
+
+		$this->assertEquals(
+			array(
+				'text/html' => array(
+					'application/xml',
+					'application/json'
+				),
+				'text/plain' => array(
+					'text/html',
+					'application/xml',
+					'application/json'
+				),
+				'application/xml' => array(
+					'application/json'
+				)
+			),
+			$this->MultistepCollection->availableConversions( )
+		);
+	}
+
+
+
+	/**
+	 *
+	 */
+
 	public function testCanConvert( ) {
 
 		$Document = new Transformist_Document(
-			new Transformist_FileInfo( CONVERTER_COLLECTION_INPUT_FILE, 'text/plain' ),
-			new Transformist_FileInfo( CONVERTER_COLLECTION_OUTPUT_FILE, 'text/html' )
+			new Transformist_FileInfo( vfsStream::url( 'root/readable.txt' ), 'text/plain' ),
+			new Transformist_FileInfo( vfsStream::url( 'root/writable/converted.html' ), 'text/html' )
 		);
 
 		$this->assertTrue( $this->Collection->canConvert( $Document ));
+	}
+
+
+
+	/**
+	 *
+	 */
+
+	public function testCanConvertMultistep( ) {
+
+		$Document = new Transformist_Document(
+			new Transformist_FileInfo( vfsStream::url( 'root/readable.txt' ), 'text/plain' ),
+			new Transformist_FileInfo( vfsStream::url( 'root/writable/converted.json' ), 'application/json' )
+		);
+
+		$this->assertEquals( 3, $this->MultistepCollection->canConvert( $Document ));
 	}
 
 
@@ -114,8 +167,8 @@ class Transformist_ConverterCollectionTest extends PHPUnit_Framework_TestCase {
 	public function testConvert( ) {
 
 		$Document = new Transformist_Document(
-			new Transformist_FileInfo( CONVERTER_COLLECTION_INPUT_FILE, 'text/plain' ),
-			new Transformist_FileInfo( CONVERTER_COLLECTION_OUTPUT_FILE, 'text/html' )
+			new Transformist_FileInfo( vfsStream::url( 'root/readable.txt' ), 'text/plain' ),
+			new Transformist_FileInfo( vfsStream::url( 'root/writable/converted.html' ), 'text/html' )
 		);
 
 		$this->Collection->convert( $Document );
@@ -129,8 +182,60 @@ class Transformist_ConverterCollectionTest extends PHPUnit_Framework_TestCase {
 	 *
 	 */
 
+	public function testConvertMultistep( ) {
+
+		$Document = new Transformist_Document(
+			new Transformist_FileInfo( vfsStream::url( 'root/readable.txt' ), 'text/plain' ),
+			new Transformist_FileInfo( vfsStream::url( 'root/writable/converted.json' ), 'application/json' )
+		);
+
+		$this->MultistepCollection->convert( $Document );
+
+		$this->assertTrue( $Document->isConverted( ));
+	}
+
+
+
+	/**
+	 *
+	 */
+
+	public function testConvertFromUnreadableFile( ) {
+
+		$Document = new Transformist_Document(
+			new Transformist_FileInfo( vfsStream::url( 'root/unreadable.txt' )),
+			new Transformist_FileInfo( vfsStream::url( 'root/writable' ))
+		);
+
+		$this->setExpectedException( 'Transformist_Exception' );
+		$this->Collection->convert( $Document );
+	}
+
+
+
+	/**
+	 *
+	 */
+
+	public function testConvertToUnwritableDir( ) {
+
+		$Document = new Transformist_Document(
+			new Transformist_FileInfo( vfsStream::url( 'root/readable.txt' )),
+			new Transformist_FileInfo( vfsStream::url( 'root/unwritable/converted' ))
+		);
+
+		$this->setExpectedException( 'Transformist_Exception' );
+		$this->Collection->convert( $Document );
+	}
+
+
+
+	/**
+	 *
+	 */
+
 	public function tearDown( ) {
 
-		Runkit::reset( 'TRANSFORMIST_ROOT' );
+		Runkit::resetConstant( 'TRANSFORMIST_ROOT' );
 	}
 }

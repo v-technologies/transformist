@@ -19,17 +19,11 @@ class Transformist_TransformistTest extends PHPUnit_Framework_TestCase {
 	 *
 	 */
 
-	public $ConverterCollection = null;
-
-
-
-	/**
-	 *
-	 */
-
 	public function setUp( ) {
 
-		$this->ConverterCollection = new Transformist_ConverterCollection( );
+		if ( !Runkit::isEnabled( )) {
+			$this->markTestAsSkipped( 'Runkit must be enabled.' );
+		}
 	}
 
 
@@ -40,10 +34,16 @@ class Transformist_TransformistTest extends PHPUnit_Framework_TestCase {
 
 	public function testAvailableConversions( ) {
 
-		$this->assertEquals(
-			$this->ConverterCollection->availableConversions( ),
-			Transformist_Transformist::availableConversions( )
+		Runkit::reimplementMethod(
+			'Transformist_ConverterCollection',
+			'availableConversions',
+			'',
+			'return \'foo\';'
 		);
+
+		$this->assertEquals( 'foo', Transformist_Transformist::availableConversions( ));
+
+		Runkit::resetMethod( 'Transformist_ConverterCollection', 'availableConversions' );
 	}
 
 
@@ -54,14 +54,15 @@ class Transformist_TransformistTest extends PHPUnit_Framework_TestCase {
 
 	public function testConvert( ) {
 
-		$Document = new Transformist_Document(
-			new Transformist_FileInfo( 'input.txt', 'text/plain' ),
-			new Transformist_FileInfo( 'output.doc', 'application/msword' )
+		Runkit::reimplementMethod(
+			'Transformist_ConverterCollection',
+			'convert',
+			'$Document',
+			'return \'foo\';'
 		);
 
-		$this->assertEquals(
-			$this->ConverterCollection->convert( $Document ),
-			Transformist_Transformist::convert( $Document )
-		);
+		$this->assertEquals( 'foo', Transformist_Transformist::convert( null ));
+
+		Runkit::resetMethod( 'Transformist_ConverterCollection', 'convert' );
 	}
 }

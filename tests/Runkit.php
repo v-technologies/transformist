@@ -23,9 +23,9 @@ class Runkit {
 	 *
 	 */
 
-	public static function redefine( $constant, $value ) {
+	public static function redefineConstant( $constant, $value ) {
 
-		$originalConstant = "__original_$constant";
+		$originalConstant = "__ORIGINAL_$constant";
 
 		if ( !defined( $originalConstant )) {
 			define( $originalConstant, constant( $constant ));
@@ -37,15 +37,31 @@ class Runkit {
 
 
 	/**
+	 *	Reset original definition.
+	 */
+
+	public static function resetConstant( $constant ) {
+
+		$originalConstant = "__ORIGINAL_$constant";
+
+		if ( defined( $originalConstant )) {
+			runkit_constant_redefine( $constant, constant( $originalConstant ));
+			runkit_constant_remove( $originalConstant );
+		}
+	}
+
+
+
+	/**
 	 *	Reimplements the given function.
 	 */
 
-	public static function reimplement( $function, $arguments, $code ) {
+	public static function reimplementFunction( $function, $arguments, $code ) {
 
 		$originalFunction = "__original_$function";
 
 		if ( !function_exists( $originalFunction )) {
-			runkit_function_rename( $function, "__original_$function" );
+			runkit_function_rename( $function, $originalFunction );
 		}
 
 		runkit_function_add( $function, $arguments, $code );
@@ -54,21 +70,49 @@ class Runkit {
 
 
 	/**
+	 *	Reset original function.
+	 */
+
+	public static function resetFunction( $function ) {
+
+		$originalFunction = "__original_$function";
+
+		if ( function_exists( $originalFunction )) {
+			runkit_function_remove( $function );
+			runkit_function_rename( $originalFunction, $function );
+		}
+	}
+
+
+
+	/**
+	 *	Reimplements the given function.
+	 */
+
+	public static function reimplementMethod( $class, $method, $arguments, $code ) {
+
+		$originalMethod = "__original_$method";
+
+		if ( !method_exists( $class, $originalMethod )) {
+			runkit_method_rename( $class, $method, $originalMethod );
+		}
+
+		runkit_method_add( $class, $method, $arguments, $code );
+	}
+
+
+
+	/**
 	 *	Reset original definition.
 	 */
 
-	public static function reset( $definition ) {
+	public static function resetMethod( $class, $method ) {
 
-		$originalDefinition = "__original_$definition";
+		$originalMethod = "__original_$method";
 
-		if ( function_exists( $originalDefinition )) {
-			runkit_function_remove( $definition );
-			runkit_function_rename( $originalDefinition, $definition );
-		}
-
-		if ( defined( $originalDefinition )) {
-			runkit_constant_redefine( $definition, constant( $originalDefinition ));
-			runkit_constant_remove( $originalDefinition );
+		if ( method_exists( $class, $originalMethod )) {
+			runkit_method_remove( $class, $method );
+			runkit_method_rename( $class, $originalMethod, $method );
 		}
 	}
 }

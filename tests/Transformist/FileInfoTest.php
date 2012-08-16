@@ -44,6 +44,12 @@ class Transformist_FileInfoTest extends PHPUnit_Framework_TestCase {
 			$this->markTestAsSkipped( 'vfsStream must be enabled.' );
 		}
 
+		if ( !Runkit::isEnabled( )) {
+			$this->markTestAsSkipped( 'Runkit must be enabled.' );
+		}
+
+		Runkit::reimplementFunction( 'realpath', '$path', 'return $path;' );
+
 		$this->vfs = vfsStream::setup( 'root' );
 
 		$accessible = vfsStream::newDirectory( 'accessible' );
@@ -88,6 +94,31 @@ class Transformist_FileInfoTest extends PHPUnit_Framework_TestCase {
 	public function testBaseName( ) {
 
 		$this->assertEquals( 'foo', $this->XmlFileInfo->baseName( ));
+	}
+
+
+
+	/**
+	 *
+	 */
+
+	public function testExtension( ) {
+
+		$this->assertEquals( 'xml', $this->XmlFileInfo->extension( ));
+	}
+
+
+
+	/**
+	 *
+	 */
+
+	public function testSetExtension( ) {
+
+		$FileInfo = new Transformist_FileInfo( 'foo/bar/foo' );
+		$FileInfo->setExtension( 'bar' );
+
+		$this->assertEquals( 'bar', $FileInfo->extension( ));
 	}
 
 
@@ -172,19 +203,6 @@ class Transformist_FileInfoTest extends PHPUnit_Framework_TestCase {
 	 *
 	 */
 
-	public function testSplFileInfo( ) {
-
-		$SplFileInfo = $this->XmlFileInfo->splFileInfo( );
-
-		$this->assertTrue( $SplFileInfo instanceof SplFileInfo );
-	}
-
-
-
-	/**
-	 *
-	 */
-
 	public function testType( ) {
 
 		$this->assertEquals( 'application/xml', $this->XmlFileInfo->type( ));
@@ -233,7 +251,7 @@ class Transformist_FileInfoTest extends PHPUnit_Framework_TestCase {
 			$this->markTestAsSkipped( 'Runkit must be enabled.' );
 		}
 
-		Runkit::reimplement( 'class_exists', '$className', 'return false;' );
+		Runkit::reimplementFunction( 'class_exists', '$className', 'return false;' );
 
 		$FileInfo = new Transformist_FileInfo( vfsStream::url( 'root/accessible/empty' ));
 		$caught = false;
@@ -246,6 +264,17 @@ class Transformist_FileInfoTest extends PHPUnit_Framework_TestCase {
 
 		$this->assertTrue( $caught );
 
-		Runkit::reset( 'class_exists' );
+		Runkit::resetFunction( 'class_exists' );
+	}
+
+
+
+	/**
+	 *
+	 */
+
+	public function tearDown( ) {
+
+		Runkit::resetFunction( 'realpath' );
 	}
 }

@@ -55,6 +55,10 @@ class Transformist_DocumentTest extends PHPUnit_Framework_TestCase {
 
 	public function setUp( ) {
 
+		if ( !class_exists( '\\org\\bovigo\\vfs\\vfsStream' )) {
+			$this->markTestAsSkipped( 'vfsStream must be enabled.' );
+		}
+
 		$this->vfs = vfsStream::setup( 'root', null, array( 'input.txt' ));
 
 		$this->Input = new Transformist_FileInfo( vfsStream::url( 'root/input.txt' ));

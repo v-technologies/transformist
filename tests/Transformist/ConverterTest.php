@@ -8,8 +8,6 @@ if ( !defined( 'TRANSFORMIST_BOOTSTRAPPED' )) {
 define( 'CONVERTER_INPUT_TYPE', 'application/xml' );
 define( 'CONVERTER_OUTPUT_TYPE', 'application/pdf' );
 
-use org\bovigo\vfs\vfsStream;
-
 
 
 /**
@@ -24,14 +22,6 @@ class Transformist_ConverterTest extends PHPUnit_Framework_TestCase {
 	 *
 	 */
 
-	public $vfs = null;
-
-
-
-	/**
-	 *
-	 */
-
 	public $Converter = null;
 
 
@@ -41,12 +31,6 @@ class Transformist_ConverterTest extends PHPUnit_Framework_TestCase {
 	 */
 
 	public function setUp( ) {
-
-		$this->vfs = vfsStream::setup( 'root' );
-		$this->vfs->addChild( vfsStream::newFile( 'readable.xml' ));
-		$this->vfs->addChild( vfsStream::newFile( 'unreadable.xml', 0000 ));
-		$this->vfs->addChild( vfsStream::newDirectory( 'writable' ));
-		$this->vfs->addChild( vfsStream::newDirectory( 'unwritable', 0000 ));
 
 		$this->Converter = new Transformist_ConcreteConverter( );
 	}
@@ -104,40 +88,6 @@ class Transformist_ConverterTest extends PHPUnit_Framework_TestCase {
 
 		$this->assertEquals( CONVERTER_OUTPUT_TYPE, $this->Converter->outputType( ));
 	}
-
-
-
-	/**
-	 *
-	 */
-
-	public function testConvertFromUnreadableFile( ) {
-
-		$Document = new Transformist_Document(
-			new Transformist_FileInfo( vfsStream::url( 'root/unreadable.xml' ), 'unknown' ),
-			new Transformist_FileInfo( vfsStream::url( 'root/writable' ), 'unknown' )
-		);
-
-		$this->setExpectedException( 'Transformist_Exception' );
-		$this->Converter->convert( $Document );
-	}
-
-
-
-	/**
-	 *
-	 */
-
-	public function testConvertToUnwritableDir( ) {
-
-		$Document = new Transformist_Document(
-			new Transformist_FileInfo( vfsStream::url( 'root/readable.xml' ), 'unknown' ),
-			new Transformist_FileInfo( vfsStream::url( 'root/unwritable/output' ), 'unknown' )
-		);
-
-		$this->setExpectedException( 'Transformist_Exception' );
-		$this->Converter->convert( $Document );
-	}
 }
 
 
@@ -168,6 +118,6 @@ class Transformist_ConcreteConverter extends Transformist_Converter {
 	 *
 	 */
 
-	protected function _convert( $Document ) { }
+	public function convert( $Document ) { }
 
 }

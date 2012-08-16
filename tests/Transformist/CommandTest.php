@@ -97,7 +97,7 @@ class Transformist_CommandTest extends PHPUnit_Framework_TestCase {
 			$this->markTestAsSkipped( 'Runkit must be enabled.' );
 		}
 
-		Runkit::reimplement(
+		Runkit::reimplementFunction(
 			'exec',
 			'$command, &$output, &$status',
 			'$output = array( ); $status = 0;'
@@ -152,6 +152,6 @@ class Transformist_CommandTest extends PHPUnit_Framework_TestCase {
 
 	public function tearDown( ) {
 
-		Runkit::reset( 'exec' );
+		Runkit::resetFunction( 'exec' );
 	}
 }

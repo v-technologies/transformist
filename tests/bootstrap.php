@@ -36,3 +36,20 @@ $ClassLoader->register( );
 // Composer
 
 require_once dirname( dirname( __FILE__ )) . DS . 'vendor' . DS . 'autoload.php';
+
+
+
+/**
+ *	Utility
+ */
+
+function Transformist_cleanDirectory( $path ) {
+
+	if ( is_dir( $path )) {
+		foreach( glob( $path . DS . '*' ) as $entry ) {
+			unlink( $entry );
+		}
+	} else {
+		mkdir( $path );
+	}
+}

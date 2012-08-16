@@ -36,13 +36,7 @@ class Transformist_Converter_OfficeTest extends PHPUnit_Framework_TestCase {
 
 	public function setUp( ) {
 
-		if ( file_exists( OFFICE_OUTPUT_FILE_1 )) {
-			unlink( OFFICE_OUTPUT_FILE_1 );
-		}
-
-		if ( file_exists( OFFICE_OUTPUT_FILE_2 )) {
-			unlink( OFFICE_OUTPUT_FILE_2 );
-		}
+		Transformist_cleanDirectory( dirname( OFFICE_OUTPUT_FILE_1 ));
 	}
 
 
