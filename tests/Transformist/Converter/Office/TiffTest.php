@@ -8,18 +8,18 @@ if ( !defined( 'TRANSFORMIST_BOOTSTRAPPED' )) {
 
 
 /**
- *	Test case for JpgToPng.
+ *	Test case for Tiff.
  *
  *	@author Félix Girault <felix@vtech.fr>
  */
 
-class Transformist_Converter_Office_JpgToPngTest extends PHPUnit_Framework_TestCase {
+class Transformist_Converter_Office_TiffTest extends PHPUnit_Framework_TestCase {
 
 	/**
 	 *
 	 */
 
-	public $JpgToPng = null;
+	public $Tiff = null;
 
 
 
@@ -29,7 +29,7 @@ class Transformist_Converter_Office_JpgToPngTest extends PHPUnit_Framework_TestC
 
 	public function setup( ) {
 
-		$this->JpgToPng = new Transformist_Converter_Office_JpgToPng( );
+		$this->Tiff = new Transformist_Converter_Office_Tiff( );
 	}
 
 
@@ -42,9 +42,9 @@ class Transformist_Converter_Office_JpgToPngTest extends PHPUnit_Framework_TestC
 
 		$Document = new Transformist_Document(
 			new Transformist_FileInfo( 'foo', 'image/jpeg' ),
-			new Transformist_FileInfo( 'bar', 'image/png' )
+			new Transformist_FileInfo( 'bar', 'image/tiff' )
 		);
 
-		$this->assertTrue( $this->JpgToPng->canConvert( $Document ));
+		$this->assertTrue( $this->Tiff->canConvert( $Document ));
 	}
 }

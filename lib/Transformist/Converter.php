@@ -10,12 +10,12 @@
 abstract class Transformist_Converter {
 
 	/**
-	 *	Accepted input type.
+	 *	Accepted input types.
 	 *
-	 *	@var string
+	 *	@var array
 	 */
 
-	protected $_inputType = '';
+	protected $_inputTypes = array( );
 
 
 
@@ -39,7 +39,7 @@ abstract class Transformist_Converter {
 	public function canConvert( $Document ) {
 
 		return (
-			$Document->input( )->type( ) == $this->_inputType
+			in_array( $Document->input( )->type( ), $this->_inputTypes )
 			&& $Document->output( )->type( ) == $this->_outputType
 		);
 	}
@@ -49,12 +49,12 @@ abstract class Transformist_Converter {
 	/**
 	 *	Returns the type of files that the converter accepts.
 	 *
-	 *	@return string Type.
+	 *	@return array Types.
 	 */
 
-	public function inputType( ) {
+	public function inputTypes( ) {
 
-		return $this->_inputType;
+		return $this->_inputTypes;
 	}
 
 

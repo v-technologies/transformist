@@ -1,21 +1,21 @@
 <?php
 
 /**
- *	Converts DOCs to PDFs.
+ *	Converts files to PDFs.
  *
  *	@package Transformist.Converter.Office
  *	@author Félix Girault <felix@vtech.fr>
  */
 
-class Transformist_Converter_Office_DocToPdf extends Transformist_Converter_Office {
+class Transformist_Converter_Office_Pdf extends Transformist_Converter_Office {
 
 	/**
-	 *	Accepted input type.
+	 *	Accepted input types.
 	 *
-	 *	@var string
+	 *	@var array
 	 */
 
-	protected $_inputType = 'application/msword';
+	protected $_inputTypes = array( 'application/msword' );
 
 
 

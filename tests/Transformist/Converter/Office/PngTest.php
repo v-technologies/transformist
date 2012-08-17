@@ -8,18 +8,18 @@ if ( !defined( 'TRANSFORMIST_BOOTSTRAPPED' )) {
 
 
 /**
- *	Test case for DocToPdf.
+ *	Test case for Png.
  *
  *	@author Félix Girault <felix@vtech.fr>
  */
 
-class Transformist_Converter_Office_DocToPdfTest extends PHPUnit_Framework_TestCase {
+class Transformist_Converter_Office_PngTest extends PHPUnit_Framework_TestCase {
 
 	/**
 	 *
 	 */
 
-	public $DocToPdf = null;
+	public $Png = null;
 
 
 
@@ -29,7 +29,7 @@ class Transformist_Converter_Office_DocToPdfTest extends PHPUnit_Framework_TestC
 
 	public function setup( ) {
 
-		$this->DocToPdf = new Transformist_Converter_Office_DocToPdf( );
+		$this->Png = new Transformist_Converter_Office_Png( );
 	}
 
 
@@ -41,10 +41,10 @@ class Transformist_Converter_Office_DocToPdfTest extends PHPUnit_Framework_TestC
 	public function testCanConvert( ) {
 
 		$Document = new Transformist_Document(
-			new Transformist_FileInfo( 'foo', 'application/msword' ),
-			new Transformist_FileInfo( 'bar', 'application/pdf' )
+			new Transformist_FileInfo( 'foo', 'image/jpeg' ),
+			new Transformist_FileInfo( 'bar', 'image/png' )
 		);
 
-		$this->assertTrue( $this->DocToPdf->canConvert( $Document ));
+		$this->assertTrue( $this->Png->canConvert( $Document ));
 	}
 }

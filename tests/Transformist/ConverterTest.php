@@ -73,9 +73,9 @@ class Transformist_ConverterTest extends PHPUnit_Framework_TestCase {
 	 *
 	 */
 
-	public function testInputType( ) {
+	public function testInputTypes( ) {
 
-		$this->assertEquals( CONVERTER_INPUT_TYPE, $this->Converter->inputType( ));
+		$this->assertEquals( array( CONVERTER_INPUT_TYPE ), $this->Converter->inputTypes( ));
 	}
 
 
@@ -102,7 +102,7 @@ class Transformist_ConcreteConverter extends Transformist_Converter {
 	 *
 	 */
 
-	protected $_inputType = CONVERTER_INPUT_TYPE;
+	protected $_inputTypes = array( CONVERTER_INPUT_TYPE );
 
 
 

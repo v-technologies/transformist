@@ -4,13 +4,13 @@
  *	@author Félix Girault <felix@vtech.fr>
  */
 
-class Transformist_Converter_XmlToJson extends Transformist_Converter {
+class Transformist_Converter_Html extends Transformist_Converter {
 
 	/**
 	 *
 	 */
 
-	protected $_inputType = 'application/xml';
+	protected $_inputTypes = array( 'text/plain' );
 
 
 
@@ -18,7 +18,7 @@ class Transformist_Converter_XmlToJson extends Transformist_Converter {
 	 *
 	 */
 
-	protected $_outputType = 'application/json';
+	protected $_outputType = 'text/html';
 
 
 

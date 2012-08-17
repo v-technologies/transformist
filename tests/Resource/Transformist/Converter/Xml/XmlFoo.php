@@ -4,8 +4,8 @@
  *	@author Félix Girault <felix@vtech.fr>
  */
 
-class Transformist_Converter_HtmlToXml_HtmlToXmlFoo
-	extends Transformist_Converter_HtmlToXml {
+class Transformist_Converter_Xml_XmlFoo
+	extends Transformist_Converter_Xml {
 
 	/**
 	 *

@@ -1,21 +1,21 @@
 <?php
 
 /**
- *	Converts JPGs to PNGs.
+ *	Converts files to PNGs.
  *
  *	@package Transformist.Converter.Office
  *	@author Félix Girault <felix@vtech.fr>
  */
 
-class Transformist_Converter_Office_JpgToPng extends Transformist_Converter_Office {
+class Transformist_Converter_Office_Png extends Transformist_Converter_Office {
 
 	/**
-	 *	Accepted input type.
+	 *	Accepted input types.
 	 *
-	 *	@var string
+	 *	@var array
 	 */
 
-	protected $_inputType = 'image/jpeg';
+	protected $_inputTypes = array( 'image/jpeg' );
 
 
 

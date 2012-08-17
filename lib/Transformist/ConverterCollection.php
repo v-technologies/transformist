@@ -110,14 +110,16 @@ class Transformist_ConverterCollection {
 	protected function _mapConverters( ) {
 
 		foreach ( $this->_converters as $name => $Converter ) {
-			$input = $Converter->inputType( );
+			$inputs = $Converter->inputTypes( );
 			$output = $Converter->outputType( );
 
-			if ( !isset( $this->_map[ $input ])) {
-				$this->_map[ $input ] = array( );
-			}
+			foreach ( $inputs as $input ) {
+				if ( !isset( $this->_map[ $input ])) {
+					$this->_map[ $input ] = array( );
+				}
 
-			$this->_map[ $input ][ $output ] = array( $name );
+				$this->_map[ $input ][ $output ] = array( $name );
+			}
 		}
 
 		if ( $this->_multistep !== false ) {
@@ -140,7 +142,7 @@ class Transformist_ConverterCollection {
 			$modified = false;
 
 			foreach ( $this->_map as $input => $outputs ) {
-				foreach ( $outputs as $output => $converters ) {
+				foreach ( $outputs as $output => $chain ) {
 					if ( !isset( $this->_map[ $output ])) {
 						continue;
 					}
@@ -150,11 +152,11 @@ class Transformist_ConverterCollection {
 							continue;
 						}
 
-						$total = count( $converters ) + count( $chainableConverters );
+						$total = count( $chain ) + count( $chainableConverters );
 
 						if (( $this->_multistep === true ) || ( $total <= $limit )) {
 							$this->_map[ $input ][ $chainableOutput ] = array_merge(
-								$converters,
+								$chain,
 								$chainableConverters
 							);
 

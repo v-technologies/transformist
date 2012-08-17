@@ -69,14 +69,17 @@ class Transformist_ConverterCollectionTest extends PHPUnit_Framework_TestCase {
 
 		$this->assertEquals(
 			array(
-				'text/html' => array(
-					'application/xml'
-				),
 				'text/plain' => array(
 					'text/html'
 				),
 				'application/xml' => array(
 					'application/json'
+				),
+				'text/html' => array(
+					'application/xml'
+				),
+				'image/svg+xml' => array(
+					'application/xml'
 				)
 			),
 			$this->Collection->availableConversions( )
@@ -93,16 +96,20 @@ class Transformist_ConverterCollectionTest extends PHPUnit_Framework_TestCase {
 
 		$this->assertEquals(
 			array(
-				'text/html' => array(
-					'application/xml',
-					'application/json'
-				),
 				'text/plain' => array(
 					'text/html',
 					'application/xml',
 					'application/json'
 				),
 				'application/xml' => array(
+					'application/json'
+				),
+				'text/html' => array(
+					'application/xml',
+					'application/json'
+				),
+				'image/svg+xml' => array(
+					'application/xml',
 					'application/json'
 				)
 			),
