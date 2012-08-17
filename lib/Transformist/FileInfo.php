@@ -38,7 +38,12 @@ class Transformist_FileInfo {
 
 	public function __construct( $filePath, $type = '' ) {
 
-		$this->_path = $filePath;//realpath( $filePath );
+		$this->_path = realpath( $filePath );
+
+		if ( $this->_path === false ) {
+			$this->_path = $filePath;
+		}
+
 		$this->_type = $type;
 	}
 
