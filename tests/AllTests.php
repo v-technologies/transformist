@@ -29,11 +29,8 @@ class AllTests {
 	public static function suite( ) {
 
 		$Suite = new PHPUnit_Framework_TestSuite( );
-
-		self::_output( 'Searching for test cases in %s...', self::$_path );
-		self::_output( '' );
-
 		$Package = new Transformist_Package( self::$_path );
+
 		$tests = $Package->classes( array( 'Transformist' ), true );
 
 		if ( empty( $tests )) {
