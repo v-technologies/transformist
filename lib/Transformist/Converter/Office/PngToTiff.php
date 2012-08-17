@@ -35,6 +35,6 @@ class Transformist_Converter_Office_PngToTiff extends Transformist_Converter_Off
 	 *	@var string
 	 */
 
-	protected $_printer = 'impress_tif_Export';
+	protected $_printer = 'draw_tif_Export';
 
 }

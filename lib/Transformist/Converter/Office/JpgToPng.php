@@ -1,13 +1,13 @@
 <?php
 
 /**
- *	Converts JPGs to TIFFs.
+ *	Converts JPGs to PNGs.
  *
  *	@package Transformist.Converter.Office
  *	@author Félix Girault <felix@vtech.fr>
  */
 
-class Transformist_Converter_Office_JpgToTiff extends Transformist_Converter_Office {
+class Transformist_Converter_Office_JpgToPng extends Transformist_Converter_Office {
 
 	/**
 	 *	Accepted input type.
@@ -25,7 +25,7 @@ class Transformist_Converter_Office_JpgToTiff extends Transformist_Converter_Off
 	 *	@var string
 	 */
 
-	protected $_outputType = 'image/tiff';
+	protected $_outputType = 'image/png';
 
 
 
@@ -35,6 +35,6 @@ class Transformist_Converter_Office_JpgToTiff extends Transformist_Converter_Off
 	 *	@var string
 	 */
 
-	protected $_printer = 'draw_tif_Export';
+	protected $_printer = 'draw_png_Export';
 
 }

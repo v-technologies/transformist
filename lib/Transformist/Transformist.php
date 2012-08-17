@@ -76,6 +76,6 @@ class Transformist_Transformist {
 
 	protected function __construct( ) {
 
-		$this->_ConverterCollection = new Transformist_ConverterCollection( );
+		$this->_ConverterCollection = new Transformist_ConverterCollection( true );
 	}
 }
