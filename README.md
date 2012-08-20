@@ -22,13 +22,12 @@ $Document = new Transformist_Document(
 ?>
 ```
 
-Document accepts to parameters: the file to convert, and the desired output file.
-Here, we want to convert an Office file to a PDF.
-
-Transformist makes a heavy usage of MIME types. These are used to identify file types for conversion.
-
+A FileInfo object represents a file on the file system, associated to its MIME types.
 In the above example, the type of the the input file can be detected automatically,
 but we have to specify the output file type, as this file doesn't exists for now.
+
+Document constructor takes two FileInfo objects, representing input and output files.
+Here, we want to convert an Office file to a PDF.
 
 Now, we just have to let Transformist do the hard work for us:
 
@@ -63,7 +62,7 @@ Each of its key represents an input type, and points to an array of output types
 
 Typically, it looks like this:
 
-```
+```php
 <?php
 
 array(
@@ -78,9 +77,7 @@ array(
 ?>
 ```
 
-Here you can convert JPG images to PNG, and PNG images to TIFF.
-
-You can also check if a particular Document can be converted:
+Here you can convert JPG images to PNG, and PNG images to TIFF. Alternatively, you can check if a particular Document can be converted:
 
 ```php
 <?php
@@ -93,12 +90,12 @@ $canBeConverted = Transformist_Transformist::canConvert( $Document );
 Multistep conversions
 ---------------------
 
-To take full advantage of converters, Transformist can chain them together to enlarge its panel of available conversions.
+To take full advantage of converters, Transformist can chain them together to enlarge its panel of conversions.
 
 For example, according to the result of Transformist::availableConversions( ) shown above,
-we can convert 'image/jpeg' to 'image/png', and 'image/png' to 'image/tiff'.
+we can convert _image/jpeg_ to _image/png_, and _image/png_ to _image/tiff_.
 With multistep conversions enabled, those two converters would be chained together,
-allowing a conversion from 'image/jpeg' to 'image/tiff'.
+allowing a conversion from _image/jpeg_ to _image/tiff_.
 
 This is of course slower, as it takes multiple conversions for one file, but it can be really useful in some cases.
 
