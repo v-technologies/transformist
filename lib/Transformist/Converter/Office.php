@@ -31,7 +31,7 @@ abstract class Transformist_Converter_Office extends Transformist_Converter {
 
 		if ( empty( $this->_printer )) {
 			throw new Transformist_Exception(
-				'$_printer, $_inputType and $_outputType must be defined'
+				'$_printer must be defined'
 			);
 		}
 

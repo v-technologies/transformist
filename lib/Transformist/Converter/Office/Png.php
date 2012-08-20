@@ -15,7 +15,7 @@ class Transformist_Converter_Office_Png extends Transformist_Converter_Office {
 	 *	@var array
 	 */
 
-	protected $_inputTypes = array( 'image/jpeg' );
+	protected $_inputTypes = array( 'image/gif', 'image/jpeg' );
 
 
 
