@@ -22,6 +22,19 @@ abstract class Transformist_Converter_Office extends Transformist_Converter {
 
 
 	/**
+	 *
+	 */
+
+	public function isRunnable( ) {
+
+		$result = Transformist_Command::execute( 'soffice', array( '--version' ));
+
+		return ( $result['status'] == 0 );
+	}
+
+
+
+	/**
 	 *	Converts the given document.
 	 *
 	 *	@param Transformist_Document $Document Document to convert.

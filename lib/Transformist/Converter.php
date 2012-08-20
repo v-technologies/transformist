@@ -30,6 +30,17 @@ abstract class Transformist_Converter {
 
 
 	/**
+	 *
+	 */
+
+	public function isRunnable( ) {
+
+		return true;
+	}
+
+
+
+	/**
 	 *	Checks if the Converter can convert the given document.
 	 *
 	 *	@param Transformist_Document $Document Document to convert.

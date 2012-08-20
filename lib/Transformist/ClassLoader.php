@@ -51,8 +51,8 @@ class Transformist_ClassLoader {
 
 	public function load( $className ) {
 
-		$path = $this->_basePath . DS . str_replace( '_', DS, $className ) . '.php';
-
+		$path = $this->_basePath . str_replace( '_', DS, $className ) . '.php';
+var_dump( $path );
 		if ( file_exists( $path )) {
 			require_once $path;
 		}

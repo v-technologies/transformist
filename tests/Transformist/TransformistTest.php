@@ -41,7 +41,7 @@ class Transformist_TransformistTest extends PHPUnit_Framework_TestCase {
 			'return \'foo\';'
 		);
 
-		$this->assertEquals( 'foo', Transformist_Transformist::availableConversions( ));
+		$this->assertEquals( 'foo', Transformist::availableConversions( ));
 
 		Runkit::resetMethod( 'Transformist_ConverterCollection', 'availableConversions' );
 	}
@@ -61,7 +61,7 @@ class Transformist_TransformistTest extends PHPUnit_Framework_TestCase {
 			'return \'foo\';'
 		);
 
-		$this->assertEquals( 'foo', Transformist_Transformist::convert( null ));
+		$this->assertEquals( 'foo', Transformist::convert( '' )->to( '', '' ));
 
 		Runkit::resetMethod( 'Transformist_ConverterCollection', 'convert' );
 	}

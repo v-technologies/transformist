@@ -12,7 +12,7 @@ class Transformist_ConverterCollection {
 	/**
 	 *	Tells if the collection uses multistep conversions.
 	 *
-	 *	@see Transformist_ConverterCollection::enableMultistepConversions( )
+	 *	@see Transformist_ConverterCollection::enableMultistep( )
 	 *	@var boolean|integer
 	 */
 
@@ -54,7 +54,7 @@ class Transformist_ConverterCollection {
 	 *	Constructs the collection, given whether or not to enable multistep
 	 *	conversions.
 	 *
-	 *	@see Transformist_ConverterCollection::enableMultistepConversions( )
+	 *	@see Transformist_ConverterCollection::enableMultistep( )
 	 *	@param mixed $multistep Whether or not to enable multistep conversions,
 	 *		or a number representing the maximum number of intermediate
 	 *		conversions.
@@ -63,7 +63,7 @@ class Transformist_ConverterCollection {
 	public function __construct( $multistep = false ) {
 
 		$this->_loadConverters( );
-		$this->enableMultistepConversions( $multistep );
+		$this->enableMultistep( $multistep );
 	}
 
 
@@ -110,7 +110,7 @@ class Transformist_ConverterCollection {
 	 *		conversions.
 	 */
 
-	public function enableMultistepConversions( $multistep ) {
+	public function enableMultistep( $multistep ) {
 
 		if ( $multistep === $this->_multistep ) {
 			return;

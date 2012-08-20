@@ -3,11 +3,10 @@
 /**
  *	A high level API to handle file conversions.
  *
- *	@package Transformist
  *	@author Félix Girault <felix@vtech.fr>
  */
 
-class Transformist_Transformist {
+class Transformist {
 
 	/**
 	 *	A collection of converters.
@@ -20,18 +19,21 @@ class Transformist_Transformist {
 
 
 	/**
-	 *	Tells whether or not to enable multistep conversions.
+	 *	Configures Transformist.
 	 *
-	 *	@see Transformist_ConverterCollection::enableMultistepConversions( )
-	 *	@param mixed $multistep Whether or not to enable multistep conversions,
-	 *		or a number representing the maximum number of intermediate
-	 *		conversions.
+	 *	### Options
+	 *
+	 *	- multistep - See Transformist_ConverterCollection::enableMultistep( );
+	 *
+	 *	@param array $options An array of configuration options.
 	 */
 
-	public static function enableMultistepConversions( $multistep ) {
+	public static function configure( $options ) {
 
-		$_this = self::_instance( );
-		$_this->_ConverterCollection->enableMultistepConversions( $multistep );
+		if ( isset( $options['multistep'])) {
+			$_this = self::_instance( );
+			$_this->_ConverterCollection->enableMultistep( $options['multistep']);
+		}
 	}
 
 
@@ -51,17 +53,43 @@ class Transformist_Transformist {
 
 
 	/**
-	 *	Converts the document to a format matching the given mime type.
 	 *
-	 *	@param Transformist_Document $Document The document to convert.
-	 *	@return mixed The path of the converted document, or false if the
-	 *		document could not be converted.
+	 *
+	 *	@param string $filePath Path to the input file.
+	 *	@param string $type MIME type of the file to avoid auto detection.
 	 */
 
-	public static function convert( $Document ) {
+	public static function convert( $filePath, $type = '' ) {
 
 		$_this = self::_instance( );
-		return $_this->_ConverterCollection->convert( $Document );
+		$_this->_Input = new Transformist_FileInfo( $filePath, $type );
+
+		return $_this;
+	}
+
+
+
+	/**
+	 *
+	 *
+	 *	@param string $filePath Path to the output file.
+	 *	@param string $type MIME type of the file.
+	 */
+
+	public function to( $filePath, $type ) {
+
+		$Output = new Transformist_FileInfo( $filePath, $type );
+		$result = false;
+
+		try {
+			$result = $this->_ConverterCollection->convert(
+				new Transformist_Document( $this->_Input, $Output )
+			);
+		} catch ( Transformist_Exception $e ) {
+			//
+		}
+
+		return $result;
 	}
 
 

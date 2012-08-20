@@ -9,50 +9,34 @@ It is also designed to be easily extended, just by adding custom converters.
 Example
 -------
 
-First, we need to create a Document object, which will hold informations about the file we want to convert.
+You can use this fluent interface to convert a document in seconds:
 
 ```php
 <?php
 
-$Document = new Transformist_Document(
-	new Transformist_FileInfo( '/path/to/input/file.doc' ),
-	new Transformist_FileInfo( '/path/to/output/file.pdf', 'application/pdf' )
-);
+$converted = Transformist::convert( '/path/to/input/file.doc', 'application/msword' )
+                         ->to( '/path/to/output/file.pdf', 'application/pdf' );
 
-?>
-```
-
-A FileInfo object represents a file on the file system, associated to its MIME types.
-In the above example, the type of the the input file can be detected automatically,
-but we have to specify the output file type, as this file doesn't exists for now.
-
-Document constructor takes two FileInfo objects, representing input and output files.
-Here, we want to convert an Office file to a PDF.
-
-Now, we just have to let Transformist do the hard work for us:
-
-```php
-<?php
-
-Transformist_Transformist::convert( $Document );
-
-if ( $Document->isConverted( )) {
-	// That's all !
+if ( $converted ) {
+	// You're good to go !
 }
 
 ?>
 ```
 
+The _convert( )_ and _to( )_ methods both accept two parameters: a file path and a MIME type.
+If the input file type is omitted, then it is detected automatically.
+
 Available conversions
 ---------------------
 
-Before going anywhere, you may want to know about the conversions that Transformist can handle.
+Before going any further, you may want to know about the conversions that Transformist can handle.
 There's a method for that:
 
 ```php
 <?php
 
-$conversions = Transformist_Transformist::availableConversions( );
+$conversions = Transformist::availableConversions( );
 
 ?>
 ```
@@ -82,7 +66,7 @@ Here you can convert JPG images to PNG, and PNG images to TIFF. Alternatively, y
 ```php
 <?php
 
-$canBeConverted = Transformist_Transformist::canConvert( $Document );
+$canBeConverted = Transformist::canConvert( $Document );
 
 ?>
 ```
@@ -104,7 +88,7 @@ To turn on this mechanism, just call this method:
 ```php
 <?php
 
-Transformist_Transformist::enableMultistepConversions( true );
+Transformist::enableMultistepConversions( true );
 
 ?>
 ```
