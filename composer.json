@@ -1,0 +1,28 @@
+{
+	"name": "v-technologies/transformist",
+	"type": "library",
+	"description": "File conversion library",
+	"authors": [{
+		"name": "Félix Girault, V-Technologies",
+		"email": "felix@vtech.fr",
+		"role": "Developer"
+	}],
+	"keywords": [
+		"file",
+		"conversion"
+	],
+	"licence": "MIT",
+	"homepage": "http://github.com/v-technologies/transformist",
+	"require": {
+		"php": ">=5.2.0"
+	},
+	"require-dev": {
+		"php": ">=5.3.0",
+		"mikey179/vfsStream": ">=1.0.0"
+	},
+	"autoload": {
+		"psr-0": {
+			"Transformist": "lib/"
+		}
+	}
+}
