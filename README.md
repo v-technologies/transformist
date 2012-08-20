@@ -75,12 +75,20 @@ allowing a conversion from _image/jpeg_ to _image/tiff_.
 
 This is of course slower, as it takes multiple conversions for one file, but it can be really useful in some cases.
 
-To turn on this mechanism, just call this method:
+To turn on this mechanism, use the _configure( )_ method:
 
 ```php
 <?php
 
-Transformist::enableMultistepConversions( true );
+Transformist::configure( array( 'multistep' => true ));
+
+/**
+ *	If you want more control, you can also set the maximum number of intermediate
+ *	conversions, to avoid endless converter chains.
+ *	For example, the following line allows chaining of 3 converters maximum.
+ */
+
+Transformist::configure( array( 'multistep' => 2 ));
 
 ?>
 ```
