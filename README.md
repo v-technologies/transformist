@@ -36,7 +36,7 @@ Now, we just have to let Transformist do the hard work for us:
 
 Transformist_Transformist::convert( $Document );
 
-if ( $Document->isConverted( )) {
+if ( $Document->isConverted( )) {
 	// That's all !
 }
 
@@ -93,7 +93,7 @@ Multistep conversions
 To take full advantage of converters, Transformist can chain them together to enlarge its panel of conversions.
 
 For example, according to the result of Transformist::availableConversions( ) shown above,
-we can convert _image/jpeg_ to _image/png_, and _image/png_ to _image/tiff_.
+we can convert files from _image/jpeg_ to _image/png_, and from _image/png_ to _image/tiff_.
 With multistep conversions enabled, those two converters would be chained together,
 allowing a conversion from _image/jpeg_ to _image/tiff_.
 
