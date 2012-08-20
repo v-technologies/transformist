@@ -12,11 +12,11 @@ class Transformist_ConverterCollection {
 	/**
 	 *	Tells if the collection uses multistep conversions.
 	 *
-	 *	@see Transformist_ConverterCollection::__construct( )
+	 *	@see Transformist_ConverterCollection::enableMultistepConversions( )
 	 *	@var boolean|integer
 	 */
 
-	protected $_multistep = false;
+	protected $_multistep = -1;
 
 
 
@@ -54,18 +54,7 @@ class Transformist_ConverterCollection {
 	 *	Constructs the collection, given whether or not to enable multistep
 	 *	conversions.
 	 *
-	 *	For example, consider that the collection contains two converters,
-	 *	[text to doc] and [doc to pdf], and that you want to convert a document
-	 *	from text to pdf.
-	 *
-	 *	None of the converters can convert the document directly; but if
-	 *	multistep conversions are enabled, the collection will use both
-	 *	converters, and convert the document from text to doc, and then from
-	 *	doc to pdf, resulting in a conversion from text to pdf.
-	 *
-	 *	If $multistep is a positive number, then it indicates the maximum number
-	 *	of intermediate conversions that can be done to convert a file.
-	 *
+	 *	@see Transformist_ConverterCollection::enableMultistepConversions( )
 	 *	@param mixed $multistep Whether or not to enable multistep conversions,
 	 *		or a number representing the maximum number of intermediate
 	 *		conversions.
@@ -73,10 +62,8 @@ class Transformist_ConverterCollection {
 
 	public function __construct( $multistep = false ) {
 
-		$this->_multistep = $multistep;
-
 		$this->_loadConverters( );
-		$this->_mapConverters( );
+		$this->enableMultistepConversions( $multistep );
 	}
 
 
@@ -104,6 +91,43 @@ class Transformist_ConverterCollection {
 
 
 	/**
+	 *	Enables or disables multistep conversions.
+	 *
+	 *	For example, consider that the collection contains two converters,
+	 *	[text to doc] and [doc to pdf], and that you want to convert a document
+	 *	from text to pdf.
+	 *
+	 *	None of the converters can convert the document directly; but if
+	 *	multistep conversions are enabled, the collection will use both
+	 *	converters, and convert the document from text to doc, and then from
+	 *	doc to pdf, resulting in a conversion from text to pdf.
+	 *
+	 *	If $multistep is a positive number, then it indicates the maximum number
+	 *	of intermediate conversions that can be done to convert a file.
+	 *
+	 *	@param mixed $multistep Whether or not to enable multistep conversions,
+	 *		or a number representing the maximum number of intermediate
+	 *		conversions.
+	 */
+
+	public function enableMultistepConversions( $multistep ) {
+
+		if ( $multistep === $this->_multistep ) {
+			return;
+		}
+
+		$this->_multistep = $multistep;
+		$this->_map = array( );
+		$this->_mapConverters( );
+
+		if ( $this->_multistep ) {
+			$this->_mapConvertersDeeply( );
+		}
+	}
+
+
+
+	/**
 	 *	Indexes all converters for their later usage to be easier.
 	 */
 
@@ -120,10 +144,6 @@ class Transformist_ConverterCollection {
 
 				$this->_map[ $input ][ $output ] = array( $name );
 			}
-		}
-
-		if ( $this->_multistep !== false ) {
-			$this->_mapConvertersDeeply( );
 		}
 	}
 

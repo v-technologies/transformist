@@ -20,6 +20,23 @@ class Transformist_Transformist {
 
 
 	/**
+	 *	Tells whether or not to enable multistep conversions.
+	 *
+	 *	@see Transformist_ConverterCollection::enableMultistepConversions( )
+	 *	@param mixed $multistep Whether or not to enable multistep conversions,
+	 *		or a number representing the maximum number of intermediate
+	 *		conversions.
+	 */
+
+	public static function enableMultistepConversions( $multistep ) {
+
+		$_this = self::_instance( );
+		$_this->_ConverterCollection->enableMultistepConversions( $multistep );
+	}
+
+
+
+	/**
 	 *	Returns an array of all available conversions.
 	 *
 	 *	@param array Available conversions.
@@ -76,6 +93,6 @@ class Transformist_Transformist {
 
 	protected function __construct( ) {
 
-		$this->_ConverterCollection = new Transformist_ConverterCollection( true );
+		$this->_ConverterCollection = new Transformist_ConverterCollection( );
 	}
 }
