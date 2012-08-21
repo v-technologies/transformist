@@ -7,18 +7,28 @@
 class Transformist_Converter_Json extends Transformist_Converter {
 
 	/**
+	 *	Returns the type of files that the converter accepts.
 	 *
+	 *	@return array Types.
 	 */
 
-	protected $_inputTypes = array( 'application/xml' );
+	public static function inputTypes( ) {
+
+		return array( 'application/xml' );
+	}
 
 
 
 	/**
+	 *	Returns the type of files that the converter produces.
 	 *
+	 *	@return string Type.
 	 */
 
-	protected $_outputType = 'application/json';
+	public static function outputType( ) {
+
+		return 'application/json';
+	}
 
 
 

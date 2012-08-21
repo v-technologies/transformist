@@ -105,8 +105,8 @@ class Transformist_Converter_OfficeTest extends PHPUnit_Framework_TestCase {
 
 class Transformist_Converter_ConcreteOffice extends Transformist_Converter_Office {
 
-	protected $_inputTypes = array( 'application/msword' );
-	protected $_outputType = 'application/pdf';
+	protected static $_inputTypes = array( 'application/msword' );
+	protected static $_outputType = 'application/pdf';
 
 	protected $_printer = 'writer_pdf_Export';
 }
@@ -119,8 +119,8 @@ class Transformist_Converter_ConcreteOffice extends Transformist_Converter_Offic
 
 class Transformist_Converter_BrokenOffice extends Transformist_Converter_Office {
 
-	protected $_inputTypes = array( );
-	protected $_outputType = '';
+	protected static $_inputTypes = array( );
+	protected static $_outputType = '';
 
 	protected $_printer = '';
 }

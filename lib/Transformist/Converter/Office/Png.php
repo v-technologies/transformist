@@ -10,26 +10,6 @@
 class Transformist_Converter_Office_Png extends Transformist_Converter_Office {
 
 	/**
-	 *	Accepted input types.
-	 *
-	 *	@var array
-	 */
-
-	protected $_inputTypes = array( 'image/gif', 'image/jpeg' );
-
-
-
-	/**
-	 *	Supported output type.
-	 *
-	 *	@var string
-	 */
-
-	protected $_outputType = 'image/png';
-
-
-
-	/**
 	 *	Name of the printer to be used for conversion.
 	 *
 	 *	@var string
@@ -37,4 +17,29 @@ class Transformist_Converter_Office_Png extends Transformist_Converter_Office {
 
 	protected $_printer = 'draw_png_Export';
 
+
+
+	/**
+	 *	Returns the type of files that the converter accepts.
+	 *
+	 *	@return array Types.
+	 */
+
+	public static function inputTypes( ) {
+
+		return array( 'image/gif', 'image/jpeg' );
+	}
+
+
+
+	/**
+	 *	Returns the type of files that the converter produces.
+	 *
+	 *	@return string Type.
+	 */
+
+	public static function outputType( ) {
+
+		return 'image/png';
+	}
 }

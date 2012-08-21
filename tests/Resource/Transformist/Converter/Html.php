@@ -7,18 +7,28 @@
 class Transformist_Converter_Html extends Transformist_Converter {
 
 	/**
+	 *	Returns the type of files that the converter accepts.
 	 *
+	 *	@return array Types.
 	 */
 
-	protected $_inputTypes = array( 'text/plain' );
+	public static function inputTypes( ) {
+
+		return array( 'text/plain' );
+	}
 
 
 
 	/**
+	 *	Returns the type of files that the converter produces.
 	 *
+	 *	@return string Type.
 	 */
 
-	protected $_outputType = 'text/html';
+	public static function outputType( ) {
+
+		return 'text/html';
+	}
 
 
 

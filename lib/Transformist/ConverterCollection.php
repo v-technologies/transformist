@@ -72,10 +72,32 @@ class Transformist_ConverterCollection {
 				$Reflection = new ReflectionClass( $className );
 
 				if ( !$Reflection->isAbstract( )) {
-					$this->_converters[ $className ] = new $className( );
+					$this->_converters[ $className ] = null;	// lazy load
 				}
 			}
 		}
+	}
+
+
+
+	/**
+	 *
+	 */
+
+	protected function _converter( $className ) {
+
+		if ( !array_key_exists( $className, $this->_converters )) {
+			return null;
+		}
+
+		$Converter = $this->_converters[ $className ];
+
+		if ( $Converter === null ) {
+			$Converter = new $className( );
+			$this->_converters[ $className ] = $Converter;
+		}
+
+		return $Converter;
 	}
 
 
@@ -90,8 +112,8 @@ class Transformist_ConverterCollection {
 
 		$results = array( );
 
-		foreach ( $this->_converters as $name => $Converter ) {
-			$results[ $name ] = $Converter->isRunnable( );
+		foreach ( $this->_converters as $className => $Converter ) {
+			$results[ $className ] = $className::isRunnable( );
 		}
 
 		return $results;
@@ -142,16 +164,16 @@ class Transformist_ConverterCollection {
 
 	protected function _mapConverters( ) {
 
-		foreach ( $this->_converters as $name => $Converter ) {
-			$inputs = $Converter->inputTypes( );
-			$output = $Converter->outputType( );
+		foreach ( $this->_converters as $className => $Converter ) {
+			$inputs = $className::inputTypes( );
+			$output = $className::outputType( );
 
 			foreach ( $inputs as $input ) {
 				if ( !isset( $this->_map[ $input ])) {
 					$this->_map[ $input ] = array( );
 				}
 
-				$this->_map[ $input ][ $output ] = array( $name );
+				$this->_map[ $input ][ $output ] = array( $className );
 			}
 		}
 	}
@@ -274,7 +296,7 @@ class Transformist_ConverterCollection {
 				break;
 
 			case 1:
-				$Converter =& $this->_converters[ array_shift( $chain )];
+				$Converter = $this->_converter( array_shift( $chain ));
 				$Converter->convert( $Document );
 
 				$result = $Document->isConverted( );
@@ -346,13 +368,13 @@ class Transformist_ConverterCollection {
 		$converterCount = count( $chain );
 
 		for ( $i = 0; $i < $converterCount; $i++ ) {
-			$Converter =& $this->_converters[ $chain[ $i ]];
+			$Converter = $this->_converter( $chain[ $i ]);
 
 			// first step
 
 			if ( $i === 0 ) {
 				$Step = clone $Document;
-				$Step->output( )->setType( $Converter->outputType( ));
+				$Step->output( )->setType( $Converter::outputType( ));
 				$Step->output( )->setExtension( "step-$i" );
 			} else {
 				$PreviousStep =& $steps[ count( $steps ) - 1 ]['document'];
@@ -368,7 +390,7 @@ class Transformist_ConverterCollection {
 
 				} else {
 					$Step->setInput( $PreviousStep->output( ));
-					$Step->output( )->setType( $Converter->outputType( ));
+					$Step->output( )->setType( $Converter::outputType( ));
 					$Step->output( )->setExtension( "step-$i" );
 				}
 			}

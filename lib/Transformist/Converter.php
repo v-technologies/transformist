@@ -15,7 +15,7 @@ abstract class Transformist_Converter {
 	 *	@var array
 	 */
 
-	protected $_inputTypes = array( );
+	protected static $_inputTypes = array( );
 
 
 
@@ -25,7 +25,7 @@ abstract class Transformist_Converter {
 	 *	@var string
 	 */
 
-	protected $_outputType = '';
+	protected static $_outputType = '';
 
 
 
@@ -36,7 +36,7 @@ abstract class Transformist_Converter {
 	 *	@return boolean True if everything went good, otherwise false.
 	 */
 
-	public function isRunnable( ) {
+	public static function isRunnable( ) {
 
 		return true;
 	}
@@ -50,13 +50,15 @@ abstract class Transformist_Converter {
 	 *	@return boolean Whether or not the Converter can convert the document.
 	 */
 
-	public function canConvert( $Document ) {
+	/*
+	public static function canConvert( $Document ) {
 
 		return (
-			in_array( $Document->input( )->type( ), $this->_inputTypes )
-			&& $Document->output( )->type( ) == $this->_outputType
+			in_array( $Document->input( )->type( ), self::inputTypes( ))
+			&& $Document->output( )->type( ) == self::outputType( )
 		);
 	}
+	*/
 
 
 
@@ -66,9 +68,9 @@ abstract class Transformist_Converter {
 	 *	@return array Types.
 	 */
 
-	public function inputTypes( ) {
+	public static function inputTypes( ) {
 
-		return $this->_inputTypes;
+		return array( );
 	}
 
 
@@ -79,9 +81,9 @@ abstract class Transformist_Converter {
 	 *	@return string Type.
 	 */
 
-	public function outputType( ) {
+	public static function outputType( ) {
 
-		return $this->_outputType;
+		return '';
 	}
 
 

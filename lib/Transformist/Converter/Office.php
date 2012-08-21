@@ -27,7 +27,7 @@ abstract class Transformist_Converter_Office extends Transformist_Converter {
 	 *	@return boolean True if the command exists, otherwise false.
 	 */
 
-	public function isRunnable( ) {
+	public static function isRunnable( ) {
 
 		$result = Transformist_Command::execute( 'soffice', array( '--version' ));
 

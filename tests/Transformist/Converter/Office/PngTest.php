@@ -19,17 +19,9 @@ class Transformist_Converter_Office_PngTest extends PHPUnit_Framework_TestCase {
 	 *
 	 */
 
-	public $Png = null;
+	public function testSkip( ) {
 
-
-
-	/**
-	 *
-	 */
-
-	public function setup( ) {
-
-		$this->Png = new Transformist_Converter_Office_Png( );
+		$this->markTestIncomplete( );
 	}
 
 
@@ -38,6 +30,7 @@ class Transformist_Converter_Office_PngTest extends PHPUnit_Framework_TestCase {
 	 *
 	 */
 
+	/*
 	public function testCanConvert( ) {
 
 		$Document = new Transformist_Document(
@@ -45,6 +38,7 @@ class Transformist_Converter_Office_PngTest extends PHPUnit_Framework_TestCase {
 			new Transformist_FileInfo( 'bar', 'image/png' )
 		);
 
-		$this->assertTrue( $this->Png->canConvert( $Document ));
+		$this->assertTrue( Transformist_Converter_Office_Png::canConvert( $Document ));
 	}
+	*/
 }
