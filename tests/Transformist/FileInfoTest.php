@@ -44,12 +44,6 @@ class Transformist_FileInfoTest extends PHPUnit_Framework_TestCase {
 			$this->markTestAsSkipped( 'vfsStream must be enabled.' );
 		}
 
-		if ( !Runkit::isEnabled( )) {
-			$this->markTestAsSkipped( 'Runkit must be enabled.' );
-		}
-
-		Runkit::reimplementFunction( 'realpath', '$path', 'return $path;' );
-
 		$this->vfs = vfsStream::setup( 'root' );
 
 		$accessible = vfsStream::newDirectory( 'accessible' );
@@ -265,16 +259,5 @@ class Transformist_FileInfoTest extends PHPUnit_Framework_TestCase {
 		$this->assertTrue( $caught );
 
 		Runkit::resetFunction( 'class_exists' );
-	}
-
-
-
-	/**
-	 *
-	 */
-
-	public function tearDown( ) {
-
-		Runkit::resetFunction( 'realpath' );
 	}
 }
