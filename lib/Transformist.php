@@ -52,7 +52,7 @@ class Transformist {
 
 
 	/**
-	 *
+	 *	Pending input files, appended by from( ) and waiting for to( ).
 	 *
 	 *	@var array
 	 */
@@ -62,7 +62,7 @@ class Transformist {
 
 
 	/**
-	 *
+	 *	Pending documents to convert.
 	 *
 	 *	@var array
 	 */
@@ -278,7 +278,7 @@ class Transformist {
 
 
 	/**
-	 *	Checks if the collection knows a way convert the given document.
+	 *	Checks if there is a way convert the given document.
 	 *
 	 *	@param Transformist_Document $Document Document to convert.
 	 *	@return boolean|integer True if the document can be converter, otherwise
