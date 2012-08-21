@@ -30,7 +30,10 @@ abstract class Transformist_Converter {
 
 
 	/**
+	 *	Runs some tests to determine if the converter can run properly.
+	 *	For example, checks if an external software is installed on the system.
 	 *
+	 *	@return boolean True if everything went good, otherwise false.
 	 */
 
 	public function isRunnable( ) {

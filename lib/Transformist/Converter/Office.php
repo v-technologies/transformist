@@ -22,14 +22,18 @@ abstract class Transformist_Converter_Office extends Transformist_Converter {
 
 
 	/**
+	 *	Tests if the soffice command is available on the system.
 	 *
+	 *	@return boolean True if the command exists, otherwise false.
 	 */
 
 	public function isRunnable( ) {
 
 		$result = Transformist_Command::execute( 'soffice', array( '--version' ));
 
-		return ( $result['status'] == 0 );
+		return ( $result['status'] == 0 )
+			? true
+			: 'The soffice command is not available.';
 	}
 
 

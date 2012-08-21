@@ -110,3 +110,34 @@ array(
 
 ?>
 ```
+
+Test
+----
+
+Transformist provides a way to check all converters for validity.
+Some could be runnable without further configuration, while others could rely on external librairies that must be installed for the converter to work.
+
+```php
+<?php
+
+$results = Transformist::testConverters( );
+
+?>
+```
+
+$results now looks like this:
+
+```php
+<?php
+
+array(
+	'Transformist_Converter_Office_Pdf' => true,
+	'Transformist_Converter_Office_Png' => 'An external library is missing!',
+	'Transformist_Converter_Office_Tiff' => true
+);
+
+?>
+```
+
+You should run this function only once when configuring your system or troubleshooting errors,
+as some converters could do some heavy computation to test their environment.

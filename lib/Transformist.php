@@ -9,12 +9,32 @@
 class Transformist {
 
 	/**
+	 *	Singleton instance.
+	 *
+	 *	@var Transformist
+	 */
+
+	protected static $_Instance = null;
+
+
+
+	/**
 	 *	A collection of converters.
 	 *
 	 *	@var Transformist_ConverterCollection
 	 */
 
 	protected $_ConverterCollection = null;
+
+
+
+	/**
+	 *	An array of execution error messages.
+	 *
+	 *	@var array
+	 */
+
+	protected $_errors = array( );
 
 
 
@@ -39,6 +59,20 @@ class Transformist {
 
 
 	/**
+	 *	Runs a test on every converter and returns the results of these tests.
+	 *
+	 *	@return array Test results, boolean values indexed by converters name.
+	 */
+
+	public static function testConverters( ) {
+
+		$_this = self::_instance( );
+		return $_this->_ConverterCollection->testConverters( );
+	}
+
+
+
+	/**
 	 *	Returns an array of all available conversions.
 	 *
 	 *	@param array Available conversions.
@@ -53,7 +87,7 @@ class Transformist {
 
 
 	/**
-	 *
+	 *	Sets the input file infos for later conversion.
 	 *
 	 *	@param string $filePath Path to the input file.
 	 *	@param string $type MIME type of the file to avoid auto detection.
@@ -70,7 +104,7 @@ class Transformist {
 
 
 	/**
-	 *
+	 *	Sets the output file info and start the conversion.
 	 *
 	 *	@param string $filePath Path to the output file.
 	 *	@param string $type MIME type of the file.
@@ -102,13 +136,11 @@ class Transformist {
 
 	protected static function _instance( ) {
 
-		static $Instance = null;
-
-		if ( $Instance === null ) {
-			$Instance = new self( );
+		if ( self::$_Instance === null ) {
+			self::$_Instance = new self( );
 		}
 
-		return $Instance;
+		return self::$_Instance;
 	}
 
 

@@ -41,16 +41,6 @@ class Transformist_ConverterCollection {
 
 
 	/**
-	 *	An array of execution error messages.
-	 *
-	 *	@var array
-	 */
-
-	protected $_errors = array( );
-
-
-
-	/**
 	 *	Constructs the collection, given whether or not to enable multistep
 	 *	conversions.
 	 *
@@ -86,6 +76,25 @@ class Transformist_ConverterCollection {
 				}
 			}
 		}
+	}
+
+
+
+	/**
+	 *	Runs a test on every converter and returns the results of these tests.
+	 *
+	 *	@return array Test results, boolean values indexed by converters name.
+	 */
+
+	public function testConverters( ) {
+
+		$results = array( );
+
+		foreach ( $this->_converters as $name => $Converter ) {
+			$results[ $name ] = $Converter->isRunnable( );
+		}
+
+		return $results;
 	}
 
 

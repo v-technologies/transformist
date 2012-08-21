@@ -19,11 +19,36 @@ class Transformist_TransformistTest extends PHPUnit_Framework_TestCase {
 	 *
 	 */
 
-	public function setUp( ) {
+	public function testConfigure( ) {
 
-		if ( !Runkit::isEnabled( )) {
-			$this->markTestAsSkipped( 'Runkit must be enabled.' );
-		}
+		$Collection = $this->getMock( '\\Essence\\ConverterCollection', array( 'enableMultistep' ));
+		$Collection->expects( $this->any( ))
+			->method( 'enableMultistep' )
+			->with( $this->equalTo( true ));
+
+		TestableTransformist::stub( $Collection );
+		TestableTransformist::configure( array( 'multistep' => true ));
+	}
+
+
+
+	/**
+	 *
+	 */
+
+	public function testTestConverters( ) {
+
+		$Collection = $this->getMock( '\\Essence\\ConverterCollection', array( 'testConverters' ));
+		$Collection->expects( $this->any( ))
+			->method( 'testConverters' )
+			->will( $this->returnValue( array( 'foo' => true )));
+
+		TestableTransformist::stub( $Collection );
+
+		$this->assertEquals(
+			array( 'foo' => true ),
+			TestableTransformist::testConverters( )
+		);
 	}
 
 
@@ -34,16 +59,17 @@ class Transformist_TransformistTest extends PHPUnit_Framework_TestCase {
 
 	public function testAvailableConversions( ) {
 
-		Runkit::reimplementMethod(
-			'Transformist_ConverterCollection',
-			'availableConversions',
-			'',
-			'return \'foo\';'
+		$Collection = $this->getMock( '\\Essence\\ConverterCollection', array( 'availableConversions' ));
+		$Collection->expects( $this->any( ))
+			->method( 'availableConversions' )
+			->will( $this->returnValue( array( 'foo' => 'bar' )));
+
+		TestableTransformist::stub( $Collection );
+
+		$this->assertEquals(
+			array( 'foo' => 'bar' ),
+			TestableTransformist::availableConversions( )
 		);
-
-		$this->assertEquals( 'foo', Transformist::availableConversions( ));
-
-		Runkit::resetMethod( 'Transformist_ConverterCollection', 'availableConversions' );
 	}
 
 
@@ -54,15 +80,68 @@ class Transformist_TransformistTest extends PHPUnit_Framework_TestCase {
 
 	public function testConvert( ) {
 
-		Runkit::reimplementMethod(
-			'Transformist_ConverterCollection',
-			'convert',
-			'$Document',
-			'return \'foo\';'
+		$Document = new Transformist_Document(
+			new Transformist_FileInfo( 'foo', 'application/foo' ),
+			new Transformist_FileInfo( 'bar', 'application/bar' )
 		);
 
-		$this->assertEquals( 'foo', Transformist::convert( '' )->to( '', '' ));
+		$Collection = $this->getMock( '\\Essence\\ConverterCollection', array( 'convert' ));
+		$Collection->expects( $this->any( ))
+			->method( 'convert' )
+			->with( $this->equalTo( $Document ))
+			->will( $this->returnValue( true ));
 
-		Runkit::resetMethod( 'Transformist_ConverterCollection', 'convert' );
+		TestableTransformist::stub( $Collection );
+
+		$this->assertTrue( TestableTransformist::convert( 'foo', 'application/foo' )->to( 'bar', 'application/bar' ));
+	}
+
+
+
+	/**
+	 *
+	 */
+
+	public function tearDown( ) {
+
+		TestableTransformist::kill( );
+	}
+}
+
+
+
+/**
+ *
+ */
+
+class TestableTransformist extends Transformist {
+
+	/**
+	 *
+	 */
+
+	protected function __construct( ) { }
+
+
+
+	/**
+	 *
+	 */
+
+	public static function kill( ) {
+
+		self::$_Instance = null;
+	}
+
+
+
+	/**
+	 *
+	 */
+
+	public static function stub( $ConverterCollection ) {
+
+		$_this = self::_instance( );
+		$_this->_ConverterCollection = $ConverterCollection;
 	}
 }
