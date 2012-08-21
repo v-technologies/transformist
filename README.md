@@ -14,8 +14,12 @@ You can use this fluent interface to convert a document in seconds:
 ```php
 <?php
 
-$converted = Transformist::convert( '/path/to/input/file.doc', 'application/msword' )
-	->to( '/path/to/output/file.pdf', 'application/pdf' );
+$Transformist = new Transformist( );
+
+$converted = $Transformist
+	->from( '/path/to/input/file.doc', 'application/msword' )
+	->to( '/path/to/output/file.pdf', 'application/pdf' )
+	->convert( );
 
 if ( $converted ) {
 	// You're good to go !
@@ -24,8 +28,23 @@ if ( $converted ) {
 ?>
 ```
 
-The _convert( )_ and _to( )_ methods both accept two parameters: a file path and a MIME type.
+The _from( )_ and _to( )_ methods both accept two parameters: a file path and a MIME type.
 Note that if the input file type is omitted, then it is detected automatically.
+
+You can chain those methods multiple times to make multiple conversions:
+
+```php
+<?php
+
+$Transformist
+	->from( '/path/to/input/file.doc' ),
+	->to( '/path/to/output/file.pdf', 'application/pdf' )
+	->from( '/path/to/other/input/file.doc' )
+	->to( '/path/to/other/output/file.html', 'text/html' )
+	->convert( );
+
+?>
+```
 
 Available conversions
 ---------------------
@@ -36,7 +55,7 @@ There's a method for that:
 ```php
 <?php
 
-$conversions = Transformist::availableConversions( );
+$conversions = $Transformist->availableConversions( );
 
 ?>
 ```
@@ -80,7 +99,7 @@ To turn on this mechanism, use the _configure( )_ method:
 ```php
 <?php
 
-Transformist::configure( array( 'multistep' => true ));
+$Transformist->configure( array( 'multistep' => true ));
 
 /**
  *	If you want more control, you can also set the maximum number of intermediate
@@ -88,7 +107,7 @@ Transformist::configure( array( 'multistep' => true ));
  *	For example, the following line allows chaining of 3 converters maximum.
  */
 
-Transformist::configure( array( 'multistep' => 2 ));
+$Transformist->configure( array( 'multistep' => 2 ));
 
 ?>
 ```
@@ -119,6 +138,10 @@ Some could be runnable without further configuration, while others could rely on
 
 ```php
 <?php
+
+$results = $Transformist->testConverters( );
+
+// Or statically:
 
 $results = Transformist::testConverters( );
 
