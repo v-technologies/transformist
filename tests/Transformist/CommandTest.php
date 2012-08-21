@@ -94,7 +94,7 @@ class Transformist_CommandTest extends PHPUnit_Framework_TestCase {
 	public function setUp( ) {
 
 		if ( !Runkit::isEnabled( )) {
-			$this->markTestAsSkipped( 'Runkit must be enabled.' );
+			$this->markTestSkipped( 'Runkit must be enabled.' );
 		}
 
 		Runkit::reimplementFunction(

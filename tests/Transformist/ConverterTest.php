@@ -132,6 +132,6 @@ class Transformist_ConcreteConverter extends Transformist_Converter {
 	 *
 	 */
 
-	public function convert( $Document ) { }
+	public function convert( Transformist_Document $Document ) { }
 
 }

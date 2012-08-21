@@ -21,7 +21,7 @@ class Transformist_Converter_Office_PngTest extends PHPUnit_Framework_TestCase {
 
 	public function testSkip( ) {
 
-		$this->markTestIncomplete( );
+		//$this->markTestIncomplete( );
 	}
 
 

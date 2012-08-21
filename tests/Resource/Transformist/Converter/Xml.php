@@ -36,7 +36,7 @@ abstract class Transformist_Converter_Xml extends Transformist_Converter {
 	 *
 	 */
 
-	public function convert( $Document ) {
+	public function convert( Transformist_Document $Document ) {
 
 		file_put_contents(
 			$Document->output( )->path( ),

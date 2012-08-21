@@ -44,7 +44,7 @@ abstract class Transformist_Converter_Office extends Transformist_Converter {
 	 *	@param Transformist_Document $Document Document to convert.
 	 */
 
-	public function convert( $Document ) {
+	public function convert( Transformist_Document $Document ) {
 
 		if ( empty( $this->_printer )) {
 			throw new Transformist_Exception(

@@ -36,7 +36,7 @@ class Transformist_Document {
 	 *	@param Transformist_FileInfo $Output Output file info.
 	 */
 
-	public function __construct( $Input, $Output ) {
+	public function __construct( Transformist_FileInfo $Input, Transformist_FileInfo $Output ) {
 
 		$this->_Input = $Input;
 		$this->_Output = $Output;
@@ -75,7 +75,7 @@ class Transformist_Document {
 	 *	@param Transformist_FileInfo $Input File info.
 	 */
 
-	public function setInput( $Input ) {
+	public function setInput( Transformist_FileInfo $Input ) {
 
 		$this->_Input = clone $Input;
 	}
@@ -101,7 +101,7 @@ class Transformist_Document {
 	 *	@return Transformist_FileInfo $Output File info.
 	 */
 
-	public function setOutput( $Output ) {
+	public function setOutput( Transformist_FileInfo $Output ) {
 
 		$this->_Output = clone $Output;
 	}

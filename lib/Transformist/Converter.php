@@ -94,6 +94,6 @@ abstract class Transformist_Converter {
 	 *	@param Transformist_Document $Document Document to convert.
 	 */
 
-	abstract public function convert( $Document );
+	abstract public function convert( Transformist_Document $Document );
 
 }

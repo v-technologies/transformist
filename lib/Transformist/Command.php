@@ -42,7 +42,7 @@ class Transformist_Command {
 	 *	@return array Informations about the executed command.
 	 */
 
-	public static function execute( $name, $options = array( ), $assignment = ' ' ) {
+	public static function execute( $name, array $options = array( ), $assignment = ' ' ) {
 
 		$command = $name;
 
