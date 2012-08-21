@@ -58,7 +58,6 @@ class Transformist_ClassLoaderTest extends PHPUnit_Framework_TestCase {
 	public function testLoad( ) {
 
 		$this->assertTrue( class_exists( 'Transformist_Converter_Html' ));
-		$this->assertTrue( class_exists( 'Transformist_Converter_Xml_XmlFoo' ));
 	}
 
 

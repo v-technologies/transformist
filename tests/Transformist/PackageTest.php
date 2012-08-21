@@ -68,13 +68,24 @@ class Transformist_PackageTest extends PHPUnit_Framework_TestCase {
 
 	public function testPath( ) {
 
-		$here = dirname( __FILE__ );
+		$dir = dirname( __FILE__ );
 
-		$Package = new Transformist_Package( $here );
-		$this->assertEquals( $here, $Package->path( ));
+		$Package = new Transformist_Package( $dir );
+		$this->assertEquals( $dir, $Package->path( ));
+	}
+
+
+
+	/**
+	 *
+	 */
+
+	public function testFilePath( ) {
+
+		$dir = dirname( __FILE__ );
 
 		$Package = new Transformist_Package( __FILE__ );
-		$this->assertEquals( $here, $Package->path( ));
+		$this->assertEquals( $dir, $Package->path( ));
 	}
 
 
@@ -87,9 +98,6 @@ class Transformist_PackageTest extends PHPUnit_Framework_TestCase {
 
 		$Package = new Transformist_Package( 'foo', '\\' );
 		$this->assertEquals( '\\', $Package->separator( ));
-
-		$Package = new Transformist_Package( 'bar', DS );
-		$this->assertEquals( DS, $Package->separator( ));
 	}
 
 

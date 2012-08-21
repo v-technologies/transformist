@@ -124,6 +124,16 @@ class Transformist_FileInfoTest extends PHPUnit_Framework_TestCase {
 	public function testIsReadable( ) {
 
 		$this->assertTrue( $this->XmlFileInfo->isReadable( ));
+	}
+
+
+
+	/**
+	 *
+	 */
+
+	public function testIsUnreadable( ) {
+
 		$this->assertFalse( $this->GifFileInfo->isReadable( ));
 	}
 
@@ -136,6 +146,16 @@ class Transformist_FileInfoTest extends PHPUnit_Framework_TestCase {
 	public function testIsWritable( ) {
 
 		$this->assertTrue( $this->XmlFileInfo->isWritable( ));
+	}
+
+
+
+	/**
+	 *
+	 */
+
+	public function testIsUnwritable( ) {
+
 		$this->assertFalse( $this->GifFileInfo->isWritable( ));
 	}
 
@@ -148,6 +168,16 @@ class Transformist_FileInfoTest extends PHPUnit_Framework_TestCase {
 	public function testIsDirReadable( ) {
 
 		$this->assertTrue( $this->XmlFileInfo->isDirReadable( ));
+	}
+
+
+
+	/**
+	 *
+	 */
+
+	public function testIsDirUnreadable( ) {
+
 		$this->assertFalse( $this->GifFileInfo->isDirReadable( ));
 	}
 
@@ -160,6 +190,16 @@ class Transformist_FileInfoTest extends PHPUnit_Framework_TestCase {
 	public function testIsDirWritable( ) {
 
 		$this->assertTrue( $this->XmlFileInfo->isDirWritable( ));
+	}
+
+
+
+	/**
+	 *
+	 */
+
+	public function testIsDirUnwritable( ) {
+
 		$this->assertFalse( $this->GifFileInfo->isDirWritable( ));
 	}
 
