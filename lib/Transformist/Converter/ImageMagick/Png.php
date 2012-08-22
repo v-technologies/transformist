@@ -1,23 +1,13 @@
 <?php
 
 /**
- *	Converts files to PNGs.
+ *	Converts images to PNGs.
  *
- *	@package Transformist.Converter.Office
+ *	@package Transformist.Converter.ImageMagick
  *	@author Félix Girault <felix@vtech.fr>
  */
 
-class Transformist_Converter_Office_Png extends Transformist_Converter_Office {
-
-	/**
-	 *	Name of the printer to be used for conversion.
-	 *
-	 *	@var string
-	 */
-
-	protected $_printer = 'draw_png_Export';
-
-
+class Transformist_Converter_ImageMagick_Png extends Transformist_Converter_ImageMagick {
 
 	/**
 	 *	Returns the type of files that the converter accepts.
@@ -27,7 +17,12 @@ class Transformist_Converter_Office_Png extends Transformist_Converter_Office {
 
 	public static function inputTypes( ) {
 
-		return array( 'image/gif', 'image/jpeg' );
+		return array(
+			'image/gif',
+			'image/jpeg',
+			'image/svg+xml',
+			'image/tiff'
+		);
 	}
 
 

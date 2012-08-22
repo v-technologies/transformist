@@ -1,13 +1,13 @@
 <?php
 
 /**
- *	Converts files to PDFs.
+ *	Converts files to PDF/As.
  *
  *	@package Transformist.Converter.Office
  *	@author Félix Girault <felix@vtech.fr>
  */
 
-class Transformist_Converter_Office_Pdf extends Transformist_Converter_Office {
+class Transformist_Converter_Office_Pdfa extends Transformist_Converter_Office {
 
 	/**
 	 *	Output format.
@@ -16,6 +16,16 @@ class Transformist_Converter_Office_Pdf extends Transformist_Converter_Office {
 	 */
 
 	protected $_format = 'pdf';
+
+
+
+	/**
+	 *	Command arguments to be merged with the default ones.
+	 *
+	 *	@var array
+	 */
+
+	protected $_arguments = array( '-e' => 'SelectPdfVersion=1' );
 
 
 
@@ -40,6 +50,6 @@ class Transformist_Converter_Office_Pdf extends Transformist_Converter_Office {
 
 	public static function outputType( ) {
 
-		return 'application/pdf';
+		return 'application/pdfa';
 	}
 }

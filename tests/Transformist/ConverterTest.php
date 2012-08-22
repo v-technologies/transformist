@@ -41,42 +41,6 @@ class Transformist_ConverterTest extends PHPUnit_Framework_TestCase {
 	 *
 	 */
 
-	/*
-	public function testCanConvert( ) {
-
-		$Document = new Transformist_Document(
-			new Transformist_FileInfo( 'foo', CONVERTER_INPUT_TYPE ),
-			new Transformist_FileInfo( 'bar', CONVERTER_OUTPUT_TYPE )
-		);
-
-		$this->assertTrue( $this->Converter->canConvert( $Document ));
-	}
-	*/
-
-
-
-	/**
-	 *
-	 */
-
-	/*
-	public function testCanConvertWithUnknownTypes( ) {
-
-		$OtherDocument = new Transformist_Document(
-			new Transformist_FileInfo( 'foo', 'unknown' ),
-			new Transformist_FileInfo( 'bar', 'unknown' )
-		);
-
-		$this->assertFalse( $this->Converter->canConvert( $OtherDocument ));
-	}
-	*/
-
-
-
-	/**
-	 *
-	 */
-
 	public function testInputTypes( ) {
 
 		$this->assertEquals( array( CONVERTER_INPUT_TYPE ), $this->Converter->inputTypes( ));

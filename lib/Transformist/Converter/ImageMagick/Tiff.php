@@ -1,23 +1,13 @@
 <?php
 
 /**
- *	Converts files to PDFs.
+ *	Converts images to TIFFs.
  *
- *	@package Transformist.Converter.Office
+ *	@package Transformist.Converter.ImageMagick
  *	@author Félix Girault <felix@vtech.fr>
  */
 
-class Transformist_Converter_Office_Pdf extends Transformist_Converter_Office {
-
-	/**
-	 *	Output format.
-	 *
-	 *	@var string
-	 */
-
-	protected $_format = 'pdf';
-
-
+class Transformist_Converter_ImageMagick_Tiff extends Transformist_Converter_ImageMagick {
 
 	/**
 	 *	Returns the type of files that the converter accepts.
@@ -27,7 +17,12 @@ class Transformist_Converter_Office_Pdf extends Transformist_Converter_Office {
 
 	public static function inputTypes( ) {
 
-		return array( 'application/msword' );
+		return array(
+			'image/gif',
+			'image/jpeg',
+			'image/png',
+			'image/svg+xml'
+		);
 	}
 
 
@@ -40,6 +35,6 @@ class Transformist_Converter_Office_Pdf extends Transformist_Converter_Office {
 
 	public static function outputType( ) {
 
-		return 'application/pdf';
+		return 'image/tiff';
 	}
 }

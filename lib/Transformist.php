@@ -211,7 +211,7 @@ class Transformist {
 					}
 
 					foreach ( $this->_map[ $output ] as $chainableOutput => $chainableConverters ) {
-						if ( isset( $outputs[ $chainableOutput ])) {
+						if ( isset( $outputs[ $chainableOutput ]) || ( $input == $chainableOutput )) {
 							continue;
 						}
 

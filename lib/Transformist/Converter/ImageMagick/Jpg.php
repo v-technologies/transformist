@@ -1,23 +1,13 @@
 <?php
 
 /**
- *	Converts JPGs to TIFFs.
+ *	Converts images to JPGs.
  *
- *	@package Transformist.Converter.Office
+ *	@package Transformist.Converter.ImageMagick
  *	@author Félix Girault <felix@vtech.fr>
  */
 
-class Transformist_Converter_Office_Tiff extends Transformist_Converter_Office {
-
-	/**
-	 *	Name of the printer to be used for conversion.
-	 *
-	 *	@var string
-	 */
-
-	protected $_printer = 'draw_tif_Export';
-
-
+class Transformist_Converter_ImageMagick_Jpg extends Transformist_Converter_ImageMagick {
 
 	/**
 	 *	Returns the type of files that the converter accepts.
@@ -27,7 +17,12 @@ class Transformist_Converter_Office_Tiff extends Transformist_Converter_Office {
 
 	public static function inputTypes( ) {
 
-		return array( 'image/png', 'image/jpeg' );
+		return array(
+			'image/gif',
+			'image/png',
+			'image/svg+xml',
+			'image/tiff'
+		);
 	}
 
 
@@ -40,6 +35,6 @@ class Transformist_Converter_Office_Tiff extends Transformist_Converter_Office {
 
 	public static function outputType( ) {
 
-		return 'image/tiff';
+		return 'image/jpeg';
 	}
 }

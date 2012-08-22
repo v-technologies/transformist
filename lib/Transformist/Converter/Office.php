@@ -12,12 +12,22 @@
 abstract class Transformist_Converter_Office extends Transformist_Converter {
 
 	/**
-	 *	Name of the printer to be used for conversion.
+	 *	Output format.
 	 *
 	 *	@var string
 	 */
 
-	protected $_printer = '';
+	protected $_format = '';
+
+
+
+	/**
+	 *	Command arguments to be merged with the default ones.
+	 *
+	 *	@var array
+	 */
+
+	protected $_arguments = array( );
 
 
 
@@ -29,11 +39,11 @@ abstract class Transformist_Converter_Office extends Transformist_Converter {
 
 	public static function isRunnable( ) {
 
-		$result = Transformist_Command::execute( 'soffice', array( '--version' ));
+		$result = Transformist_Command::execute( 'command', array( '-v', 'unoconv' ));
 
 		return ( $result['status'] == 0 )
 			? true
-			: 'The soffice command is not available.';
+			: 'The unoconv command is not available.';
 	}
 
 
@@ -46,9 +56,9 @@ abstract class Transformist_Converter_Office extends Transformist_Converter {
 
 	public function convert( Transformist_Document $Document ) {
 
-		if ( empty( $this->_printer )) {
+		if ( empty( $this->_format )) {
 			throw new Transformist_Exception(
-				'$_printer must be defined'
+				'$_format must be defined.'
 			);
 		}
 
@@ -82,16 +92,16 @@ abstract class Transformist_Converter_Office extends Transformist_Converter {
 		// We're calling the office suite, without GUI (--headless) and without
 		// opening a default document (--nodefault).
 
-		Transformist_Command::execute(
-			'soffice',
+		$arguments = array_merge(
+			$this->_arguments,
 			array(
-				'--headless',
-				'--nodefault',
-				'--convert-to' => $Output->extension( ) . ':' . $this->_printer,
-				'--outdir' => $Output->dirPath( ),
+				'-f' => $this->_format,
+				'--outputpath' => $Output->dirPath( ),
 				$inputPath
 			)
 		);
+
+		Transformist_Command::execute( 'unoconv', $arguments );
 
 		// We don't need the symlink anymore.
 

@@ -11,12 +11,7 @@ define(
 );
 
 define(
-	'OFFICE_OUTPUT_FILE_1',
-	TRANSFORMIST_TEST_RESOURCE . 'File' . DS . 'Output' . DS . 'sample.pdf'
-);
-
-define(
-	'OFFICE_OUTPUT_FILE_2',
+	'OFFICE_OUTPUT_FILE',
 	TRANSFORMIST_TEST_RESOURCE . 'File' . DS . 'Output' . DS . 'converted.pdf'
 );
 
@@ -34,9 +29,31 @@ class Transformist_Converter_OfficeTest extends PHPUnit_Framework_TestCase {
 	 *
 	 */
 
+	public $Office = null;
+
+
+
+	/**
+	 *
+	 */
+
+	public $Document = null;
+
+
+
+	/**
+	 *
+	 */
+
 	public function setUp( ) {
 
-		Transformist_cleanDirectory( dirname( OFFICE_OUTPUT_FILE_1 ));
+		Transformist_cleanDirectory( dirname( OFFICE_OUTPUT_FILE ));
+
+		$this->Office = new Transformist_Converter_Office_Concrete( );
+		$this->Document = new Transformist_Document(
+			new Transformist_FileInfo( OFFICE_INPUT_FILE ),
+			new Transformist_FileInfo( OFFICE_OUTPUT_FILE, 'application/pdf' )
+		);
 	}
 
 
@@ -47,34 +64,9 @@ class Transformist_Converter_OfficeTest extends PHPUnit_Framework_TestCase {
 
 	public function testConvert( ) {
 
-		$Document = new Transformist_Document(
-			new Transformist_FileInfo( OFFICE_INPUT_FILE ),
-			new Transformist_FileInfo( OFFICE_OUTPUT_FILE_1 )
-		);
+		$this->Office->convert( $this->Document );
 
-		$Office = new Transformist_Converter_ConcreteOffice( );
-		$Office->convert( $Document );
-
-		$this->assertTrue( file_exists( OFFICE_OUTPUT_FILE_1 ));
-	}
-
-
-
-	/**
-	 *
-	 */
-
-	public function testConvertWithNewName( ) {
-
-		$Document = new Transformist_Document(
-			new Transformist_FileInfo( OFFICE_INPUT_FILE ),
-			new Transformist_FileInfo( OFFICE_OUTPUT_FILE_2 )
-		);
-
-		$Office = new Transformist_Converter_ConcreteOffice( );
-		$Office->convert( $Document );
-
-		$this->assertTrue( file_exists( OFFICE_OUTPUT_FILE_2 ));
+		$this->assertTrue( file_exists( OFFICE_OUTPUT_FILE ));
 	}
 
 
@@ -87,13 +79,8 @@ class Transformist_Converter_OfficeTest extends PHPUnit_Framework_TestCase {
 
 		$this->setExpectedException( 'Transformist_Exception' );
 
-		$Document = new Transformist_Document(
-			new Transformist_FileInfo( OFFICE_INPUT_FILE ),
-			new Transformist_FileInfo( OFFICE_OUTPUT_FILE_1 )
-		);
-
-		$Office = new Transformist_Converter_BrokenOffice( );
-		$Office->convert( $Document );
+		$Office = new Transformist_Converter_Office_Broken( );
+		$Office->convert( $this->Document );
 	}
 }
 
@@ -103,12 +90,19 @@ class Transformist_Converter_OfficeTest extends PHPUnit_Framework_TestCase {
  *
  */
 
-class Transformist_Converter_ConcreteOffice extends Transformist_Converter_Office {
+class Transformist_Converter_Office_Concrete extends Transformist_Converter_Office {
 
-	protected static $_inputTypes = array( 'application/msword' );
-	protected static $_outputType = 'application/pdf';
+	public static function inputTypes( ) {
 
-	protected $_printer = 'writer_pdf_Export';
+		return array( 'application/msword' );
+	}
+
+	public static function outputType( ) {
+
+		return 'application/pdf';
+	}
+
+	protected $_format = 'pdf';
 }
 
 
@@ -117,10 +111,6 @@ class Transformist_Converter_ConcreteOffice extends Transformist_Converter_Offic
  *
  */
 
-class Transformist_Converter_BrokenOffice extends Transformist_Converter_Office {
+class Transformist_Converter_Office_Broken extends Transformist_Converter_Office {
 
-	protected static $_inputTypes = array( );
-	protected static $_outputType = '';
-
-	protected $_printer = '';
 }
