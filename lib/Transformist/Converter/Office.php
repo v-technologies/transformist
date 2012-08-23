@@ -41,9 +41,25 @@ abstract class Transformist_Converter_Office extends Transformist_Converter {
 
 		$result = Transformist_Command::execute( 'command', array( '-v', 'unoconv' ));
 
-		return ( $result['status'] == 0 )
-			? true
-			: 'The unoconv command is not available.';
+		if ( $result['status'] != 0 ) {
+			return 'The unoconv command is not available.';
+		}
+
+		$result = Transformist_Command::execute( 'unoconv', array( '--version' ));
+		$version = 0;
+
+		foreach ( $result['output'] as $line ) {
+			if ( preg_match( '#unoconv\\s+(?P<version>[0-9]\\.[0-9])#i', $line, $matches )) {
+				$version = floatval( $matches['version']);
+				break;
+			}
+		}
+
+		if ( $version < 0.6 ) {
+			return 'unoconv version must be 0.6 or higher';
+		}
+
+		return true;
 	}
 
 
@@ -96,7 +112,7 @@ abstract class Transformist_Converter_Office extends Transformist_Converter {
 			$this->_arguments,
 			array(
 				'-f' => $this->_format,
-				'--outputpath' => $Output->dirPath( ),
+				'--output' => $Output->dirPath( ),
 				$inputPath
 			)
 		);

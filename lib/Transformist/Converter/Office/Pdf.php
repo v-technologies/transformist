@@ -20,6 +20,16 @@ class Transformist_Converter_Office_Pdf extends Transformist_Converter_Office {
 
 
 	/**
+	 *	Command arguments to be merged with the default ones.
+	 *
+	 *	@var array
+	 */
+
+	protected $_arguments = array( '-e' => 'SelectPdfVersion=0' );
+
+
+
+	/**
 	 *	Returns the type of files that the converter accepts.
 	 *
 	 *	@return array Types.

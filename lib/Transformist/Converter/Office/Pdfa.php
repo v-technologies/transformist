@@ -37,7 +37,10 @@ class Transformist_Converter_Office_Pdfa extends Transformist_Converter_Office {
 
 	public static function inputTypes( ) {
 
-		return array( 'application/msword' );
+		return array(
+			'application/msword',
+			'application/pdf'
+		);
 	}
 
 

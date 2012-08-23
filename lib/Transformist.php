@@ -370,7 +370,7 @@ class Transformist {
 			try {
 				$this->_convert( $Document );
 			} catch ( Transformist_Exception $exception ) {
-				// log
+				//var_dump( $exception->getMessage( ));
 			}
 
 			if ( !$Document->isConverted( )) {
