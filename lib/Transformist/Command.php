@@ -56,11 +56,7 @@ class Transformist_Command {
 			$command .= $value;
 		}
 
-		// stderr redirection
-
-		$command .= ' 2>&1';
-
-		@exec( $command, $output, $status );
+		@exec( $command . ' 2>&1', $output, $status );
 
 		$informations = compact( 'command', 'output', 'status' );
 		self::$_executed[] = $informations;
