@@ -52,12 +52,12 @@ class Transformist {
 
 
 	/**
-	 *	Pending input files, appended by from( ) and waiting for to( ).
+	 *	Pending conversion settings.
 	 *
-	 *	@var array
+	 *	@var string
 	 */
 
-	protected $_pendingInputs = array( );
+	protected $_pending = '';
 
 
 
@@ -303,45 +303,134 @@ class Transformist {
 
 
 	/**
-	 *	Sets the input file infos for later conversion.
+	 *	Sets up some conversions to run later.
 	 *
-	 *	@param string $filePath Path to the input file.
-	 *	@param string $type MIME type of the file to avoid auto detection.
+	 *	@param string|array $conversions The input directory, or an array of
+	 *		input and output directories, in such form: array( input => output ).
+	 *		If no output directory is specified, the converted files will be
+	 *		outputted in the input directory.
+	 *	@param string|array $from The input pattern, or an array of output types
+	 *		indexed by pattern, in such form: array( pattern => outputtype ).
+	 *	@param string $to The output type, if $from is a pattern.
 	 *	@return Transformist Current instance to allow chaining.
 	 */
 
-	public function from( $filePath, $type = '' ) {
+	public function setup( $dir, $from, $to = '' ) {
 
-		$this->_pendingInputs[] = new Transformist_FileInfo( $filePath, $type );
-		return $this;
-	}
-
-
-
-	/**
-	 *	Sets the output file info for all the pending inputs.
-	 *
-	 *	@param string $filePath Path to the output file.
-	 *	@param string $type MIME type of the file.
-	 *	@return Transformist Current instance to allow chaining.
-	 */
-
-	public function to( $filePath, $type ) {
-
-		$Output = new Transformist_FileInfo( $filePath, $type );
-
-		foreach ( $this->_pendingInputs as $Input ) {
-			$this->addDocument( new Transformist_Document( $Input, $Output ));
+		if ( is_array( $dir )) {
+			reset( $dir );
+			$input = key( $dir );
+			$output = current( $dir );
+		} else {
+			$input = $dir;
+			$output = $input;
 		}
 
-		$this->_pendingInputs = array( );
+		$this->_pending = array(
+			'input' => Transformist_FileInfo::absolutePath( $input ),
+			'output' => Transformist_FileInfo::absolutePath( $output ),
+			'conversions' => is_array( $from )
+				? $from
+				: array( $from => $to )
+		);
+
 		return $this;
 	}
 
 
 
 	/**
-	 *	Adds a Document to the conversion queue.
+	 *	Returns if the given string is a MIME type definition.
+	 *
+	 *	@param string $string The string to test.
+	 *	@return boolean True if the string is a MIME type, otherwise false.
+	 */
+
+	protected function _isMimeType( $string ) {
+
+		return preg_match( '#^[-\w]+/[-\w\+]+$#i', $string );
+	}
+
+
+
+	/**
+	 *	Returns if the given string is a glob pattern.
+	 *
+	 *	@param string $string The string to test.
+	 *	@return boolean True if the string is a glob pattern, otherwise false.
+	 */
+
+	protected function _isGlobPattern( $string ) {
+
+		if ( strpbrk( $string, '*?[]' ) !== false ) {
+			return true;
+		}
+
+		return ( strpos( $string, '...' ) !== false );
+	}
+
+
+
+	/**
+	 *	Lists documents based on the settings defined in setup( ).
+	 */
+
+	protected function _listDocuments( ) {
+
+		if ( empty( $this->_pending )) {
+			return;
+		}
+
+		foreach ( $this->_pending['conversions'] as $in => $out ) {
+			if ( !$this->_isMimeType( $out )) {
+				continue;
+			}
+
+			$mime = $this->_isMimeType( $in );
+
+			if ( $mime ) {
+				$pattern = '*';
+			} else {
+				$pattern = $in;
+			}
+
+			$path = $this->_pending['input'] . DS . $pattern;
+			$files = $this->_isGlobPattern( $pattern )
+				? glob( $path, GLOB_NOSORT )
+				: array( $path );
+
+			if ( $files ) {
+				foreach ( $files as $file ) {
+					if ( $mime ) {
+						$FileInfo = new Transformist_FileInfo( $file );
+						$type = false;
+
+						try {
+							$type = $FileInfo->type( );
+						} catch ( Transformist_Exception $exception ) {
+							//var_dump( $exception->getMessage( ));
+						}
+
+						if ( $type !== $in ) {
+							continue;
+						}
+					}
+
+					$Input = new Transformist_FileInfo( $file, ( $mime ? $in : '' ));
+					$Output = new Transformist_FileInfo( $this->_pending['output'] . DS . basename( $file ), $out );
+
+					$Output->setExtension( Transformist_Registry::extension( $out ));
+
+					$this->addDocument( new Transformist_Document( $Input, $Output ));
+				}
+			}
+		}
+	}
+
+
+
+	/**
+	 *	Adds the given Document to the conversion queue.
 	 *
 	 *	@param Transformist_Document $Document Document to add.
 	 *	@return Transformist Current instance to allow chaining.
@@ -362,24 +451,22 @@ class Transformist {
 	 *	@return boolean True if every document was converted, otherwise false.
 	 */
 
-	public function convert( ) {
+	public function run( ) {
 
-		$succes = true;
+		$this->_listDocuments( );
+		$success = true;
 
 		foreach ( $this->_documents as $Document ) {
 			try {
 				$this->_convert( $Document );
 			} catch ( Transformist_Exception $exception ) {
 				//var_dump( $exception->getMessage( ));
-			}
-
-			if ( !$Document->isConverted( )) {
-				$succes = false;
+				$success = false;
 			}
 		}
 
 		$this->_documents = array( );
-		return $succes;
+		return $success;
 	}
 
 

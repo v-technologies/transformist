@@ -10,47 +10,75 @@
 class Transformist_Command {
 
 	/**
-	 *	Holds informations about executed commands.
+	 *	Command name.
 	 *
-	 *	```
-	 *		array(
-	 *			array( ... ),
-	 *			array( ... ),
-	 *			array(
-	 *				'command' => 'ls -l',
-	 *				'output' => array( ... ),
-	 *				'status' => 0
-	 *			)
-	 *		)
-	 *	```
-	 *
-	 *	@var array
+	 *	@var string
 	 */
 
-	protected static $_executed = array( );
+	protected $_name = '';
 
 
 
 	/**
-	 *	Executes a command with the given options.
+	 *	Assignment operator.
+	 *
+	 *	@var string
+	 */
+
+	protected $_assignment = '';
+
+
+
+	/**
+	 *	Constructs a command with the given name.
 	 *
 	 *	@param string $name Command name.
-	 *	@param array $options Command options.
 	 *	@param string $assignment An assignment character that will be used to
 	 *		associate long options and their values. It is generally a space
 	 *		or an equals sign.
-	 *	@return array Informations about the executed command.
 	 */
 
-	public static function execute( $name, array $options = array( ), $assignment = ' ' ) {
+	public function __construct( $name, $assignment = ' ' ) {
 
-		$command = $name;
+		$this->_name = $name;
+		$this->_assignment = $assignment;
+	}
+
+
+
+	/**
+	 *	Returns if the command is available on the system, relying on the
+	 *	'command' utility, which should be installed on most systems.
+	 *
+	 *	@return boolean True if it is available, otherwise false.
+	 */
+
+	public function exists( ) {
+
+		$Command = new Transformist_Command( 'command' );
+		$Result = $Command->execute( array( '-v', $this->_name ));
+
+		return $Result->isSuccess( );
+	}
+
+
+
+	/**
+	 *	Executes the command with the given options.
+	 *
+	 *	@param array $options Command options.
+	 *	@return Transformist_CommandResult Informations about the executed command.
+	 */
+
+	public function execute( array $options = array( )) {
+
+		$command = $this->_name;
 
 		foreach ( $options as $key => $value ) {
 			$command .= ' ';
 
 			if ( is_string( $key )) {
-				$command .= $key . $assignment;
+				$command .= $key . $this->_assignment;
 			}
 
 			$command .= $value;
@@ -58,39 +86,6 @@ class Transformist_Command {
 
 		@exec( $command . ' 2>&1', $output, $status );
 
-		$informations = compact( 'command', 'output', 'status' );
-		self::$_executed[] = $informations;
-
-		return $informations;
-	}
-
-
-
-	/**
-	 *	Returns informations about all executed commands.
-	 *
-	 *	@return array Informations.
-	 */
-
-	public static function executed( ) {
-
-		return self::$_executed;
-	}
-
-
-
-	/**
-	 *	Returns informations about the last executed command.
-	 *
-	 *	@return array Informations.
-	 */
-
-	public function last( ) {
-
-		$last = count( self::$_executed ) - 1;
-
-		return ( $last < 0 )
-			? array( )
-			: self::$_executed[ $last ];
+		return new Transformist_CommandResult( $command, $output, $status );
 	}
 }

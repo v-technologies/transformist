@@ -29,10 +29,7 @@ class Transformist_ConverterCollectionTest extends PHPUnit_Framework_TestCase {
 
 	public function setUp( ) {
 
-		if ( !Runkit::isEnabled( )) {
-			$this->markTestSkipped( 'Runkit must be enabled.' );
-		}
-
+		Runkit::requiredBy( $this );
 		Runkit::redefineConstant( 'TRANSFORMIST_ROOT', TRANSFORMIST_TEST_RESOURCE );
 
 		$this->ConverterCollection = new Transformist_ConverterCollection( );

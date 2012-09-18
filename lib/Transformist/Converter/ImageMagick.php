@@ -31,9 +31,9 @@ abstract class Transformist_Converter_ImageMagick extends Transformist_Converter
 
 	public static function isRunnable( ) {
 
-		$result = Transformist_Command::execute( 'command', array( '-v', 'convert' ));
+		$Convert = new Transformist_Command( 'convert' );
 
-		return ( $result['status'] == 0 )
+		return $Convert->exists( )
 			? true
 			: 'The convert command (from imagemagick) is not available.';
 	}
@@ -60,6 +60,7 @@ abstract class Transformist_Converter_ImageMagick extends Transformist_Converter
 			: '';
 		$output = $Output->path( );
 
-		Transformist_Command::execute( 'convert', array( $input, $output ));
+		$Convert = new Transformist_Command( 'convert' );
+		$Convert->execute( array( $input, $output ));
 	}
 }

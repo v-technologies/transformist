@@ -281,10 +281,7 @@ class Transformist_FileInfoTest extends PHPUnit_Framework_TestCase {
 
 	public function testTypeWithoutFileInfo( ) {
 
-		if ( !Runkit::isEnabled( )) {
-			$this->markTestSkipped( 'Runkit must be enabled.' );
-		}
-
+		Runkit::requiredBy( $this );
 		Runkit::reimplementFunction( 'class_exists', '$className', 'return false;' );
 
 		$FileInfo = new Transformist_FileInfo( vfsStream::url( 'root/accessible/empty' ));

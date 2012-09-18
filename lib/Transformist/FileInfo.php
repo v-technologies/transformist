@@ -38,13 +38,28 @@ class Transformist_FileInfo {
 
 	public function __construct( $filePath, $type = '' ) {
 
-		$this->_path = realpath( $filePath );
+		$this->_path = self::absolutePath( $filePath );
+		$this->_type = $type;
+	}
 
-		if ( $this->_path === false ) {
-			$this->_path = $filePath;
+
+
+	/**
+	 *	Returns the absolute path of the given path.
+	 *
+	 *	@param string $path Orignal path.
+	 *	@return string Absolute path.
+	 */
+
+	public static function absolutePath( $path ) {
+
+		$absolutePath = realpath( $path );
+
+		if ( $absolutePath === false ) {
+			$absolutePath = $path;
 		}
 
-		$this->_type = $type;
+		return $absolutePath;
 	}
 
 

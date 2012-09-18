@@ -51,10 +51,7 @@ class Transformist_TransformistTest extends PHPUnit_Framework_TestCase {
 			$this->markTestSkipped( 'vfsStream must be enabled.' );
 		}
 
-		if ( !Runkit::isEnabled( )) {
-			$this->markTestSkipped( 'Runkit must be enabled.' );
-		}
-
+		Runkit::requiredBy( $this );
 		Runkit::redefineConstant( 'TRANSFORMIST_ROOT', TRANSFORMIST_TEST_RESOURCE );
 
 		$this->vfs = vfsStream::setup( 'root' );
@@ -187,8 +184,7 @@ class Transformist_TransformistTest extends PHPUnit_Framework_TestCase {
 		);
 
 		$this->Transformist->addDocument( $Document );
-
-		$this->assertTrue( $this->Transformist->convert( ));
+		$this->assertTrue( $this->Transformist->run( ));
 	}
 
 
@@ -205,8 +201,7 @@ class Transformist_TransformistTest extends PHPUnit_Framework_TestCase {
 		);
 
 		$this->MultistepTransformist->addDocument( $Document );
-
-		$this->assertTrue( $this->MultistepTransformist->convert( ));
+		$this->assertTrue( $this->MultistepTransformist->run( ));
 	}
 
 
@@ -223,8 +218,7 @@ class Transformist_TransformistTest extends PHPUnit_Framework_TestCase {
 		);
 
 		$this->Transformist->addDocument( $Document );
-
-		$this->assertFalse( $this->Transformist->convert( ));
+		$this->assertFalse( $this->Transformist->run( ));
 	}
 
 
@@ -241,8 +235,7 @@ class Transformist_TransformistTest extends PHPUnit_Framework_TestCase {
 		);
 
 		$this->Transformist->addDocument( $Document );
-
-		$this->assertFalse( $this->Transformist->convert( ));
+		$this->assertFalse( $this->Transformist->run( ));
 	}
 
 
@@ -251,14 +244,16 @@ class Transformist_TransformistTest extends PHPUnit_Framework_TestCase {
 	 *
 	 */
 
-	public function testConvertFluent( ) {
+	public function testSetup( ) {
 
-		$converted = $this->Transformist
-			->from( vfsStream::url( 'root/readable.txt' ), 'text/plain' )
-			->to( vfsStream::url( 'root/writable/converted.html' ), 'text/html' )
-			->convert( );
+		$this->Transformist->setup(
+			vfsStream::url( 'root' ),
+			array(
+				'readable.txt' => 'text/html'
+			)
+		);
 
-		$this->assertTrue( $converted );
+		$this->assertTrue( $this->Transformist->run( ));
 	}
 
 

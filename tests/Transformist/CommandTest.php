@@ -19,84 +19,9 @@ class Transformist_CommandTest extends PHPUnit_Framework_TestCase {
 	 *
 	 */
 
-	public $commands = array(
-
-		// simple command
-		array(
-			'name' => 'ls',
-			'options' => array( ),
-			'assignment' => ' '
-		),
-
-		// command with short options
-		array(
-			'name' => 'ls',
-			'options' => array( '-a', '-b' ),
-			'assignment' => ' '
-		),
-
-		// command with long options
-		array(
-			'name' => 'ls',
-			'options' => array(
-				'--color' => 'never',
-				'--width' => '80'
-			),
-			'assignment' => ' '
-		),
-
-		// command with mixed options and a custom assignment character
-		array(
-			'name' => 'ls',
-			'options' => array(
-				'-a',
-				'--width' => '80'
-			),
-			'assignment' => '='
-		)
-	);
-
-
-
-	/**
-	 *
-	 */
-
-	public $results = array(
-		array(
-			'command' => 'ls',
-			'output' => array( ),
-			'status' => 0
-		),
-		array(
-			'command' => 'ls -a -b',
-			'output' => array( ),
-			'status' => 0
-		),
-		array(
-			'command' => 'ls --color never --width 80',
-			'output' => array( ),
-			'status' => 0
-		),
-		array(
-			'command' => 'ls -a --width=80',
-			'output' => array( ),
-			'status' => 0
-		)
-	);
-
-
-
-	/**
-	 *
-	 */
-
 	public function setUp( ) {
 
-		if ( !Runkit::isEnabled( )) {
-			$this->markTestSkipped( 'Runkit must be enabled.' );
-		}
-
+		Runkit::requiredBy( $this );
 		Runkit::reimplementFunction(
 			'exec',
 			'$command, &$output, &$status',
@@ -112,14 +37,12 @@ class Transformist_CommandTest extends PHPUnit_Framework_TestCase {
 
 	public function testExecute( ) {
 
-		foreach ( $this->commands as $index => $command ) {
-			extract( $command );
+		$Command = new Transformist_Command( 'ls' );
 
-			$this->assertEquals(
-				$this->results[ $index ],
-				Transformist_Command::execute( $name, $options, $assignment )
-			);
-		}
+		$this->assertEquals(
+			new Transformist_CommandResult( 'ls', array( ), 0 ),
+			$Command->execute( )
+		);
 	}
 
 
@@ -128,9 +51,14 @@ class Transformist_CommandTest extends PHPUnit_Framework_TestCase {
 	 *
 	 */
 
-	public function testExecuted( ) {
+	public function testExecuteWithFlags( ) {
 
-		$this->assertEquals( $this->results, Transformist_Command::executed( ));
+		$Command = new Transformist_Command( 'ls' );
+
+		$this->assertEquals(
+			new Transformist_CommandResult( 'ls -a -l', array( ), 0 ),
+			$Command->execute( array( '-a', '-l' ))
+		);
 	}
 
 
@@ -139,9 +67,30 @@ class Transformist_CommandTest extends PHPUnit_Framework_TestCase {
 	 *
 	 */
 
-	public function testLast( ) {
+	public function testExecuteWithOptions( ) {
 
-		$this->assertEquals( array_pop( $this->results ), Transformist_Command::last( ));
+		$Command = new Transformist_Command( 'ls' );
+
+		$this->assertEquals(
+			new Transformist_CommandResult( 'ls --tabsize 5', array( ), 0 ),
+			$Command->execute( array( '--tabsize' => 5 ))
+		);
+	}
+
+
+
+	/**
+	 *
+	 */
+
+	public function testExecuteWithCustomAssignment( ) {
+
+		$Command = new Transformist_Command( 'ls', '=' );
+
+		$this->assertEquals(
+			new Transformist_CommandResult( 'ls --tabsize=5', array( ), 0 ),
+			$Command->execute( array( '--tabsize' => 5 ))
+		);
 	}
 
 

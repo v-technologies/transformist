@@ -23,6 +23,19 @@ class Runkit {
 	 *
 	 */
 
+	public static function requiredBy( PHPUnit_Framework_TestCase $Case ) {
+
+		if ( !Runkit::isEnabled( )) {
+			$Case->markTestSkipped( 'Runkit must be enabled' );
+		}
+	}
+
+
+
+	/**
+	 *
+	 */
+
 	public static function redefineConstant( $constant, $value ) {
 
 		$originalConstant = "__ORIGINAL_$constant";

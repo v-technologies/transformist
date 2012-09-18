@@ -47,6 +47,12 @@ class Transformist_Converter_OfficeTest extends PHPUnit_Framework_TestCase {
 
 	public function setUp( ) {
 
+		$runnable = Transformist_Converter_Office::isRunnable( );
+
+		if ( $runnable !== true ) {
+			$this->markTestSkipped( $runnable );
+		}
+
 		Transformist_cleanDirectory( dirname( OFFICE_OUTPUT_FILE ));
 
 		$this->Office = new Transformist_Converter_Office_Concrete( );
@@ -65,8 +71,7 @@ class Transformist_Converter_OfficeTest extends PHPUnit_Framework_TestCase {
 	public function testConvert( ) {
 
 		$this->Office->convert( $this->Document );
-
-		$this->assertTrue( file_exists( OFFICE_OUTPUT_FILE ));
+		$this->assertFileExists( OFFICE_OUTPUT_FILE );
 	}
 
 
@@ -92,17 +97,33 @@ class Transformist_Converter_OfficeTest extends PHPUnit_Framework_TestCase {
 
 class Transformist_Converter_Office_Concrete extends Transformist_Converter_Office {
 
+	/**
+	 *
+	 */
+
+	protected $_format = 'pdf';
+
+
+
+	/**
+	 *
+	 */
+
 	public static function inputTypes( ) {
 
 		return array( 'application/msword' );
 	}
 
+
+
+	/**
+	 *
+	 */
+
 	public static function outputType( ) {
 
 		return 'application/pdf';
 	}
-
-	protected $_format = 'pdf';
 }
 
 

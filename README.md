@@ -9,39 +9,66 @@ It is also designed to be easily extended, just by adding custom converters.
 Example
 -------
 
-You can use this fluent interface to convert a document in seconds:
+Here is what you could do to convert every word documents to PDF files in a directory:
 
 ```php
 <?php
 
 $Transformist = new Transformist( );
+$Transformist->setup(
+	'/path/to/directory',
+	'application/msword',
+	'application/pdf'
+);
 
-$converted = $Transformist
-	->from( '/path/to/input/file.doc', 'application/msword' )
-	->to( '/path/to/output/file.pdf', 'application/pdf' )
-	->convert( );
-
-if ( $converted ) {
+if ( $Transformist->run( )) {
 	// You're good to go !
 }
 
 ?>
 ```
 
-The _from( )_ and _to( )_ methods both accept two parameters: a file path and a MIME type.
-Note that if the input file type is omitted, then it is detected automatically.
-
-You can chain those methods multiple times to make multiple conversions:
+You can use the _setup( )_ method in different ways to convert multiple documents in one pass:
 
 ```php
 <?php
 
-$Transformist
-	->from( '/path/to/input/file.doc' ),
-	->to( '/path/to/output/file.pdf', 'application/pdf' )
-	->from( '/path/to/other/input/file.doc' )
-	->to( '/path/to/other/output/file.html', 'text/html' )
-	->convert( );
+// Output directory
+
+$Transformist->setup(
+	array( '/path/to/input/directory' => '/path/to/output/directory' ),
+	'application/msword',
+	'application/pdf'
+);
+
+
+// Conversion of a particular file
+
+$Transformist->setup(
+	'/path/to/directory',
+	'file.doc',
+	'application/pdf'
+);
+
+
+// All files matching a pattern
+
+$Transformist->setup(
+	'/path/to/directory',
+	'*.doc',
+	'application/pdf'
+);
+
+
+// Multiple conversions
+
+$Transformist->setup(
+	'/path/to/directory',
+	array(
+		'*.doc'     => 'application/pdf',
+		'image/jpg' => 'image/png'
+	)
+);
 
 ?>
 ```

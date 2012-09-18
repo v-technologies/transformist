@@ -39,16 +39,16 @@ abstract class Transformist_Converter_Office extends Transformist_Converter {
 
 	public static function isRunnable( ) {
 
-		$result = Transformist_Command::execute( 'command', array( '-v', 'unoconv' ));
+		$Unoconv = new Transformist_Command( 'unoconv' );
 
-		if ( $result['status'] != 0 ) {
+		if ( !$Unoconv->exists( )) {
 			return 'The unoconv command is not available.';
 		}
 
-		$result = Transformist_Command::execute( 'unoconv', array( '--version' ));
+		$result = $Unoconv->execute( array( '--version' ));
 		$version = 0;
 
-		foreach ( $result['output'] as $line ) {
+		foreach ( $result->output( ) as $line ) {
 			if ( preg_match( '#unoconv\\s+(?P<version>[0-9]\\.[0-9])#i', $line, $matches )) {
 				$version = floatval( $matches['version']);
 				break;
@@ -117,7 +117,8 @@ abstract class Transformist_Converter_Office extends Transformist_Converter {
 			)
 		);
 
-		Transformist_Command::execute( 'unoconv', $arguments );
+		$Unoconv = new Transformist_Command( 'unoconv' );
+		$Unoconv->execute( $arguments );
 
 		// We don't need the symlink anymore.
 
