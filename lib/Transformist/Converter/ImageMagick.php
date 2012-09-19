@@ -7,21 +7,7 @@
  *	@author Félix Girault <felix@vtech.fr>
  */
 
-abstract class Transformist_Converter_ImageMagick extends Transformist_Converter {
-
-	/**
-	 *
-	 */
-
-	protected $_typesMap = array(
-		'image/gif' => 'gif',
-		'image/jpeg' => 'jpg',
-		'image/png' => 'png',
-		'image/svg+xml' => 'svg',
-		'image/tiff' => 'tif'
-	);
-
-
+class Transformist_Converter_ImageMagick extends Transformist_Converter {
 
 	/**
 	 *	Tests if the imagick extension is loaded.
@@ -41,6 +27,48 @@ abstract class Transformist_Converter_ImageMagick extends Transformist_Converter
 
 
 	/**
+	 *
+	 */
+
+	public static function conversions( ) {
+
+		return array(
+			'image/gif' => array(
+				'image/jpeg',
+				'image/png',
+				'image/svg+xml',
+				'image/tiff'
+			),
+			'image/jpeg' => array(
+				'image/gif',
+				'image/png',
+				'image/svg+xml',
+				'image/tiff'
+			),
+			'image/png' => array(
+				'image/gif',
+				'image/jpeg',
+				'image/svg+xml',
+				'image/tiff'
+			),
+			'image/svg+xml' => array(
+				'image/gif',
+				'image/jpeg',
+				'image/png',
+				'image/tiff'
+			),
+			'image/tiff' => array(
+				'image/gif',
+				'image/jpeg',
+				'image/png',
+				'image/svg+xml'
+			)
+		);
+	}
+
+
+
+	/**
 	 *	Converts the given document.
 	 *
 	 *	@param Transformist_Document $Document Document to convert.
@@ -49,16 +77,22 @@ abstract class Transformist_Converter_ImageMagick extends Transformist_Converter
 	public function convert( Transformist_Document $Document ) {
 
 		$Input =& $Document->input( );
-		$input = isset( $this->_typesMap[ $Input->type( )])
-			? $this->_typesMap[ $Input->type( )] . ':'
-			: '';
-		$input = $Input->path( );
+		$input = Transformist_Registry::extension( $Input->type( ));
+
+		if ( !empty( $input )) {
+			$input .= ':';
+		}
+
+		$input .= $Input->path( );
 
 		$Output =& $Document->output( );
-		$output = isset( $this->_typesMap[ $Output->type( )])
-			? $this->_typesMap[ $Output->type( )] . ':'
-			: '';
-		$output = $Output->path( );
+		$output = Transformist_Registry::extension( $Output->type( ));
+
+		if ( !empty( $output )) {
+			$output .= ':';
+		}
+
+		$output .= $Output->path( );
 
 		$Convert = new Transformist_Command( 'convert' );
 		$Convert->execute( array( $input, $output ));

@@ -82,43 +82,9 @@ class Transformist_TransformistTest extends PHPUnit_Framework_TestCase {
 				),
 				'text/html' => array(
 					'application/xml'
-				),
-				'image/svg+xml' => array(
-					'application/xml'
 				)
 			),
 			$this->Transformist->availableConversions( )
-		);
-	}
-
-
-
-	/**
-	 *
-	 */
-
-	public function testAvailableMultistepConversions( ) {
-
-		$this->assertEquals(
-			array(
-				'text/plain' => array(
-					'text/html',
-					'application/xml',
-					'application/json'
-				),
-				'application/xml' => array(
-					'application/json'
-				),
-				'text/html' => array(
-					'application/xml',
-					'application/json'
-				),
-				'image/svg+xml' => array(
-					'application/xml',
-					'application/json'
-				)
-			),
-			$this->MultistepTransformist->availableConversions( )
 		);
 	}
 
@@ -136,22 +102,6 @@ class Transformist_TransformistTest extends PHPUnit_Framework_TestCase {
 		);
 
 		$this->assertTrue( $this->Transformist->canConvert( $Document ));
-	}
-
-
-
-	/**
-	 *
-	 */
-
-	public function testCanConvertMultistep( ) {
-
-		$Document = new Transformist_Document(
-			new Transformist_FileInfo( vfsStream::url( 'root/readable.txt' ), 'text/plain' ),
-			new Transformist_FileInfo( vfsStream::url( 'root/writable/converted.json' ), 'application/json' )
-		);
-
-		$this->assertEquals( 3, $this->MultistepTransformist->canConvert( $Document ));
 	}
 
 
@@ -185,23 +135,6 @@ class Transformist_TransformistTest extends PHPUnit_Framework_TestCase {
 
 		$this->Transformist->addDocument( $Document );
 		$this->assertTrue( $this->Transformist->run( ));
-	}
-
-
-
-	/**
-	 *
-	 */
-
-	public function testConvertMultistep( ) {
-
-		$Document = new Transformist_Document(
-			new Transformist_FileInfo( vfsStream::url( 'root/readable.txt' ), 'text/plain' ),
-			new Transformist_FileInfo( vfsStream::url( 'root/writable/converted.json' ), 'application/json' )
-		);
-
-		$this->MultistepTransformist->addDocument( $Document );
-		$this->assertTrue( $this->MultistepTransformist->run( ));
 	}
 
 

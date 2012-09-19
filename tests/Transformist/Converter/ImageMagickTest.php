@@ -47,7 +47,7 @@ class Transformist_Converter_ImageMagickTest extends PHPUnit_Framework_TestCase 
 
 	public function setUp( ) {
 
-		$runnable = Transformist_Converter_Office::isRunnable( );
+		$runnable = Transformist_Converter_ImageMagick::isRunnable( );
 
 		if ( $runnable !== true ) {
 			$this->markTestSkipped( $runnable );
@@ -55,7 +55,7 @@ class Transformist_Converter_ImageMagickTest extends PHPUnit_Framework_TestCase 
 
 		Transformist_cleanDirectory( dirname( IMAGEMAGICK_OUTPUT_FILE ));
 
-		$this->ImageMagick = new Transformist_Converter_ImageMagick_Concrete( );
+		$this->ImageMagick = new Transformist_Converter_ImageMagick( );
 		$this->Document = new Transformist_Document(
 			new Transformist_FileInfo( IMAGEMAGICK_INPUT_FILE ),
 			new Transformist_FileInfo( IMAGEMAGICK_OUTPUT_FILE, 'image/png' )
@@ -71,36 +71,6 @@ class Transformist_Converter_ImageMagickTest extends PHPUnit_Framework_TestCase 
 	public function testConvert( ) {
 
 		$this->ImageMagick->convert( $this->Document );
-
-		$this->assertFileExists( IMAGEMAGICK_OUTPUT_FILE );
-	}
-}
-
-
-
-/**
- *
- */
-
-class Transformist_Converter_ImageMagick_Concrete extends Transformist_Converter_ImageMagick {
-
-	/**
-	 *
-	 */
-
-	public static function inputTypes( ) {
-
-		return array( 'image/jpeg' );
-	}
-
-
-
-	/**
-	 *
-	 */
-
-	public static function outputType( ) {
-
-		return 'image/png';
+		$this->assertTrue( $this->Document->isConverted( ));
 	}
 }

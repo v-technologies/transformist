@@ -19,29 +19,6 @@ class Transformist {
 
 
 	/**
-	 *	Default configuration options.
-	 *
-	 *	@var array
-	 */
-
-	protected $_defaults = array(
-		'multistep' => false
-	);
-
-
-
-	/**
-	 *	Tells if the collection uses multistep conversions.
-	 *
-	 *	@see Transformist_ConverterCollection::enableMultistep( )
-	 *	@var boolean|integer
-	 */
-
-	protected $_multistep = -1;
-
-
-
-	/**
 	 *	A map of converters indexed by their input and output types.
 	 *
 	 *	@var array
@@ -89,81 +66,10 @@ class Transformist {
 	 *	@param array $options Configuration options.
 	 */
 
-	public function __construct( array $options = array( )) {
+	public function __construct( ) {
 
 		$this->_ConverterCollection = new Transformist_ConverterCollection( );
-
-		$this->configure( array_merge( $this->_defaults, $options ));
-	}
-
-
-
-	/**
-	 *	Configures the collection.
-	 *
-	 *	### Options
-	 *
-	 *	- multistep - See Transformist::_setMultistep( ).
-	 *
-	 *	@param array|string $key Either a key for $value, or an array of
-	 *		key => value configuration options.
-	 *	@param mixed $value If $key is a string, the value for this key.
-	 *		$value will be skipped if an array of configuration options is
-	 *		passed as first parameter.
-	 */
-
-	public function configure( $key, $value = null ) {
-
-		$options = is_array( $key )
-			? $key
-			: array( $key => $value );
-
-		foreach ( $options as $key => $value ) {
-			switch ( $key ) {
-				case 'multistep':
-					if ( is_bool( $value ) || is_int( $value )) {
-						$this->_setMultistep( $value );
-					}
-					break;
-			}
-		}
-	}
-
-
-
-	/**
-	 *	Enables or disables multistep conversions.
-	 *
-	 *	For example, consider that the collection contains two converters,
-	 *	[text to doc] and [doc to pdf], and that you want to convert a document
-	 *	from text to pdf.
-	 *
-	 *	None of the converters can convert the document directly; but if
-	 *	multistep conversions are enabled, the collection will use both
-	 *	converters, and convert the document from text to doc, and then from
-	 *	doc to pdf, resulting in a conversion from text to pdf.
-	 *
-	 *	If $multistep is a positive number, then it indicates the maximum number
-	 *	of intermediate conversions that can be done to convert a file.
-	 *
-	 *	@param mixed $multistep Whether or not to enable multistep conversions,
-	 *		or a number representing the maximum number of intermediate
-	 *		conversions.
-	 */
-
-	protected function _setMultistep( $multistep ) {
-
-		if ( $multistep === $this->_multistep ) {
-			return;
-		}
-
-		$this->_multistep = $multistep;
-		$this->_map = array( );
 		$this->_mapConverters( );
-
-		if ( $this->_multistep ) {
-			$this->_mapConvertersDeeply( );
-		}
 	}
 
 
@@ -176,59 +82,23 @@ class Transformist {
 
 		$converters = $this->_ConverterCollection->converterNames( );
 
-		foreach ( $converters as $name ) {
-			$inputs = $name::inputTypes( );
-			$output = $name::outputType( );
+		foreach ( $converters as $converter ) {
+			$conversions = $converter::conversions( );
 
-			foreach ( $inputs as $input ) {
+			foreach ( $conversions as $input => $outputs ) {
 				if ( !isset( $this->_map[ $input ])) {
 					$this->_map[ $input ] = array( );
 				}
 
-				$this->_map[ $input ][ $output ] = array( $name );
-			}
-		}
-	}
+				if ( !is_array( $outputs )) {
+					$outputs = array( $outputs );
+				}
 
-
-
-	/**
-	 *	Finds all possible converters combinations to provide a larger panel
-	 *	of conversions.
-	 */
-
-	protected function _mapConvertersDeeply( ) {
-
-		$limit = intval( $this->_multistep ) + 1;
-
-		do {
-			$modified = false;
-
-			foreach ( $this->_map as $input => $outputs ) {
-				foreach ( $outputs as $output => $chain ) {
-					if ( !isset( $this->_map[ $output ])) {
-						continue;
-					}
-
-					foreach ( $this->_map[ $output ] as $chainableOutput => $chainableConverters ) {
-						if ( isset( $outputs[ $chainableOutput ]) || ( $input == $chainableOutput )) {
-							continue;
-						}
-
-						$total = count( $chain ) + count( $chainableConverters );
-
-						if (( $this->_multistep === true ) || ( $total <= $limit )) {
-							$this->_map[ $input ][ $chainableOutput ] = array_merge(
-								$chain,
-								$chainableConverters
-							);
-
-							$modified = true;
-						}
-					}
+				foreach ( $outputs as $output ) {
+					$this->_map[ $input ][ $output ] = $converter;
 				}
 			}
-		} while ( $modified );
+		}
 	}
 
 
@@ -289,15 +159,7 @@ class Transformist {
 
 	public function canConvert( Transformist_Document $Document ) {
 
-		$chain = $this->_findChainFor( $Document );
-
-		if ( empty( $chain )) {
-			return false;
-		}
-
-		return $this->_multistep
-			? count( $chain )
-			: true;
+		return ( $this->_converterFor( $Document ) !== null );
 	}
 
 
@@ -418,7 +280,6 @@ class Transformist {
 
 					$Input = new Transformist_FileInfo( $file, ( $mime ? $in : '' ));
 					$Output = new Transformist_FileInfo( $this->_pending['output'] . DS . basename( $file ), $out );
-
 					$Output->setExtension( Transformist_Registry::extension( $out ));
 
 					$this->addDocument( new Transformist_Document( $Input, $Output ));
@@ -493,115 +354,11 @@ class Transformist {
 			);
 		}
 
-		$chain = $this->_findChainFor( $Document );
+		$Converter = $this->_converterFor( $Document );
 
-		switch ( count( $chain )) {
-			case 0:
-				break;
-
-			case 1:
-				$Converter = $this->_ConverterCollection->converter( array_shift( $chain ));
-				$Converter->convert( $Document );
-				break;
-
-			default:
-				$this->_convertMultistep( $Document, $chain );
-				break;
-		}
-	}
-
-
-
-	/**
-	 *	Does a multi step conversion of the given document.
-	 *
-	 *	@param Transformist_Document $Document The document to convert.
-	 *	@param array $chain An array of converters name, as returned by
-	 *		the _findChainFor( ) method.
-	 *	@return boolean True if the document was converted, otherwise false.
-	 */
-
-	protected function _convertMultistep( Transformist_Document $Document, $chain ) {
-
-		$steps = $this->_makeSteps( $Document, $chain );
-		$PreviousStep = null;
-
-		foreach ( $steps as $step ) {
-			$Converter = $step['converter'];
-			$Document = $step['document'];
-
+		if ( $Converter ) {
 			$Converter->convert( $Document );
-
-			// we don't need the temporary file anymore
-
-			if ( $PreviousStep !== null ) {
-				unlink( $PreviousStep->output( )->path( ));
-			}
-
-			// no need to continue if something gone wrong
-
-			if ( !$Document->isConverted( )) {
-				return false;
-			}
-
-			$PreviousStep = $Document;
 		}
-
-		return true;
-	}
-
-
-
-	/**
-	 *	Splits a documents in multiple documents to facilitate a multistep
-	 *	conversion.
-	 *
-	 *	@param Transformist_Document $Document Document to split.
-	 *	@param array $converters An array of converters that will be used to
-	 *		convert the given document.
-	 *	@return array An array of intermediate documents.
-	 */
-
-	protected function _makeSteps( Transformist_Document $Document, $chain ) {
-
-		$steps = array( );
-		$converterCount = count( $chain );
-
-		for ( $i = 0; $i < $converterCount; $i++ ) {
-			$Converter = $this->_ConverterCollection->converter( $chain[ $i ]);
-
-			// first step
-
-			if ( $i === 0 ) {
-				$Step = clone $Document;
-				$Step->output( )->setType( $Converter::outputType( ));
-				$Step->output( )->setExtension( "step-$i" );
-			} else {
-				$PreviousStep =& $steps[ count( $steps ) - 1 ]['document'];
-				$Step = clone $PreviousStep;
-
-				// last step
-
-				if ( $i == ( $converterCount - 1 )) {
-					$Step->setInput( $PreviousStep->output( ));
-					$Step->setOutput( $Document->output( ));
-
-				// intermediate step
-
-				} else {
-					$Step->setInput( $PreviousStep->output( ));
-					$Step->output( )->setType( $Converter::outputType( ));
-					$Step->output( )->setExtension( "step-$i" );
-				}
-			}
-
-			$steps[] = array(
-				'converter' => $Converter,
-				'document' => $Step
-			);
-		}
-
-		return $steps;
 	}
 
 
@@ -615,16 +372,18 @@ class Transformist {
 	 *		chain were found.
 	 */
 
-	protected function _findChainFor( Transformist_Document $Document ) {
+	protected function _converterFor( Transformist_Document $Document ) {
 
 		$inputType = $Document->input( )->type( );
 		$outputType = $Document->output( )->type( );
-		$chain = array( );
+		$Converter = null;
 
 		if ( isset( $this->_map[ $inputType ][ $outputType ])) {
-			$chain = $this->_map[ $inputType ][ $outputType ];
+			$Converter = $this->_ConverterCollection->converter(
+				$this->_map[ $inputType ][ $outputType ]
+			);
 		}
 
-		return $chain;
+		return $Converter;
 	}
 }

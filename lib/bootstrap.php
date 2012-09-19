@@ -56,7 +56,7 @@ Transformist_Registry::register(
 		'odt'	=> 'application/vnd.oasis.opendocument.text',
 		'ogg'	=> 'application/ogg',
 		'pdf'	=> 'application/pdf',
-		'pdf'	=> 'application/pdfa',	// not official, for output
+		'pdf'	=> 'application/pdfa',	// not official
 		'png'	=> 'image/png',
 		'svg'	=> 'image/svg+xml',
 		'swf'	=> 'application/x-shockwave-flash',

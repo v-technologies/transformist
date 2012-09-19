@@ -9,27 +9,7 @@
  *	@author Félix Girault <felix@vtech.fr>
  */
 
-abstract class Transformist_Converter_Office extends Transformist_Converter {
-
-	/**
-	 *	Output format.
-	 *
-	 *	@var string
-	 */
-
-	protected $_format = '';
-
-
-
-	/**
-	 *	Command arguments to be merged with the default ones.
-	 *
-	 *	@var array
-	 */
-
-	protected $_arguments = array( );
-
-
+class Transformist_Converter_Office extends Transformist_Converter {
 
 	/**
 	 *	Tests if the soffice command is available on the system.
@@ -65,6 +45,23 @@ abstract class Transformist_Converter_Office extends Transformist_Converter {
 
 
 	/**
+	 *
+	 */
+
+	public static function conversions( ) {
+
+		return array(
+			'application/msword' => array(
+				'application/pdf',
+				'application/pdfa'
+			),
+			'application/pdf' => 'application/pdfa'
+		);
+	}
+
+
+
+	/**
 	 *	Converts the given document.
 	 *
 	 *	@param Transformist_Document $Document Document to convert.
@@ -72,16 +69,8 @@ abstract class Transformist_Converter_Office extends Transformist_Converter {
 
 	public function convert( Transformist_Document $Document ) {
 
-		if ( empty( $this->_format )) {
-			throw new Transformist_Exception(
-				'$_format must be defined.'
-			);
-		}
-
 		$Input =& $Document->input( );
 		$Output =& $Document->output( );
-
-		$inputPath = $Input->path( );
 
 		// The office command doesn't allow us to specify an output file name.
 		// So here's the trick: we're creating a link to the input file, named
@@ -90,6 +79,7 @@ abstract class Transformist_Converter_Office extends Transformist_Converter {
 		// The we will pass the symlink to the office command, which will use
 		// the link name as output file name.
 
+		$inputPath = $Input->path( );
 		$workaround = ( $Input->baseName( ) !== $Output->baseName( ));
 
 		if ( $workaround ) {
@@ -98,27 +88,34 @@ abstract class Transformist_Converter_Office extends Transformist_Converter {
 				. $Output->baseName( )
 				. uniqid( '.workaround-' );
 
-			if ( @symlink( $inputPath, $linkPath )) {
+			if ( symlink( $inputPath, $linkPath )) {
 				$inputPath = $linkPath;
 			} else {
 				return;
 			}
 		}
 
-		// We're calling the office suite, without GUI (--headless) and without
-		// opening a default document (--nodefault).
+		//
 
-		$arguments = array_merge(
-			$this->_arguments,
-			array(
-				'-f' => $this->_format,
-				'--output' => $Output->dirPath( ),
-				$inputPath
-			)
+		$arguments = array( );
+
+		if ( $Output->type( ) == 'application/pdfa' ) {
+			$arguments['-e'] = 'SelectPdfVersion=1';
+		}
+
+		$format = Transformist_Registry::extension( $Output->type( ));
+
+		if ( $format ) {
+			$arguments['-f'] = $format;
+		}
+
+		$arguments += array(
+			'--output' => $Output->dirPath( ),
+			$inputPath
 		);
 
 		$Unoconv = new Transformist_Command( 'unoconv' );
-		$Unoconv->execute( $arguments );
+		$R = $Unoconv->execute( $arguments );
 
 		// We don't need the symlink anymore.
 

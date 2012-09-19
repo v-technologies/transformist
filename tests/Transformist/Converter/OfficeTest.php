@@ -55,7 +55,7 @@ class Transformist_Converter_OfficeTest extends PHPUnit_Framework_TestCase {
 
 		Transformist_cleanDirectory( dirname( OFFICE_OUTPUT_FILE ));
 
-		$this->Office = new Transformist_Converter_Office_Concrete( );
+		$this->Office = new Transformist_Converter_Office( );
 		$this->Document = new Transformist_Document(
 			new Transformist_FileInfo( OFFICE_INPUT_FILE ),
 			new Transformist_FileInfo( OFFICE_OUTPUT_FILE, 'application/pdf' )
@@ -71,67 +71,6 @@ class Transformist_Converter_OfficeTest extends PHPUnit_Framework_TestCase {
 	public function testConvert( ) {
 
 		$this->Office->convert( $this->Document );
-		$this->assertFileExists( OFFICE_OUTPUT_FILE );
+		$this->assertTrue( $this->Document->isConverted( ));
 	}
-
-
-
-	/**
-	 *
-	 */
-
-	public function testConvertWithBrokenImplementation( ) {
-
-		$this->setExpectedException( 'Transformist_Exception' );
-
-		$Office = new Transformist_Converter_Office_Broken( );
-		$Office->convert( $this->Document );
-	}
-}
-
-
-
-/**
- *
- */
-
-class Transformist_Converter_Office_Concrete extends Transformist_Converter_Office {
-
-	/**
-	 *
-	 */
-
-	protected $_format = 'pdf';
-
-
-
-	/**
-	 *
-	 */
-
-	public static function inputTypes( ) {
-
-		return array( 'application/msword' );
-	}
-
-
-
-	/**
-	 *
-	 */
-
-	public static function outputType( ) {
-
-		return 'application/pdf';
-	}
-}
-
-
-
-/**
- *
- */
-
-class Transformist_Converter_Office_Broken extends Transformist_Converter_Office {
-
 }

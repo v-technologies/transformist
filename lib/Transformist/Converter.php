@@ -24,27 +24,12 @@ abstract class Transformist_Converter {
 
 
 	/**
-	 *	Returns the type of files that the converter accepts.
 	 *
-	 *	@return array Types.
 	 */
 
-	public static function inputTypes( ) {
+	public static function conversions( ) {
 
 		return array( );
-	}
-
-
-
-	/**
-	 *	Returns the type of files that the converter produces.
-	 *
-	 *	@return string Type.
-	 */
-
-	public static function outputType( ) {
-
-		return '';
 	}
 
 
