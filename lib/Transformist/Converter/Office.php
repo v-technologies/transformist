@@ -14,7 +14,7 @@ class Transformist_Converter_Office extends Transformist_Converter {
 	/**
 	 *	Tests if the soffice command is available on the system.
 	 *
-	 *	@return boolean True if the command exists, otherwise false.
+	 *	@return boolean|sting True if the command exists, otherwise an error message.
 	 */
 
 	public static function isRunnable( ) {
@@ -45,7 +45,12 @@ class Transformist_Converter_Office extends Transformist_Converter {
 
 
 	/**
+	 *	Returns an array of conversions the converter can handle.
 	 *
+	 *	array( 'input/type' => 'output/type' )
+	 *	array( 'input/type' => array( 'output/type1', 'output/type2' ))
+	 *
+	 *	@return array Array of supported types.
 	 */
 
 	public static function conversions( ) {

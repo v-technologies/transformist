@@ -24,7 +24,12 @@ abstract class Transformist_Converter {
 
 
 	/**
+	 *	Returns an array of conversions the converter can handle.
 	 *
+	 *	array( 'input/type' => 'output/type' )
+	 *	array( 'input/type' => array( 'output/type1', 'output/type2' ))
+	 *
+	 *	@return array Array of supported types.
 	 */
 
 	public static function conversions( ) {

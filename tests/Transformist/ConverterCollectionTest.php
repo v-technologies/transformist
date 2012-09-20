@@ -41,7 +41,7 @@ class Transformist_ConverterCollectionTest extends PHPUnit_Framework_TestCase {
 	 *
 	 */
 
-	public function testConverterNames( ) {
+	public function testNames( ) {
 
 		$this->assertEquals(
 			array(
@@ -49,7 +49,7 @@ class Transformist_ConverterCollectionTest extends PHPUnit_Framework_TestCase {
 				'Transformist_Converter_Fake_Json',
 				'Transformist_Converter_Fake_Xml'
 			),
-			$this->ConverterCollection->converterNames( )
+			$this->ConverterCollection->names( )
 		);
 	}
 
@@ -59,9 +59,9 @@ class Transformist_ConverterCollectionTest extends PHPUnit_Framework_TestCase {
 	 *
 	 */
 
-	public function testConverter( ) {
+	public function testGet( ) {
 
-		$Converter = $this->ConverterCollection->converter( 'Transformist_Converter_Fake_Html' );
+		$Converter = $this->ConverterCollection->get( 'Transformist_Converter_Fake_Html' );
 
 		$this->assertTrue( $Converter instanceof Transformist_Converter_Fake_Html );
 	}
@@ -72,9 +72,9 @@ class Transformist_ConverterCollectionTest extends PHPUnit_Framework_TestCase {
 	 *
 	 */
 
-	public function testUnknownConverter( ) {
+	public function testGetUnknown( ) {
 
-		$this->assertNull( $this->ConverterCollection->converter( 'Unknown' ));
+		$this->assertNull( $this->ConverterCollection->get( 'Unknown' ));
 	}
 
 

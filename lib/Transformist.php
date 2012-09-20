@@ -80,7 +80,7 @@ class Transformist {
 
 	protected function _mapConverters( ) {
 
-		$converters = $this->_ConverterCollection->converterNames( );
+		$converters = $this->_ConverterCollection->names( );
 
 		foreach ( $converters as $converter ) {
 			$conversions = $converter::conversions( );
@@ -116,7 +116,7 @@ class Transformist {
 			? $this
 			: new self( );
 
-		$converters = $_this->_ConverterCollection->converterNames( );
+		$converters = $_this->_ConverterCollection->names( );
 		$results = array( );
 
 		foreach ( $converters as $converter ) {
@@ -379,7 +379,7 @@ class Transformist {
 		$Converter = null;
 
 		if ( isset( $this->_map[ $inputType ][ $outputType ])) {
-			$Converter = $this->_ConverterCollection->converter(
+			$Converter = $this->_ConverterCollection->get(
 				$this->_map[ $inputType ][ $outputType ]
 			);
 		}

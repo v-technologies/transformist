@@ -61,7 +61,7 @@ class Transformist_ConverterCollection {
 	 *	@return array Names.
 	 */
 
-	public function converterNames( ) {
+	public function names( ) {
 
 		return array_keys( $this->_converters );
 	}
@@ -76,7 +76,7 @@ class Transformist_ConverterCollection {
 	 *		converter, or null if it can't be found.
 	 */
 
-	public function converter( $name ) {
+	public function get( $name ) {
 
 		if ( !array_key_exists( $name, $this->_converters )) {
 			return null;
