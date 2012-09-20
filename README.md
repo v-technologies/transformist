@@ -109,54 +109,6 @@ array(
 
 Here you can convert JPG images to PNG, and PNG images to TIFF.
 
-Multistep conversions
----------------------
-
-To take full advantage of converters, Transformist can chain them together to enlarge its panel of conversions.
-
-For example, according to the result of _Transformist::availableConversions( )_ shown above,
-we can convert files from _image/jpeg_ to _image/png_, and from _image/png_ to _image/tiff_.
-With multistep conversions enabled, those two converters would be chained together,
-allowing a conversion from _image/jpeg_ to _image/tiff_.
-
-This is of course slower, as it takes multiple conversions for one file, but it can be really useful in some cases.
-
-To turn on this mechanism, use the _configure( )_ method:
-
-```php
-<?php
-
-$Transformist->configure( array( 'multistep' => true ));
-
-/**
- *	If you want more control, you can also set the maximum number of intermediate
- *	conversions, to avoid endless converter chains.
- *	For example, the following line allows chaining of 3 converters maximum.
- */
-
-$Transformist->configure( array( 'multistep' => 2 ));
-
-?>
-```
-
-After that, a call to _Transformist::availableConversions( )_ will return:
-
-```php
-<?php
-
-array(
-	'image/jpeg' => array(
-		'image/png',
-		'image/tiff'
-	),
-	'image/png' => array(
-		'image/tiff'
-	)
-);
-
-?>
-```
-
 Test
 ----
 
