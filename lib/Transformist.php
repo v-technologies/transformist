@@ -326,7 +326,7 @@ class Transformist {
 			}
 		}
 
-		$this->_documents = array( );
+		$this->_documents = array( );
 		return $success;
 	}
 
