@@ -249,12 +249,7 @@ class Transformist {
 			}
 
 			$mime = $this->_isMimeType( $in );
-
-			if ( $mime ) {
-				$pattern = '*';
-			} else {
-				$pattern = $in;
-			}
+			$pattern = $mime ? '*' : $in;
 
 			$path = $this->_pending['input'] . DS . $pattern;
 			$files = $this->_isGlobPattern( $pattern )
