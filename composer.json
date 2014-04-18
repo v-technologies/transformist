@@ -21,8 +21,8 @@
 		"mikey179/vfsStream": ">=1.0.0"
 	},
 	"autoload": {
-		"files": {
+		"files": [
 			"lib/bootstrap.php"
-		}
+		]
 	}
 }
