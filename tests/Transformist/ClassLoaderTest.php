@@ -5,6 +5,7 @@ if ( !defined( 'TRANSFORMIST_BOOTSTRAPPED' )) {
 		. DIRECTORY_SEPARATOR . 'bootstrap.php';
 }
 
+use PHPUnit\Framework\TestCase;
 
 
 /**
@@ -13,7 +14,7 @@ if ( !defined( 'TRANSFORMIST_BOOTSTRAPPED' )) {
  *	@author Félix Girault <felix@vtech.fr>
  */
 
-class Transformist_ClassLoaderTest extends PHPUnit_Framework_TestCase {
+class Transformist_ClassLoaderTest extends TestCase {
 
 	/**
 	 *
@@ -27,7 +28,7 @@ class Transformist_ClassLoaderTest extends PHPUnit_Framework_TestCase {
 	 *
 	 */
 
-	public function setUp( ) {
+	public function setUp( ) : void {
 
 		$this->ClassLoader = new Transformist_ClassLoader( TRANSFORMIST_TEST_RESOURCE );
 		$this->ClassLoader->register( );

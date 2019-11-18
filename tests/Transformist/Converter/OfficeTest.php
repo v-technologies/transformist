@@ -5,6 +5,8 @@ if ( !defined( 'TRANSFORMIST_BOOTSTRAPPED' )) {
 		. DIRECTORY_SEPARATOR . 'bootstrap.php';
 }
 
+use PHPUnit\Framework\TestCase;
+
 define(
 	'OFFICE_INPUT_FILE',
 	TRANSFORMIST_TEST_RESOURCE . 'File' . DS . 'Input' . DS . 'sample.doc'
@@ -23,7 +25,7 @@ define(
  *	@author Félix Girault <felix@vtech.fr>
  */
 
-class Transformist_Converter_OfficeTest extends PHPUnit_Framework_TestCase {
+class Transformist_Converter_OfficeTest extends TestCase {
 
 	/**
 	 *
@@ -45,7 +47,7 @@ class Transformist_Converter_OfficeTest extends PHPUnit_Framework_TestCase {
 	 *
 	 */
 
-	public function setUp( ) {
+	public function setUp( ) : void {
 
 		$runnable = Transformist_Converter_Office::isRunnable( );
 

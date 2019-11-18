@@ -5,8 +5,8 @@ if ( !defined( 'TRANSFORMIST_BOOTSTRAPPED' )) {
 		. DIRECTORY_SEPARATOR . 'bootstrap.php';
 }
 
+use PHPUnit\Framework\TestCase;
 use org\bovigo\vfs\vfsStream;
-
 
 
 /**
@@ -15,7 +15,7 @@ use org\bovigo\vfs\vfsStream;
  *	@author Félix Girault <felix@vtech.fr>
  */
 
-class Transformist_PackageTest extends PHPUnit_Framework_TestCase {
+class Transformist_PackageTest extends TestCase {
 
 	/**
 	 *
@@ -37,7 +37,7 @@ class Transformist_PackageTest extends PHPUnit_Framework_TestCase {
 	 *
 	 */
 
-	public function setUp( ) {
+	public function setUp( ) : void {
 
 		if ( !class_exists( '\\org\\bovigo\\vfs\\vfsStream' )) {
 			$this->markTestSkipped( 'vfsStream must be enabled.' );

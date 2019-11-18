@@ -5,9 +5,8 @@ if ( !defined( 'TRANSFORMIST_BOOTSTRAPPED' )) {
 		. DIRECTORY_SEPARATOR . 'bootstrap.php';
 }
 
+use PHPUnit\Framework\TestCase;
 use org\bovigo\vfs\vfsStream;
-
-
 
 /**
  *	Test case for FileInfo.
@@ -15,7 +14,7 @@ use org\bovigo\vfs\vfsStream;
  *	@author Félix Girault <felix@vtech.fr>
  */
 
-class Transformist_FileInfoTest extends PHPUnit_Framework_TestCase {
+class Transformist_FileInfoTest extends TestCase {
 
 	/**
 	 *
@@ -38,7 +37,7 @@ class Transformist_FileInfoTest extends PHPUnit_Framework_TestCase {
 	 *
 	 */
 
-	public function setUp( ) {
+	public function setUp( ) : void {
 
 		if ( !class_exists( '\\org\\bovigo\\vfs\\vfsStream' )) {
 			$this->markTestSkipped( 'vfsStream must be enabled.' );
@@ -239,7 +238,7 @@ class Transformist_FileInfoTest extends PHPUnit_Framework_TestCase {
 
 	public function testType( ) {
 
-		$this->assertEquals( 'application/xml', $this->XmlFileInfo->type( ));
+		$this->assertEquals( 'text/xml', $this->XmlFileInfo->type( ));
 	}
 
 

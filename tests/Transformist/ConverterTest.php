@@ -5,6 +5,8 @@ if ( !defined( 'TRANSFORMIST_BOOTSTRAPPED' )) {
 		. DIRECTORY_SEPARATOR . 'bootstrap.php';
 }
 
+use PHPUnit\Framework\TestCase;
+
 define( 'CONVERTER_INPUT_TYPE', 'application/xml' );
 define( 'CONVERTER_OUTPUT_TYPE', 'application/pdf' );
 
@@ -16,7 +18,7 @@ define( 'CONVERTER_OUTPUT_TYPE', 'application/pdf' );
  *	@author Félix Girault <felix@vtech.fr>
  */
 
-class Transformist_ConverterTest extends PHPUnit_Framework_TestCase {
+class Transformist_ConverterTest extends TestCase {
 
 	/**
 	 *
@@ -30,7 +32,7 @@ class Transformist_ConverterTest extends PHPUnit_Framework_TestCase {
 	 *
 	 */
 
-	public function setUp( ) {
+	public function setUp( ) : void {
 
 		$this->Converter = new Transformist_ConcreteConverter( );
 	}
