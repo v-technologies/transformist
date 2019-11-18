@@ -5,7 +5,7 @@ if ( !defined( 'TRANSFORMIST_BOOTSTRAPPED' )) {
 		. DIRECTORY_SEPARATOR . 'bootstrap.php';
 }
 
-
+use PHPUnit\Framework\TestCase;
 
 /**
  *	Test case for Registry.
@@ -13,7 +13,7 @@ if ( !defined( 'TRANSFORMIST_BOOTSTRAPPED' )) {
  *	@author Félix Girault <felix@vtech.fr>
  */
 
-class Transformist_RegistryTest extends PHPUnit_Framework_TestCase {
+class Transformist_RegistryTest extends TestCase {
 
 	/**
 	 *

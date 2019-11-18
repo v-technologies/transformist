@@ -5,7 +5,7 @@ if ( !defined( 'TRANSFORMIST_BOOTSTRAPPED' )) {
 		. DIRECTORY_SEPARATOR . 'bootstrap.php';
 }
 
-
+use PHPUnit\Framework\TestCase;
 
 /**
  *	Test case for CommandResult.
@@ -13,7 +13,7 @@ if ( !defined( 'TRANSFORMIST_BOOTSTRAPPED' )) {
  *	@author Félix Girault <felix@vtech.fr>
  */
 
-class Transformist_CommandResultTest extends PHPUnit_Framework_TestCase {
+class Transformist_CommandResultTest extends TestCase {
 
 	/**
 	 *
@@ -27,7 +27,7 @@ class Transformist_CommandResultTest extends PHPUnit_Framework_TestCase {
 	 *
 	 */
 
-	public function setUp( ) {
+	public function setUp( ) : void {
 
 		$this->Result = new Transformist_CommandResult(
 			'ls -l',

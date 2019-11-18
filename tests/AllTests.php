@@ -1,7 +1,7 @@
 <?php
 
 require_once( 'bootstrap.php' );
-
+use PHPUnit\Framework\TestSuite;
 
 
 /**
@@ -23,12 +23,12 @@ class AllTests {
 	/**
 	 *	Constructs and returns a test suite covering all available tests cases.
 	 *
-	 *	@return PHPUnit_Framework_TestSuite Suite.
+	 *	@return TestSuite Suite.
 	 */
 
 	public static function suite( ) {
 
-		$Suite = new PHPUnit_Framework_TestSuite( );
+		$Suite = new TestSuite( );
 		$Package = new Transformist_Package( self::$_path );
 
 		$tests = $Package->classes( array( 'Transformist' ), true );

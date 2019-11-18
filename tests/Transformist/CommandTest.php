@@ -5,7 +5,7 @@ if ( !defined( 'TRANSFORMIST_BOOTSTRAPPED' )) {
 		. DIRECTORY_SEPARATOR . 'bootstrap.php';
 }
 
-
+use PHPUnit\Framework\TestCase;
 
 /**
  *	Test case for Command.
@@ -13,13 +13,13 @@ if ( !defined( 'TRANSFORMIST_BOOTSTRAPPED' )) {
  *	@author Félix Girault <felix@vtech.fr>
  */
 
-class Transformist_CommandTest extends PHPUnit_Framework_TestCase {
+class Transformist_CommandTest extends TestCase {
 
 	/**
 	 *
 	 */
 
-	public function setUp( ) {
+	public function setUp( ) : void {
 
 		Runkit::requiredBy( $this );
 		Runkit::reimplementFunction(
@@ -99,7 +99,7 @@ class Transformist_CommandTest extends PHPUnit_Framework_TestCase {
 	 *
 	 */
 
-	public function tearDown( ) {
+	public function tearDown( ) : void {
 
 		Runkit::resetFunction( 'exec' );
 	}

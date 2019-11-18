@@ -5,7 +5,7 @@ if ( !defined( 'TRANSFORMIST_BOOTSTRAPPED' )) {
 		. DIRECTORY_SEPARATOR . 'bootstrap.php';
 }
 
-
+use PHPUnit\Framework\TestCase;
 
 /**
  *	Test case for ConverterCollection.
@@ -13,7 +13,7 @@ if ( !defined( 'TRANSFORMIST_BOOTSTRAPPED' )) {
  *	@author Félix Girault <felix@vtech.fr>
  */
 
-class Transformist_ConverterCollectionTest extends PHPUnit_Framework_TestCase {
+class Transformist_ConverterCollectionTest extends TestCase {
 
 	/**
 	 *
@@ -27,7 +27,7 @@ class Transformist_ConverterCollectionTest extends PHPUnit_Framework_TestCase {
 	 *
 	 */
 
-	public function setUp( ) {
+	public function setUp( ) : void {
 
 		Runkit::requiredBy( $this );
 		Runkit::redefineConstant( 'TRANSFORMIST_ROOT', TRANSFORMIST_TEST_RESOURCE );
@@ -83,7 +83,7 @@ class Transformist_ConverterCollectionTest extends PHPUnit_Framework_TestCase {
 	 *
 	 */
 
-	public function tearDown( ) {
+	public function tearDown( ) : void {
 
 		Runkit::resetConstant( 'TRANSFORMIST_ROOT' );
 	}

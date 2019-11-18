@@ -1,5 +1,7 @@
 <?php
 
+use PHPUnit\Framework\TestCase;
+
 /**
  *	A wrapper for runkit extension.
  *
@@ -23,7 +25,7 @@ class Runkit {
 	 *
 	 */
 
-	public static function requiredBy( PHPUnit_Framework_TestCase $Case ) {
+	public static function requiredBy( TestCase $Case ) {
 
 		if ( !Runkit::isEnabled( )) {
 			$Case->markTestSkipped( 'Runkit must be enabled' );
